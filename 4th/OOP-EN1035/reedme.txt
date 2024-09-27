@@ -1,0 +1,7 @@
+to run the c++ code in terminal, use the following command:
+g++ myCode.cpp -o myCode 
+this will compile the code
+and will create a executable file named myCode
+to run the executable file, use the following command:
+./myCode
+this will run the executable file
