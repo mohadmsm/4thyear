@@ -1,0 +1,6 @@
+instructions
+
+read 5 sources and write a report
+
+learn matlab and solve diffrential equations.
+
