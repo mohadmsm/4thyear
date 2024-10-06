@@ -1,0 +1,42 @@
+clear all
+clc
+% Simulation parameters
+length_line = 400; % Length of the line (m)
+final_sol_time= 20e-10; %uS
+v = 2e8; % Wave velocity (m/s)
+NDz = 200; % Number of spatial points
+NDt = 2000; % Number of time steps
+dz=length_line/NDz;
+dt=final_sol_time/NDt;
+% Source and load parameters
+V_s = 30; % Source voltage (V)
+R_s = 50; % Source impedance (Ohms)
+R_l = 100; % Load impedance (Ohms)
+Z_c = 50; % Characteristic impedance (Ohms) 
+% Initialize voltage and current arrays
+V = zeros(NDz, NDt); % Voltage along the line
+I = zeros(NDz, NDt); % Current along the line
+L = 1.10418e-6; % Inductance per unit length (H/m)
+C = 40.628e-12; % Capacitance per unit length (F/m)
+for n = 2:NDt-1
+   
+
+    V(1,n+1) = (dz/dt * R_s +1)^-1 * ((dz/dt *R_s*C -1)*v(1,n)-2*R_s*I(1,n+0.5)+(V_s(n+1)+V_s));
+    for k = 2:NDz-1
+        % Update current using dz
+        I(k,n+1) = I(k,n) - (dt / L) * (V(k+1,n) - V(k,n)) / dz;
+
+        % Update voltage using dz
+        V(k,n+1) = V(k,n) - (dt / C) * (I(k+1,n+1) - I(k,n+1)) / dz;
+    end
+
+    % Terminal condition at the load (k = Nz)
+    V(NDz,n+1) = (R_l - Z_c) / (R_l + Z_c) * V(NDz-1,n+1); % Reflection at the load impedance
+end
+time = dt * NDt;
+% Plot the voltage at different points in time
+figure;
+plot(time, V(NDz, :)) % Voltage distribution at the final time step
+xlabel('time (us)');
+ylabel('Voltage (V)');
+title('Voltage Distribution Along the Transmission Line');
