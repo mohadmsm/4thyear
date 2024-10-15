@@ -1,32 +1,18 @@
-function df = fline(t, y)
-    N = length(y) / 2;  % Number of sections
-    L = 2.5e-7;   % Inductance
-    C = 1e-10;    % Capacitance
-    R = 50;       % Resistance per section
-    Rs = 0;       % Source resistance
-    Rl = 100;     % Load resistance
-    Vs = 30;      % Source voltage (could be a function of time)
-
-    df = zeros(2 * N, 1);  % Initialize derivatives
-    
+function df = fline(t, y,N,L,C,R,Rs,Rl,Vs)
+    % coudn't find a use for t maybe if the source is a sin or cos 
+    df = zeros(2 * N, 1);  
+    % Currents and voltages (according to your format)
+    In = y(1:2:2*N);  % Currents
+    Vn = y(2:2:2*N);  % Voltages
     % Boundary conditions at the source end (n=1)
-    I1 = y(1);
-    V1 = y(2);
-    df(1) = (-1 / L) * V1 - (Rs + R) / L * I1 + (1 / L) * Vs;  % dI1/dt
-    df(2) = (1 / C) * I1 - (1 / C) * y(3);  % dV1/dt
-    
-    % Iteratively calculate the interior sections (n=2 to N-1)
-    for n = 2:N-1
-        In = y(2*n - 1);
-        Vn = y(2*n);
-        In_next = y(2*n + 1);
-        df(2*n - 1) = (-1 / L) * Vn - R / L * In;  % dIn/dt
-        df(2*n) = (1 / C) * In - (1 / C) * In_next;  % dVn/dt
+    df(1) = (-1 / L) * Vn(1) - (Rs + R) / L * In(1) + (1 / L) * Vs;  % dI1/dt
+    df(2) = (1 / C) * In(1) - (1 / C) * In(2);  % dV1/dt   
+    % Interior sections (n=2 to N-1)
+    for n = 1:N-1
+        df(2*n + 1) = (-1 / L) * Vn(n+1) - R / L * In(n)+(1 / L) * Vn(n);  % dIn/dt
+        df(2*n) = (1 / C) * In(n) - (1 / C) * In(n+1);  % dVn/dt
     end
-
-    % Boundary conditions at the load end (n=N)
-    IN = y(2*N - 1);
-    VN = y(2*N);
-    df(2*N - 1) = (-1 / L) * VN - (R + Rl) / L * IN;  % dIN/dt
-    df(2*N) = (1 / C) * IN;  % dVN/dt
+    %df(2*N-1) = 0; % no inducatnce so =0
+    df(2*N-1) = (-1 / L) * Vn(N) - R / L * In(N) + (1 / L) * Vn(N-1);
+    df(2*N) = (1 / C) * In(N) - Vn(N) / (Rl * C);  % dVN/dt (voltage at the load)
 end
