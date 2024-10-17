@@ -20,4 +20,5 @@ xlabel('Time (us)');
 ylabel('Voltage at Load (V)');
 title('Voltage at Load over Time');
 grid on
+xlim([0 tspan(2)]);
 
