@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Fri Oct 18 15:18:14 2024
+# Process ID: 59265
+# Current directory: /home/mohammed/project_1/project_1.runs/synth_1
+# Command line: vivado -log CryptoProcessor.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source CryptoProcessor.tcl
+# Log file: /home/mohammed/project_1/project_1.runs/synth_1/CryptoProcessor.vds
+# Journal file: /home/mohammed/project_1/project_1.runs/synth_1/vivado.jou
+# Running On        :mohammed
+# Platform          :Ubuntu
+# Operating System  :Ubuntu 24.04.1 LTS
+# Processor Detail  :12th Gen Intel(R) Core(TM) i7-1255U
+# CPU Frequency     :3202.260 MHz
+# CPU Physical cores:10
+# CPU Logical cores :12
+# Host memory       :8015 MB
+# Swap memory       :0 MB
+# Total Virtual     :8015 MB
+# Available Virtual :2740 MB
+#-----------------------------------------------------------
+source CryptoProcessor.tcl -notrace

@@ -1,0 +1,16 @@
+RAM[0] = d058
+RAM[1] = 058d
+RAM[2] = 58d0
+RAM[3] = aa0b
+RAM[4] = cd29
+RAM[5] = f407
+RAM[6] = 1002
+RAM[7] = ad0d
+RAM[8] = fa72
+RAM[9] = 29ca
+RAM[10] = 7d65
+RAM[11] = 301f
+RAM[12] = 0302
+RAM[13] = a734
+RAM[14] = 2016
+RAM[15] = a03f

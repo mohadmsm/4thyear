@@ -1,0 +1,4 @@
+Running: xsim.dir/CryptoProcessor_tb_behav/xsimk -simmode gui -wdb CryptoProcessor_tb_behav.wdb -simrunnum 0 -socket 45561
+Design successfully loaded
+Design Loading Memory Usage: 20180 KB (Peak: 20652 KB)
+Design Loading CPU Usage: 50 ms

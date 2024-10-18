@@ -17,6 +17,6 @@ E497_0000_F_19ED // Test 4: 9->E, E->1, 4->9, 7->D
 0000_2FFF_9_BFFC  // Rotate left 2 bits: 0x2FFF -> 0xBFFC
 0000_3AFF_A_D7F9  // Rotate left 3 bits: 0x3AFF -> 0xD7F9
 0000_0FFF_B_FFF0  // Rotate left 4 bits: 0x0FFF -> 0xFFF0
-0000_ABCD_C_CDAB  // Rotate left 8 bits: 0xFFFF -> 0xFFFF
+0000_ABCD_C_CDAB  // Rotate left 8 bits: 0xABCD -> 0xCDAB
 0000_0F0F_D_F0F0  // Rotate right 4 bits: 0x0F0F -> 0x3C3F
 0000_ABCD_E_CDAB  // Rotate right 8 bits: 0xABCD -> 0xCDAB
