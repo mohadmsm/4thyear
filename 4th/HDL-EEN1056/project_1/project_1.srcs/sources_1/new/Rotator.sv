@@ -33,8 +33,8 @@ output logic [15:0] Rotator_out
                 3'b010: Rotator_out = {Rotator_in[12:0], Rotator_in[15:13]}; //rotate left 3 bits
                 3'b011: Rotator_out = {Rotator_in[11:0], Rotator_in[15:12]}; //rotate left 4 bits
                 3'b100: Rotator_out = {Rotator_in[7:0], Rotator_in[15:8]}; //rotate left 8 bits
-                3'b101: Rotator_out = {Rotator_in[15:12], Rotator_in[11:0]}; //rotate right 4 bits
-                3'b110: Rotator_out = {Rotator_in[15:8], Rotator_in[7:0]}; //rotate right 8 bits
+                3'b101: Rotator_out = {Rotator_in[3:0], Rotator_in[15:4]}; //rotate right 4 bits
+                3'b110: Rotator_out = {Rotator_in[7:0], Rotator_in[15:8]}; //rotate right 8 bits
                 default: Rotator_out = Rotator_in ; //default case
              endcase
          end             

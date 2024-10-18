@@ -1,0 +1,15 @@
+# compile verilog/system verilog design source files
+sv xil_defaultlib  \
+"../../../../project_1.srcs/sources_1/new/ALU.sv" \
+"../../../../project_1.srcs/sources_1/new/ControlLogic.sv" \
+"../../../../project_1.srcs/sources_1/new/LUT.sv" \
+"../../../../project_1.srcs/sources_1/new/ProsseningUnit.sv" \
+"../../../../project_1.srcs/sources_1/new/Rotator.sv" \
+"../../../../project_1.srcs/sources_1/new/S_box.sv" \
+"../../../../project_1.srcs/sim_1/new/TestBenchForTheProcessingUnit.sv" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

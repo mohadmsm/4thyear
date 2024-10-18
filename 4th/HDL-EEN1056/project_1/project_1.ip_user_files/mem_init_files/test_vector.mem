@@ -1,0 +1,22 @@
+// A_B_ctrl_expected
+1111_2222_0_3333  // Addition (A + B), ctrl = 0
+4444_2222_1_2222  // Subtraction (A - B), ctrl = 1
+1111_2222_2_8642  // Multiplication (A * B), ctrl = 2 (lower 16 bits)
+1111_2222_3_0000  // AND (A & B), ctrl = 3
+1111_2222_4_3333  // OR (A | B), ctrl = 4
+1111_2222_5_3333  // XOR (A ^ B), ctrl = 5
+1111_0000_6_eeee  // NOT A, ctrl = 6
+1111_0000_7_1111  // Pass A, ctrl = 7
+//LUT A_B_1111_expected, B is not used 
+123F_0000_F_56B2 // Test 1: 1->5, 2->6, F->2, 3->B
+460A_0000_F_9ACF // Test 2: 4->9, 0->C, A->F
+8DC5_0000_F_3740 // Test 3: 8->3, D->7, C->4, 5->0
+E497_0000_F_19ED // Test 4: 9->E, E->1, 4->9, 7->D
+// Rotator A_B_ctrl_expected , A is not used.
+0000_1FFF_8_3FFE  // Rotate left 1 bit: 0x1FFF -> 0x3FFE
+0000_2FFF_9_BFFC  // Rotate left 2 bits: 0x2FFF -> 0xBFFC
+0000_3AFF_A_D7F9  // Rotate left 3 bits: 0x3AFF -> 0xD7F9
+0000_0FFF_B_FFF0  // Rotate left 4 bits: 0x0FFF -> 0xFFF0
+0000_ABCD_C_CDAB  // Rotate left 8 bits: 0xFFFF -> 0xFFFF
+0000_0F0F_D_F0F0  // Rotate right 4 bits: 0x0F0F -> 0x3C3F
+0000_ABCD_E_CDAB  // Rotate right 8 bits: 0xABCD -> 0xCDAB
