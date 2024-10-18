@@ -21,29 +21,29 @@
 
 module RAM #(parameter N = 16, M = 4) ( // N-bit word, M-bit address
     input clk,
-    input [M-1:0] Raddra, // read address A, M
-    output [N-1:0] Doa,// data A out
-    input [M-1:0] Raddrb, // read address B
-    output [N-1:0] Dob,// data B out
-    input [M-1:0] Waddr, // write address
-    input wen,// write enable
-    input [N-1:0] Di// data in
+    input [M-1:0] Raddra, // Read address A, M
+    output [N-1:0] Doa,   // Data output A
+    input [M-1:0] Raddrb, // Read address B
+    output [N-1:0] Dob,   // Data output B
+    input [M-1:0] Waddr,  // Write address
+    input wen,            // Write enable
+    input [N-1:0] Di     // Data input
 );
-// Add your RAM functionality here
-// Define a memory array
-reg [N-1:0] RAM [0:(2**M)-1];
-// Initialize the RAM array with specific values
-// Asynchronous read for ports A and B
 
-   assign   Doa = RAM[Raddra]; // Read data for port A
-   assign   Dob = RAM[Raddrb]; // Read data for port B
+    // Define a memory array
+    reg [N-1:0] RAM [0:(2**M)-1];
 
+    // Asynchronous read for ports A and B
+    assign Doa = RAM[Raddra]; // Read data for port A
+    assign Dob = RAM[Raddrb]; // Read data for port B
+ 
     // Falling-edge synchronous write
     always @(negedge clk) begin
         if (wen) begin
             RAM[Waddr] <= Di; // Write data if write enable is high
         end
     end
+        // Initialize the RAM array with specific values
    initial begin
     RAM[0] = 16'h0001;
     RAM[1] = 16'hc505;

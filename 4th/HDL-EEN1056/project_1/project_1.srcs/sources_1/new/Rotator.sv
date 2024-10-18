@@ -21,21 +21,23 @@
 
 
 module Rotator(
-input [15:0] Rotator_in,
-input [2:0] Rotctrl,
-output logic [15:0] Rotator_out
-    );
-    always_comb
-        begin
-            case(Rotctrl)
-                3'b000: Rotator_out = {Rotator_in[14:0], Rotator_in[15]}; //rotate left one bit
-                3'b001: Rotator_out = {Rotator_in[13:0], Rotator_in[15:14]}; //rotate left 2 bits
-                3'b010: Rotator_out = {Rotator_in[12:0], Rotator_in[15:13]}; //rotate left 3 bits
-                3'b011: Rotator_out = {Rotator_in[11:0], Rotator_in[15:12]}; //rotate left 4 bits
-                3'b100: Rotator_out = {Rotator_in[7:0], Rotator_in[15:8]}; //rotate left 8 bits
-                3'b101: Rotator_out = {Rotator_in[3:0], Rotator_in[15:4]}; //rotate right 4 bits
-                3'b110: Rotator_out = {Rotator_in[7:0], Rotator_in[15:8]}; //rotate right 8 bits
-                default: Rotator_out = Rotator_in ; //default case
-             endcase
-         end             
+    input [15:0] Rotator_in,      // 16-bit input for rotation
+    input [2:0] Rotctrl,          // 3-bit control signal for rotation direction and amount
+    output logic [15:0] Rotator_out // 16-bit rotated output
+);
+
+    // Combinational logic for rotation
+    always_comb begin
+        case(Rotctrl)
+            3'b000: Rotator_out = {Rotator_in[14:0], Rotator_in[15]};      // Rotate left by 1 bit
+            3'b001: Rotator_out = {Rotator_in[13:0], Rotator_in[15:14]};   // Rotate left by 2 bits
+            3'b010: Rotator_out = {Rotator_in[12:0], Rotator_in[15:13]};   // Rotate left by 3 bits
+            3'b011: Rotator_out = {Rotator_in[11:0], Rotator_in[15:12]};   // Rotate left by 4 bits
+            3'b100: Rotator_out = {Rotator_in[7:0], Rotator_in[15:8]};     // Rotate left by 8 bits
+            3'b101: Rotator_out = {Rotator_in[3:0], Rotator_in[15:4]};     // Rotate right by 4 bits
+            3'b110: Rotator_out = {Rotator_in[7:0], Rotator_in[15:8]};     // Rotate right by 8 bits
+            default: Rotator_out = Rotator_in;                             // Default case: no rotation
+        endcase
+    end
+
 endmodule

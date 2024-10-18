@@ -19,24 +19,32 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module CryptoProcessor(
     input [15:0] instruction,
     input clock,
     output [15:0] Results
+);
+    logic [15:0] Doa, Dob; // Data output A and B from RAM
+
+    // Instantiate the RAM
+    RAM R(
+        .Raddra(instruction[11:8]), // Read address A
+        .Raddrb(instruction[7:4]),  // Read address B
+        .Waddr(instruction[3:0]),   // Write address
+        .Doa(Doa),                   // Data output A
+        .Dob(Dob),                   // Data output B
+        .clk(clock),                 // Clock input
+        .Di(Results),                // Data input for write
+        .wen(1'b1)                   // Always write enabled
     );
-    logic [15:0] Doa,Dob;
-    RAM R(.Raddra(instruction[11:8]),
-          .Raddrb(instruction[7:4]),
-          .Waddr(instruction[3:0]),
-          .Doa(Doa),
-          .Dob(Dob),
-          .clk(clock),
-          .Di(Results),
-          .wen(1'b1));
-    ProsseningUnit P(.Abus(Doa),
-                     .Bbus(Dob),
-                     .ctrl_in(instruction[15:12]),
-                     .Results(Results));
-    
+
+    // Instantiate the Processing Unit
+    ProsseningUnit P(
+        .Abus(Doa),                   // A bus input
+        .Bbus(Dob),                   // B bus input
+        .ctrl_in(instruction[15:12]), // Control input
+        .Results(Results)             // Results output
+    );
+
 endmodule
+
