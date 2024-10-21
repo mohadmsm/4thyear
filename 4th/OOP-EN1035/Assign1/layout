@@ -1,0 +1,16 @@
+PersonalizedFitnessTracker/
+│
+├── FitnessComponent.h
+├── FitnessComponent.cpp
+├── User.h
+├── User.cpp
+├── Workout.h
+├── Workout.cpp
+├── Diet.h
+├── Diet.cpp
+├── Goal.h
+├── Goal.cpp
+├── Tracker.h
+├── Tracker.cpp
+└── main.cpp
+
