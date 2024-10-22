@@ -1,0 +1,27 @@
+clear all,
+clc
+% Define the Laplace transform function
+X_func = @(s) 1 ./ (s + 4);
+
+% Choose the time point to evaluate
+t = 0:0.001:0.1;
+exact = exp(-4.*t);
+error = zeros(1,length(t)); 
+result = zeros(1,length(t));
+for M= 2: 2: 10
+for n=1:length(t)
+result(n) = NILT_approximation(X_func,t(n),M);
+error(n) = abs(exact(n) - result(n));
+end
+%fprintf('The error at t = %.2f is: %.12f\n', t(n), error(n));
+
+figure(M)
+plot(t,error)
+xlabel('time t in seconds')
+ylabel('Error' )
+end
+
+
+% Display the result
+%fprintf('The approximation at t = %.2f is: %.4f\n', t, result);
+
