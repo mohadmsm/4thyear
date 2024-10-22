@@ -12,7 +12,7 @@ function x_t = NILT_approximation(X_func, t, M)
         X_value = X_func(p_i / t);
         
 
-        x_t_sum = x_t_sum +  real(k_i * X_value ) ;
+        x_t_sum = x_t_sum + real(k_i * X_value ) ;
     end
     %x_t_sum = x_t_sum + additional_term;
     % Compute the final approximation

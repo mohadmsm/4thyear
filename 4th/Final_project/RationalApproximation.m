@@ -1,7 +1,7 @@
 clear all
 clc
 %find the approximation for any N,M values,
-M = 3;
+M = 5;
 N = M-2;
 num = zeros(1,N+1);
 deno = zeros(1,M+1);
@@ -20,7 +20,7 @@ num = flip(num);
 deno = flip(deno);
 approximation =tf(num,deno,ts,'variable','z');
 
-residues = residue(num,deno);
+[residues,p,w] = residue(num,deno);
 
 poles = pole(approximation);
    

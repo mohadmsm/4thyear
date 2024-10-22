@@ -13,11 +13,10 @@ for i=0:M
     deno(i+1)= (-1)^i* ai_N_M;
 end
 
-fs=0.1;
-ts=1/fs;% this only to convert from s to z when using tf function.
+
 num = flip(num);
 deno = flip(deno);
-approximation =tf(num,deno,ts,'variable','z');
-res = residue(num,deno);
-poles = pole(approximation);
+%approximation =tf(num,deno,ts,'variable','z');
+[res,poles] = residue(num,deno);
+%poles = pole(approximation);
 end
