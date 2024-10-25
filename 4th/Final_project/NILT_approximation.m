@@ -2,7 +2,9 @@ function x_t = NILT_approximation(X_func, t, M)
 
     [poles,residues] =  R_Approximation(M);
     % Initialize the approximation sum
-    x_t_sum = 0;
+   % x_t_sum = 0;
+    x_t =- (1 / t) *sum(X_func(poles/t).*residues);
+%{
     % Loop through each pole-residue pair
     for i = 1:M
         p_i = poles(i);
@@ -17,4 +19,5 @@ function x_t = NILT_approximation(X_func, t, M)
     %x_t_sum = x_t_sum + additional_term;
     % Compute the final approximation
     x_t = - (1 / t) * x_t_sum;
+%}
 end
