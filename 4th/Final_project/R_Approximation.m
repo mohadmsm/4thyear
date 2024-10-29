@@ -16,8 +16,7 @@ end
 
 num = flip(num);
 deno = flip(deno);
-%}
-%approximation =tf(num,deno,ts,'variable','z');
+
 [res,poles] = residue(num,deno);
-%poles = pole(approximation);
+
 end
