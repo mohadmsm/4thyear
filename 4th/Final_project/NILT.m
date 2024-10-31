@@ -5,16 +5,14 @@ clc
 clear all
 clc
 t =0:0.01:1;
-X_func = @(s) 1 ./ (s+1);
+X_func = @(s) 1 ./ (s+4);
 input = @(s) 1./s;
 G = @(s) X_func(s) .* input(s);
 %time step  to evaluate around
-M=9;
+M=3;
 [poles,residues] =  R_Approximation(M);
 result = - (1 ./ t) .*sum(G(poles./t).*residues);
-yo = real(result(2));
-result = result + yo.*real(result);
-exact = 1 - exp(-t);
+exact = 1 - exp(-4*t);
 error = abs(exact-result);
 plot(t,error)
 fprintf('The approximation at t = %.3f is: %.4f\n', t, result);
@@ -61,15 +59,9 @@ M = 9;
 [poles,residues] =  R_Approximation(M);
 NILT0_result = - (1 ./ tspan) .*sum(G(poles./tspan).*residues);
 % Define the system of equations
-function dydt = circuitODE(t, y, R,L,C,vs)
-
-    dydt = zeros(2,1);
-    dydt(1) = y(2);
-    dydt(2) = - (R/L) * y(2) - (1/(L*C)) * y(1) + (1/(L*C)) * vs;
-end
 
 % Initial conditions
-y0 = [0; 0]; % v0(0) = 0 and dv0/dt(0) = 0
+y0 = [0 0]; % v0(0) = 0 and dv0/dt(0) = 0
 
 exact = -10*exp(-tspan) + 5*exp(-2.*tspan) + vs;
 % Solve the system using ode45
@@ -78,36 +70,7 @@ exact = -10*exp(-tspan) + 5*exp(-2.*tspan) + vs;
 NILT_err = abs(exact - NILT0_result);
 exact = exact.';
 ode_err = abs(exact - y(:,1));
-% Plot the results
-figure(1);
-
-% Plot ode45 result
-subplot(2, 2, 1);
-plot(t, y(:,1), "Color", "blue");
-xlabel('Time (s)');
-ylabel('v_0(t) (V)');
-title('ODE45 Solution');
-
-% Plot NILT result
-subplot(2, 2, 2);
-plot(tspan, NILT0_result, "Color", "green");
-xlabel('Time (s)');
-ylabel('v_0(t) (V)');
-title('NILT Solution at M = 9');
-
-% Plot ode45 error
-subplot(2, 2, 3);
-plot(t, ode_err, "Color", "red");
-xlabel('Time (s)');
-ylabel('Error (V)');
-title('ODE45 Solution Error');
-
-% Plot NILT error
-subplot(2, 2, 4);
-plot(tspan, NILT_err, "Color", "magenta");
-xlabel('Time (s)');
-ylabel('Error (V)');
-title('NILT Solution Error at M = 9');
+ 
 %%
 clear all
 clc
@@ -130,4 +93,38 @@ xlabel('Time (us)');
 ylabel('Voltage at Load (V)');
 title('Voltage at Load over Time');
 
+
 %%
+%% Clear workspace and define variables
+clear all
+clc
+t = 0:0.01:1;
+% find X(s) = (B(s)+Cx(0))/(G+Cs)
+%ie 1/s+1, x(0)=0
+B = @(s) 1;
+C = 1;
+G = 1;
+Xo = 0;
+X_func = @(s) (B(s) + C*Xo)./(G+C.*s);
+% Approximation order
+M = 5;
+[poles, residues] = R_Approximation(M);
+result = - (1 ./ t) .*sum(real(X_func(poles./t).*residues));
+exact = exp(-t);
+error = abs(exact - result);
+% Plot error
+plot(t, error);
+xlabel('Time (t)');
+ylabel('Error');
+% Display results
+
+
+
+
+
+
+
+
+
+%%
+
