@@ -6,13 +6,13 @@ clear all
 clc
 t =0:0.01:1;
 X_func = @(s) 1 ./ (s+4);
-input = @(s) 1./s;
+%input = @(s) 1./s;
 G = @(s) X_func(s) .* input(s);
 %time step  to evaluate around
-M=3;
+M=10;
 [poles,residues] =  R_Approximation(M);
 result = - (1 ./ t) .*sum(G(poles./t).*residues);
-exact = 1 - exp(-4*t);
+exact = 0.25*(1 - exp(-4*t));
 error = abs(exact-result);
 plot(t,error)
 fprintf('The approximation at t = %.3f is: %.4f\n', t, result);
@@ -20,24 +20,27 @@ fprintf('The approximation at t = %.3f is: %.4f\n', t, result);
 %}
 %% 
 %test multiple vlaues of M for fast observation.
-t = 0:0.001:1;
-X_func = @(s) 1 ./ (s+1);
-input = @(s) 1./s;
-G = @(s) X_func(s) .* input(s);
-exact = exp(-4.*t);% X(t)
+% Define the Laplace transform function
+X_func = @(s) 100 ./ ((s + 3).*(s + 5));
+
+%time step  to evaluate around
+
+t = 0:0.01:10;
+
+exact = 50*(exp(-3.*t)-exp(-5*t));% X(t)
 error = zeros(1,length(t)); 
 result = zeros(1,length(t));
-figure(1);
+figure;
 %only take the even M
-for M= 2:1: 11
-[poles,residues] =  R_Approximation(M);
-result = - (1 ./ t) .*sum(G(poles./t).*residues);
-exact = 1 - exp(-t);
-error = abs(exact-result);
-
+for M= 2: 2: 12
+for n=1:length(t)
+result(n) = NILT_approximation(X_func,t(n),M);
+error(n) = abs(exact(n) - result(n));
+end
 %fprintf('The error at t = %.2f is: %.12f\n', t(n), error(n));
+
 % for observation purpose 
-subplot(5, 2, M-1); % Arrange subplots in a 3x2 grid
+subplot(3, 2, M/2); % Arrange subplots in a 3x2 grid
 plot(t,error)
 xlabel('time t in seconds')
 ylabel('Error' )
