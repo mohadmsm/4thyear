@@ -41,3 +41,19 @@ sysGtf_zpk = zpk(tfZeros,ploess,4);
 % stable == negtive poles, poles in the left-half s-plane 
 % asymptotically stable == complex poles but real part in the left-half
 % marginally/critically stable == rela part of one pole is 0 
+
+
+% sensitivity 
+
+% D and N are disturbance for input and output
+% steady state gain is when s goes to 0 in tf CL
+
+%pg14
+%%
+clear all 
+clc 
+k =  15;
+G = tf(1,[0.6 1]);
+GOpen = series(G,k);
+H = 0.45;
+GCLTF = feedback(GOpen,H);
