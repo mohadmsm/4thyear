@@ -1,0 +1,5 @@
+diary on
+xcsa;k
+{Unrecognized function or variable 'xcsa'.
+} 
+diary off

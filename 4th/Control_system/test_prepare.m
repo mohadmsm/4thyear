@@ -57,3 +57,37 @@ G = tf(1,[0.6 1]);
 GOpen = series(G,k);
 H = 0.45;
 GCLTF = feedback(GOpen,H);
+%%
+clear all
+clc
+% tut 1
+G1= tf(1,[1 0]);
+a1 = 5;
+a2 = 10;
+gCL1 = feedback(G1,a1);
+p_2 = 18;
+p_1 =tf([0.45 0],(1));
+p =series(p_2,p_1);
+GOpen = series(G1,gCL1);
+GFtf = feedback(GOpen,a2);
+GFtf2 = series(GFtf,p);
+%%
+% ex 3 11 and 12 
+clear
+clc
+tstop = 0.04;
+C1 = tf(10,1);
+C2 =tf([5],[1 5]);
+H = tf([4], [1 2 4]);
+G = tf(4.*[1 0.2],[[1 -0.5-1i*0.37].*[1 -0.5+1i*0.37]]);
+F = tf(50,[1 5]);
+G1 = parallel(series(C2,G),F);
+CLTF1= feedback(G1,H);
+CLTFF = feedback(series(C1,CLTF1),1);
+
+open('ex3_14.slx');
+sim("ex3_14.slx");
+figure(1);
+
+plot(tout,youtCLTF);
+%%
