@@ -1,7 +1,7 @@
 function df = fline(t, y,N,L,C,R,Rs,Rl,Vs)
     % coudn't find a use for t maybe if the source is a sin or cos 
     df = zeros(2 * N, 1);  
-    % Currents and voltages (according to your format)
+    % Currents and voltages
     In = y(1:2:2*N);  % Currents
     Vn = y(2:2:2*N);  % Voltages
     % Boundary conditions at the source end (n=1)
