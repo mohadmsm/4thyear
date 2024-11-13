@@ -8,10 +8,10 @@ L = 2.5e-7;     % Inductance per unit length (Henries per meter)
 G = 0;        % Conductance per unit length (Siemens per meter)
 C = 1e-10;    % Capacitance per unit length (Farads per meter)
 l = 400;    % Length of the transmission line (meters)
-vs = 30;
-M =2;      
+vs = 1;
+M =8;      
 [poles,residues] =  R_Approximation(M); 
-t= 0:1e-8:20e-6;
+t= 0:1e-11:20e-6;
 h = t(2) - t(1);
 % Calculate propagation constant (gamma) in the s-domain
 z = @(s)(R+s.*L); 

@@ -5,7 +5,7 @@ L = 2.5e-7;     % Inductance per unit length (Henries per meter)
 G = 0;        % Conductance per unit length (Siemens per meter)
 C = 1e-10;    % Capacitance per unit length (Farads per meter)
 l = 400;    % Length of the transmission line (meters)
-vs = 30;
+vs = 1;
 z = @(s)(R+s.*L); 
 y = @(s)(G + s .* C);
 gamma = @(s)sqrt(z(s) .* y(s));
@@ -14,18 +14,18 @@ Z_series =@(s) Z0(s) .* sinh(gamma(s) .* l);
 Y_parallel =@(s) (1 ./ Z0(s)) .* tanh((gamma(s) .* l)./2);
 Z_parallel = @(s) 1./Y_parallel(s);
 TF = @(s) Z_parallel(s) ./ (Z_series(s) + Z_parallel(s));
-%vo = @(s) TF(s) * vs./s;
-vo = @(s) vs./(s.*cosh(l.*(G + C.*s).^(1/2).*(R + L.*s).^(1/2)));
-tm =20e-6;                    
+vo = @(s) TF(s) * vs./s;
+%vo = @(s) vs./(s.*cosh(l.*(G + C.*s).^(1/2).*(R + L.*s).^(1/2)));
+tm =100e-6;                    
 [ft,t] = niltv(vo,tm,'pl1');
 
 %******* NiLTV – FUNCTION DEFINITION (vector version) *******%
 function [ft,t]=niltv(F,tm,pl)
 global ft t;
-alfa=0; M=1000; P=3; Er=1e-10;             % adjustable
+alfa=0; M=200; P=3; Er=1e-10;             % adjustable
 N=2*M; qd=2*P+1; t=linspace(0,tm,M);
 NT=2*tm*N/(N-2); omega=2*pi/NT; c=alfa-log(Er)/NT;
-s=c-1i*omega*(0:N+qd-1);Fsc=feval(F,s); ft=fft(Fsc,N,2);
+s=c-1i*omega*(0:N+qd-1);Fsc=F(s); ft=fft(Fsc,N,2);
 ft=ft(:,1:M); delv=size(Fsc,1); d=zeros(delv,qd); e=d;
 q=Fsc(:,N+2:N+qd)./Fsc(:,N+1:N+qd-1);
 d(:,1)=Fsc(:,N+1); d(:,2)=-q(:,1);
