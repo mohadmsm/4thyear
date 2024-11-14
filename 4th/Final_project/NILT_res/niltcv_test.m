@@ -1,6 +1,6 @@
 clear all
 clc
-R = 0.08;        % Resistance per unit length (Ohms per meter)
+R = 0;        % Resistance per unit length (Ohms per meter)
 L = 2.5e-7;     % Inductance per unit length (Henries per meter)
 G = 0;        % Conductance per unit length (Siemens per meter)
 C = 1e-10;    % Capacitance per unit length (Farads per meter)

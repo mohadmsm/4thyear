@@ -16,8 +16,9 @@ Z_parallel = @(s) 1./Y_parallel(s);
 TF = @(s) Z_parallel(s) ./ (Z_series(s) + Z_parallel(s));
 vo = @(s) TF(s) * vs./s;
 %vo = @(s) vs./(s.*cosh(l.*(G + C.*s).^(1/2).*(R + L.*s).^(1/2)));
-tm =100e-6;                    
-[ft,t] = niltv(vo,tm,'pl1');
+tm =10;     
+F = @(s) 1./(s+1) * 1./s;
+[ft,t] = niltv(F,tm,'pl1');
 
 %******* NiLTV – FUNCTION DEFINITION (vector version) *******%
 function [ft,t]=niltv(F,tm,pl)

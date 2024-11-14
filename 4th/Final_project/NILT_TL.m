@@ -10,7 +10,7 @@ C = 1e-10;    % Capacitance per unit length (Farads per meter)
 l = 400;    % Length of the transmission line (meters)
 vs = 30;
  
-t= 0:1e-9:60e-6;
+t= 0:1e-9:20e-6;
 h = t(2) - t(1);
 % Calculate propagation constant (gamma) in the s-domain
 z = @(s)(R+s.*L); 
@@ -31,7 +31,7 @@ Z_parallel = @(s) 1./Y_parallel(s);
 TF = @(s) Z_parallel(s) ./ (Z_series(s) + Z_parallel(s));
 vo = @(s) TF(s) * vs./s;
 %vo = @(s) vs./(s.*cosh(l.*(G + C.*s).^(1/2).*(R + L.*s).^(1/2)));
-M =3;      
+M =2;      
 [poles,residues] =  R_Approximation(M);
 % without prev step 
 result = - (1 ./ t) .*sum(real(vo(poles./t).*residues)); %implement NILT without time steping
