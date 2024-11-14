@@ -8,10 +8,9 @@ L = 2.5e-7;     % Inductance per unit length (Henries per meter)
 G = 0;        % Conductance per unit length (Siemens per meter)
 C = 1e-10;    % Capacitance per unit length (Farads per meter)
 l = 400;    % Length of the transmission line (meters)
-vs = 1;
-M =8;      
-[poles,residues] =  R_Approximation(M); 
-t= 0:1e-11:20e-6;
+vs = 30;
+ 
+t= 0:1e-9:60e-6;
 h = t(2) - t(1);
 % Calculate propagation constant (gamma) in the s-domain
 z = @(s)(R+s.*L); 
@@ -30,9 +29,10 @@ Y_parallel =@(s) (1 ./ Z0(s)) .* tanh((gamma(s) .* l)./2); %y *tanh(gamma*l/2)
 Z_parallel = @(s) 1./Y_parallel(s);
 % Transfer function TF = Z_parallel / (Z_series + Z_parallel)
 TF = @(s) Z_parallel(s) ./ (Z_series(s) + Z_parallel(s));
-%vo = @(s) TF(s) * vs./s;
-vo = @(s) vs./(s.*cosh(l.*(G + C.*s).^(1/2).*(R + L.*s).^(1/2)));
-
+vo = @(s) TF(s) * vs./s;
+%vo = @(s) vs./(s.*cosh(l.*(G + C.*s).^(1/2).*(R + L.*s).^(1/2)));
+M =3;      
+[poles,residues] =  R_Approximation(M);
 % without prev step 
 result = - (1 ./ t) .*sum(real(vo(poles./t).*residues)); %implement NILT without time steping
 %consider prev step
@@ -45,7 +45,7 @@ end
 %}
 % plot the result
 figure(1);
-plot(t,result)
+plot(t,real(result))
 xlabel('Time (us)');
 ylabel('Voltage at Load (V)');
 title('Voltage at Load over Time');
