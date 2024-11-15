@@ -36,3 +36,25 @@ hold on
 margin(sys_cG)
 hold off
 sys_C = zpk([-1/(alpha*tau)],[-1/tau],K * alpha);
+close all
+clc
+tstop = 10;
+open("q1_c.slx");
+sim("q1_c.slx");
+plot(tout,yout);
+hold on
+plot(tout, R);
+hold off
+%%
+% C part 2 chnage the input to ramp input 
+close all
+clc
+tstop = 15;
+open("q1_c.slx");
+sim("q1_c.slx");
+plot(tout,(yout)); % 1/s = 1 u(t), but 1/s^2 = t u(t) 
+Ess = 0.6002; % get this from the ramp error plot 
+yss = mean(yout(901: end));
+Mp = max((yout));
+per_os = 100 * (Mp - yss)/yss; % 29.3432 get this form step input 
+
