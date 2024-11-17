@@ -3,14 +3,14 @@
 
 clear all
 clc
-R = 0;        % Resistance per unit length (Ohms per meter)
-L = 2.5e-7;     % Inductance per unit length (Henries per meter)
-G = 0;        % Conductance per unit length (Siemens per meter)
-C = 1e-10;    % Capacitance per unit length (Farads per meter)
-l = 400;    % Length of the transmission line (meters)
-vs = 30;
- 
+R = 0;        
+L = 2.5e-7;     
+G = 0;       
+C = 1e-10;    
+l = 400;   
+vs = 30; 
 t= 0:1e-9:20e-6;
+
 h = t(2) - t(1);
 % Calculate propagation constant (gamma) in the s-domain
 z = @(s)(R+s.*L); 

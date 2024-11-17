@@ -1,9 +1,5 @@
-clear all
-clc
-
-
 function [ft,t]=niltcv(F,tm,depict);
-alfa=0; M=256; P=3; Er=1e-10; % adjustable
+alfa=0; M=2506; P=3; Er=1e-10; % adjustable
 N=2*M; qd=2*P+1; t=linspace(0,tm,M); NT=2*tm*N/(N-2);
 omega=2*pi/NT;
 c=alfa+log(1+1/Er)/NT; s=c-i*omega*(0:N+qd-1);
@@ -33,20 +29,3 @@ switch depict
  case 'p1', plott1(t,ft); case 'p2', plott2(t,ft);
  case 'p3', plott3(t,ft); otherwise display('Invalid Plot');
 end
-% --- Plotting functions called by 1D NILT, vector version ----
-%----------- Multiple plotting into single figure -------------
-function plott1(t,ft)
-figure; plot(t,real(ft)); grid on;
-figure; plot(t,imag(ft)); grid on; % optional
-% ------------- Plotting into separate figures ----------------
-function plott2(t,ft)
-for k=1:size(ft,1)
- figure; plot(t,real(ft(k,:))); grid on;
- figure; plot(t,imag(ft(k,:))); grid on; % optional
-end
-% ------------------ Plotting into 3D graphs ------------------
-function plott3(t,ft)
-global x; % x must be global in F
- m=length(t); tgr=[1:m/64:m,m]; % 65 time points chosen
- figure; mesh(t(tgr),x,real(ft(:,tgr)));
- figure; mesh(t(tgr),x,imag(ft(:,tgr))); 
