@@ -14,5 +14,5 @@ function df = fline(t, y,N,L,C,R,Rs,Rl,Vs)
     end
     %df(2*N-1) = 0; % no inducatnce so =0
     df(2*N-1) = (-1 / L) * Vn(N) - R / L * In(N) + (1 / L) * Vn(N-1);
-    df(2*N) = (1 / C) * In(N) - Vn(N) / (Rl * C);  % dVN/dt (voltage at the load)
+    df(2*N) = (1 / C) * In(N);  % dVN/dt (voltage at the load)
 end

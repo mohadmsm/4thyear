@@ -1,4 +1,4 @@
-% RLC Ladded using ode45 vs exact woth niltcv
+% RLC Ladded using ode45 vs exact with niltcv
 clear all, clc
 R = 0.1;  
 Rs = 0;
@@ -12,13 +12,14 @@ Vs = 30;
 Vo = @(s) Vs./(s.*cosh(l.*(G + C.*s).^(1/2).*(R + L.*s).^(1/2))); % simplified version 
 [y, t]= niltcv(Vo,20e-6,'ppp'); %passing ppp as we don't want a plot
 % change R, L and C to be per unit length with N=20
-N=20;
+N=200;
 dz = l/N;
 R = R *dz; % the issue 
 L = L *dz;
 C = C *dz;
+tspan = 0 :1e-11:20e-6;
 y0 = zeros(2 * N, 1); % initial conditions
-[RLC_t, RLC_y] = ode45(@(t, y) fline(t, y, N, L, C, R, Rs, RL, Vs), t, y0);
+[RLC_t, RLC_y] = ode45(@(t, y) fline(t, y, N, L, C, R, Rs, RL, Vs), tspan, y0);
 % now plot both of them
 figure(1);
 plot(RLC_t,RLC_y(:,N*2),'r');
