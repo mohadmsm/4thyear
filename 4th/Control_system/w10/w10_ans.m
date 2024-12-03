@@ -1,9 +1,6 @@
 %%Week 10 exercise 
-
 sys_G = zpk([],[0 -1 -6],30);
-
 % using Ess = lim s=0 S.Es, Es = 1/1+GC , C= K , 
-
 K = 1/3;
 margin_safty = 6;
 sys_kG = series(K,sys_G);
