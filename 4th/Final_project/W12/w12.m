@@ -75,10 +75,10 @@ for N=2:10
  N_1 = N*10;
     y0 = zeros(2 * N_1, 1);
     dz = l/N_1;
-    R =0.1;
+    R =0.1*dz;
     L = 2.5e-7*dz;
     C = 1e-10*dz;
-    [t, y] = ode45(@(t, y) fline(t, y, N_1, L, C, R, Rs, RL, Vs), tspan, y0);
+    [t, y] = ode45(@(t, y) fline_noR(t, y, N_1, L, C, R, Rs, RL, Vs), tspan, y0);
 %plot t,y, in top of t1,y1 in one figure
 %subplot(3, 3, (N-1));
   hold on;

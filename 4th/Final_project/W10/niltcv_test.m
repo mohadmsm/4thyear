@@ -9,4 +9,7 @@ vs = 30;
 vo = @(s) vs./(s.*cosh(l.*(G + C.*s).^(1/2).*(R + L.*s).^(1/2)));
 tm = 60e-6;
 niltcv(vo,tm,'p1')
-
+xlabel('Time (us)');
+ylabel('Voltage at Load (V)');
+title('Using NILTv to solve the exact solution');
+grid on

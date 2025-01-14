@@ -22,8 +22,7 @@ t_steps = round(t_max / dt);  % Number of time steps
 % allocate voltage and current arrays
 V = zeros(NDZ+1, t_steps);
 V(1,:)=Vs*ones(1,t_steps);
-I = zeros(NDZ, t_steps);
-   
+I = zeros(NDZ, t_steps);   
 % FDTD Loop for Time Stepping
 for n = 1:t_steps-1
     V(1,n+1) = V(1,n);
@@ -34,7 +33,6 @@ for n = 1:t_steps-1
         I(k-1,n+1) = I(k-1,n) + dt/(dz *L) * dV_k; 
     end
     end
- 
     V(NDZ,n+1) =V(NDZ,n)+dt*(I(NDZ-1,n)/(C*dz)-V(NDZ,n)/(RL*C*dz));
 end
 
@@ -43,5 +41,5 @@ figure(1)
 plot((0:t_steps-1)*dt/1e-6, V(NDZ,:));
 xlabel('Time (\mus)');
 ylabel('V Load (Volts)');
-title('FDTD Simulation of Transmission Line Vs ODE45');
+title('FDTD Simulation of Transmission Line');
 grid on;
