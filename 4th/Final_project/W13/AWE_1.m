@@ -14,9 +14,8 @@ b = -moments(2)/moments(1);
 p = -1/b;
 % residues
 k=-moments(1)*p;
-%t = 
+%t = 0:0.01:0.5 
 %hense 
-%syms t
 ht1 = k*exp(p*t);
 %Case 2
 m2 = [moments(1),moments(2);moments(2),moments(3)];

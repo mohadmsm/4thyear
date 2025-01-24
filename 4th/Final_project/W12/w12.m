@@ -2,7 +2,7 @@ clear all
 clc 
 % Week 12, time domain approximation.
 % define parameater
-R = 0;
+R = 0.1;
 L = 2.5e-7;     
 G = 0;       
 C = 1e-10;    
@@ -22,12 +22,12 @@ C_dz = 1e-10 *dz;
 L_dz = 2.5e-7 *dz;
 Vs = 30;
 y0 = zeros(2 * N, 1);
-[t, y] = ode45(@(t, y) fline(t, y, N, L, C, R, Rs, RL, Vs), t, y0);
+[t, y] = ode45(@(t, y) fline_noR(t, y, N, L, C, R, Rs, RL, Vs), t, y0);
 Vo = @(S) (RL*Vs./S)./(RL*C_dz^2*L_dz^2*S.^4 + 2*RL*C_dz^2*L_dz*R_dz*S.^3 + RL*C_dz^2*R_dz^2*S.^2 + C_dz*L_dz^2*S.^3 + 2*C_dz*L_dz*R_dz*S.^2 + 3*RL*C_dz*L_dz*S.^2 + C_dz*R_dz^2.*S + 3*RL*C_dz*R_dz.*S + 2*L_dz.*S + 2*R_dz + RL);
 [y1,t1]=niltcv(Vo,20e-6,'ppp1');
 plot(t, y(:,N*2));
 hold on
-plot(t1,y1,'ro');
+%plot(t1,y1,'ro');
 hold off
 xlabel('Time (\mus)');
 ylabel('V Load (Volts)');
@@ -46,14 +46,15 @@ V2 = z1/(z1+R_dz+S*L_dz)*V1;
 V2 = simplify(V2);
 %%
 clear all, clc
-RL = 100;
-R_dz = 0;
+RL = 1;
 dz = 400/2;
+R_dz = 0.1*dz;
 C_dz = 1e-10 *dz;
 L_dz = 2.5e-7 *dz;
 Vs = 30;
 Vo = @(S) (RL*Vs./S)./(RL*C_dz^2*L_dz^2*S.^4 + 2*RL*C_dz^2*L_dz*R_dz*S.^3 + RL*C_dz^2*R_dz^2*S.^2 + C_dz*L_dz^2*S.^3 + 2*C_dz*L_dz*R_dz*S.^2 + 3*RL*C_dz*L_dz*S.^2 + C_dz*R_dz^2.*S + 3*RL*C_dz*R_dz.*S + 2*L_dz.*S + 2*R_dz + RL);
 [y,t]=niltcv(Vo,20e-6,'ppp1');
+plot(t,y)
 %%
 % RLC vs exact with diffrent value for N
 clear all, clc
