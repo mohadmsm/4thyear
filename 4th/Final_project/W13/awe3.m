@@ -1,10 +1,20 @@
 clear all
 clc
 % Input state-space matrices
-A = [-2 1 0 0; 1 -2 1 0; 0 1 -2 1; 0 0 1 -1];
-B = [1; 0; 0; 0];
-C = [1; 0; 0; 0];
-
+l = 400;
+N = 2;
+dz = l/N;
+R = 0.1*dz;
+L = 2.5e-7*dz;  
+C = 1e-10*dz;      
+Rs = 0;       
+Vs  = 30; % this is u
+A = [-(Rs+R)/L, -1/L, 0   , 0   ;
+       1/C    ,  0  , -1/C, 0   ;
+    0         , 1/L , -R/L, -1/L;
+    0         , 0   , 1/C , 0  ];
+B = [1/L;0;0;0].*30;
+C = [0;0;0;1];
 % Determine the order of the system
 q = length(B);
 
@@ -47,7 +57,7 @@ for approx_order = 1:q
     residues = -1*inv(A_diag)* inv(V)* transpose(r_moments);
     %set a value for t 
     %t=0:10;
-    t = 0:0.1:5;
+    t = 0:1e-10:20e-6;
     %form the impulse response 
     h =0;
     for i = 1:approx_order
@@ -55,9 +65,10 @@ for approx_order = 1:q
     end
     % plot the output 
     figure(approx_order);
-    title(['Apprximation of order',num2str(approx_order)]);
     plot(t,h);
     xlabel('Time (\mus)');
     ylabel('V Load (Volts)');
+    title(['Apprximation of order',num2str(approx_order)]);
     grid on
 end
+
