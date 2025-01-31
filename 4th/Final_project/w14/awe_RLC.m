@@ -75,9 +75,7 @@ end
 %%
 clear all
 clc
-
-%find the theyritical impulse response
-%syms t
+%find the theorytical impulse response
 A = [-2 1 0 0; 1 -2 1 0; 0 1 -2 1; 0 0 1 -1];
 B = [1; 0; 0; 0];
 C = [1; 0; 0; 0];
@@ -86,6 +84,5 @@ eat = @(t) expm(A.*t);
 y = @(t)mtimes(mtimes(C,eat(t)),B); 
 t = 0:0.01:2;
 y_values = arrayfun(@(t) y(t), t);
-
 % Plot y(t)
 plot(t, y_values);

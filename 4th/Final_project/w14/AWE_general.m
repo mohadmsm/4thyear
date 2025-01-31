@@ -4,7 +4,10 @@ clc
 A = [-2 1 0 0; 1 -2 1 0; 0 1 -2 1; 0 0 1 -1];
 B = [1; 0; 0; 0];
 C = [1; 0; 0; 0];
-
+t = 0:0.1:2;
+eat = @(t) expm(A.*t); 
+y = @(t)mtimes(mtimes(transpose(C),eat(t)),B); 
+y_values = arrayfun(@(t) y(t), t);
 % Determine the order of the system
 q = length(B);
 
@@ -47,20 +50,22 @@ for approx_order = 1:q
     residues = -1*inv(A_diag)* inv(V)* transpose(r_moments);
     %set a value for t 
     %t=0:10;
-    t = 0.5;
+    
     %form the impulse response 
     h =0;
     for i = 1:approx_order
         h = h + residues(i) * exp(poles(i) * t);
     end
-    h
-    %{
+
     % plot the output 
     figure(approx_order);
-    title(['Apprximation of order',num2str(approx_order)]);
     plot(t,h);
+    hold on 
+    plot(t, y_values,'ro');
     xlabel('Time (\mus)');
     ylabel('V Load (Volts)');
+    title(['Apprximation of order',num2str(approx_order)]);
+    legend('Awe', 'Theory Impulse', 'Location', 'Best');
     grid on
     %}
 end
