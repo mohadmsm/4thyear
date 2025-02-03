@@ -4,8 +4,8 @@
 
 % Define parameters
 k_inf = 0;       % Direct coupling term (adjust based on your AWE results)
-poles = [...];   % Column vector of poles (from AWE)
-residues = [...];% Column vector of residues (from AWE)
+poles = 1;   % Column vector of poles (from AWE)
+residues =1;% Column vector of residues (from AWE)
 
 % Time parameters
 t_start = 0;     % Start time (s)
@@ -51,14 +51,24 @@ grid on;
 % ======================================================
 % Unit Step Response via lsim (State-Space Representation)
 % ======================================================
+clear all
+clc
 
 % Define system parameters (replace with your AWE results)
-poles = [-1e9, -5e9];   % Column vector of stable poles (Re(p) < 0)
-residues = [2e9, -1e9]; % Row vector of residues
-k_inf = 0.1;            % Direct coupling term
+poles = [
+   -3.5321
+   -2.3473
+   -1.0000
+   -0.1206];   % Column vector of stable poles (Re(p) < 0)
+residues = [
+    0.1836
+    0.4310
+    0.3333
+    0.0520]; % Row vector of residues
+k_inf = 0;            % Direct coupling term
 
 % Time vector
-t = 0:1e-12:5e-9;       % Time grid: 0 to 5 ns with 1 ps steps
+t = 0:0.1:2;       % Time grid: 0 to 5 ns with 1 ps steps
 u = ones(size(t));       % Unit step input
 
 % --------------------------------------
@@ -73,7 +83,7 @@ B = ones(length(poles), 1);
 C = residues;           % Residues as output matrix
 D = k_inf;              % Direct coupling term
 
-sys = ss(A, B, C, D);   % Create state-space model
+sys = ss(A, B, C', D);   % Create state-space model
 
 % --------------------------------------
 % Step 2: Compute response with lsim
@@ -84,14 +94,14 @@ sys = ss(A, B, C, D);   % Create state-space model
 % Step 3: Validate with recursive convolution
 % --------------------------------------
 % Implement recursive convolution (from previous code)
-[y_recursive, ~] = lsim_custom(poles(:), residues(:), k_inf, u, t);
+%[y_recursive, ~] = lsim_custom(poles(:), residues(:), k_inf, u, t);
 
 % --------------------------------------
 % Plot results
 % --------------------------------------
 figure;
 plot(t, y_lsim, 'b', 'LineWidth', 1.5); hold on;
-plot(t, y_recursive, 'ro', 'MarkerSize', 4, 'LineWidth', 1.0);
+%plot(t, y_recursive, 'ro', 'MarkerSize', 4, 'LineWidth', 1.0);
 xlabel('Time (s)');
 ylabel('Response');
 legend('lsim (State-Space)', 'Recursive Convolution');
