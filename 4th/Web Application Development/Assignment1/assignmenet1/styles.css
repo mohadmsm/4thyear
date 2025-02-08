@@ -116,3 +116,31 @@ footer p {
     font-size: 14px;
     margin: 0;
 }
+.steps {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: left;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.step h3 {
+    margin: 0;
+    position: relative;
+    top: -30px;
+    left: 50px;
+}
+
+.step img {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    top:-30px;
+}
+

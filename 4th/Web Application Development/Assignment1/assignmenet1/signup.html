@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - AutoGadget Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            z-index: 10;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 20px;
+        }
+        .signup-container {
+            max-width: 500px;
+            margin: 100px auto -500px; /* Adjusted top margin to push it below the header */
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .signup-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group input:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+        .form-actions {
+            text-align: center;
+        }
+        .form-actions button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .form-actions button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div>
+            <img src="my_logo.png" alt="AutoGadget Hub Logo">
+            <h1>AutoGadget Hub</h1>
+        </div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#shop">Shop</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <div>
+            <a href="#cart">
+                <img src="shopping_cart.png" alt="Shopping Cart">
+            </a>
+            <a href="#signin" id="signin">Sign In</a>
+            <a href="#signup" id="signup">Sign Up</a>
+        </div>
+    </header>
+
+    <!-- Sign Up Form Section -->
+    <main>
+        <div class="signup-container">
+            <h2>Create Your Account</h2>
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Your Address</label>
+                    <input type="text" id="address-line1" name="address-line1" placeholder="Type in your Address" required>
+                    <input type="text" id="address-line2" name="address-line2" placeholder="Type in your Address line 2">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
