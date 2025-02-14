@@ -6,15 +6,6 @@ B = [1; 0; 0; 0];
 C = [1; 0; 0; 0];
 t = 0:0.1:2;
 % impulse response 
-%{
-eat = @(t) expm(A.*t); 
-y = @(t)mtimes(mtimes(transpose(C),eat(t)),B); 
-y_values = arrayfun(@(t) y(t), t);
-%}
-
-% step response
-sys = ss(A,B,transpose(C),0);
-[y_theory, t] = step(sys, t); % get the step input response using step 
 % Determine the order of the system
 q = length(B);
 % Compute moments
@@ -74,13 +65,13 @@ for approx_order = 1:q
     exp_term = exp(poles * dt); % Precompute exponentials
         for i = 1:length(poles)
             % Updat state using Eq. (15)
-           % y(i) = residues(i) * (1 - exp_term(i)) * 1 + exp_term(i)*y(i);
             y(i) = residues(i) * (1 - exp_term(i))/(-poles(i)) * 1 + exp_term(i)*y(i);
         end
         y_awe(n) = sum(y); % Total response
     end
 
     % Plot Results
+    %{
     subplot(2,2,ii)
     ii=ii+1;
     plot(t, y_awe, 'b-'); hold on;
@@ -90,6 +81,7 @@ for approx_order = 1:q
     title(['Approximation of Order ', num2str(approx_order)]);
     legend('AWE (Recursive Convolution)', 'Theoretical step', 'Location', 'Best');
     grid on;
+    %}
     % plot the output 
     %{
     figure(approx_order);

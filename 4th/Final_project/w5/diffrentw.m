@@ -54,8 +54,16 @@ w = 2*pi*f;
 %s = i*w;
 % generated H
 H = @(s)(a1*s+a0)./(s.^2+b1*s+b0) * 30./s;
+l = 400;
+R = 0.1;
+L = 2.5e-7;  
+C = 1e-10; 
+G=0;
+vs=30;
+vo =@(s) vs./(s.*cosh(l.*(G + C.*s).^(1/2).*(R + L.*s).^(1/2)));
 [y,t]=niltcv(H,20e-6,'pt1');
-plot(t,y);
+[y1,t1]=niltcv(vo,20e-6,'pt1');
+plot(t,y,t1,y1);
 %{
 l = 400;
 R = 0.01;
