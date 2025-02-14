@@ -19,9 +19,12 @@ plot(f,Y11)
 clear all
 clc
 % Given the last 3 points
-Yr = [1, 1.0004, 1.0014];  % Real part of Y11
-Yi = [-0.0025, -0.0126, -0.0252]; % Imaginary part of Y11
-w = [1000*pi, 5000*pi, 10000*pi]; 
+Yr = [0.9253, -1.0521, -1.2332];  % Real part of Y11
+Yi = [-0.0044, -0.2690, -1.6812]; % Imaginary part of Y11
+w = [3.1416e+6, 1.2566e+6,0.8976e+6]; 
+Yr = flip(Yr);
+Yi = flip(Yi);
+w = flip(w);
 A = [];
 C = [];
 % Loop through each frequency point to construct A and C
@@ -87,17 +90,4 @@ legend('generated Y' ,'Exact Y',sprintf('Error = %.4f', Error))
 grid on
 %}
 %%
-clear all
-clc
-l = 400;
-R = 0.1;
-L = 2.5e-7;  
-C = 1e-10; 
-G=0;
-vs=1;
-f=0:10:5000;
-w = 2*pi*f;
-s=1i*w;
-vo = vs./(cosh(l.*(G + C.*s).^(1/2).*(R + L.*s).^(1/2)));
-%[y,t]=niltcv(vo,20e-6,'pt1');
-%plot(f,vo)
+
