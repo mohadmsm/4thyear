@@ -38,7 +38,7 @@ C = 1e-10;
 G=0;
 vs=1;
 %T = [1e-2, 0.5e-2, 0.2e-2, 0.1e-2, 2e-4];
-f=120000:10:375420;
+f=2.5e5:10:4.8e5;
 wo = 2*pi*f;
 s=1i*wo;
 vo1 = vs./(cosh(l.*(G + C.*s).^(1/2).*(R + L.*s).^(1/2)));
@@ -51,19 +51,22 @@ w = wo;
 A = [];
 C = [];
 % Loop through each frequency point to construct A and C
+A = [];
+C = [];
+% Loop through each frequency point to construct A and C
 for k = 1:length(w)
     wk = w(k);
     Yr_k = Yr(k);
     Yi_k = Yi(k); 
     % Construct rows for A and C
-    A_row1 = [-1, Yr_k, 0, -wk*Yi_k]; % Real part 
-    A_row2 = [0, Yi_k, -wk, wk*Yr_k]; % Imaginary part 
+    A_row1 = [-1, Yr_k, 0, -wk*Yi_k, wk^2, -Yr_k*wk^2]; % Real part 
+    A_row2 = [0, Yi_k, -wk, wk*Yr_k, 0, -Yi_k*wk^2]; % Imaginary part 
     
     % Append to A
     A = [A; A_row1; A_row2];    
     % C
-    C_row1 = wk^2 * Yr_k; % Real part
-    C_row2 = wk^2 * Yi_k; % Imaginary part   
+    C_row1 = -wk^3 *Yi_k ; % Real part
+    C_row2 = wk^3 * Yr_k; % Imaginary part   
     % Append to C
     C = [C; C_row1; C_row2];
 end
@@ -75,12 +78,13 @@ a0 = B(1);
 b0 = B(2);
 a1 = B(3);
 b1 = B(4);
-%s = i*w;
+a2 = B(5);
+b2 = B(6);
 % generated H
-f=0:10:6e5;
+f=0:10:4.8e5;
 w=2*pi*f;
 s=i*w;
-H = (a1*s+a0)./(s.^2+b1*s+b0) * 30./s;
+H = (a2*s.^2+a1*s+a0)./(s.^3+b2*s.^2+b1*s+b0) *30./s;
 l = 400;
 R = 0.1;
 L = 2.5e-7;  
