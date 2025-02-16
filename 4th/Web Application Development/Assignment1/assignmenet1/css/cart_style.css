@@ -1,43 +1,51 @@
+/* Body styling for full-height layout with flexbox */
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
+/* Cart container with padding and centered content */
 .cart-container {
     padding: 20px;
     max-width: 1200px;
     margin: auto;
 }
 
+/* Cart section header with blue color */
 .cart-container h2 {
     text-align: center;
     margin-bottom: 30px;
     color: #007BFF;
 }
 
+/* Cart table styling */
 .cart-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
 
+/* Table headers and data cell styling */
 .cart-table th, .cart-table td {
     padding: 15px;
     text-align: center;
     border: 1px solid #ddd;
 }
 
+/* Header background color */
 .cart-table th {
     background-color: #f8f9fa;
 }
 
+/* Image styling for product images in the cart */
 .cart-image {
     width: 50px;
     height: auto;
     margin-right: 10px;
 }
 
+/* Input field styling for product quantity */
 .quantity {
     width: 50px;
     padding: 5px;
@@ -46,10 +54,12 @@ body {
     text-align: center;
 }
 
+/* Product total styling for bold text */
 .product-total {
     font-weight: bold;
 }
 
+/* Button styling for removing items from the cart */
 .remove-item {
     background-color: #dc3545;
     color: white;
@@ -59,20 +69,24 @@ body {
     cursor: pointer;
 }
 
+/* Hover effect for remove button */
 .remove-item:hover {
     background-color: #c82333;
 }
 
+/* Cart summary section with right-aligned text */
 .cart-summary {
     text-align: right;
     margin-top: 30px;
 }
 
+/* Cart summary paragraph styling */
 .cart-summary p {
     font-size: 20px;
     margin-bottom: 20px;
 }
 
+/* Checkout button styling */
 .checkout-btn {
     background-color: #007BFF;
     color: white;
@@ -83,11 +97,12 @@ body {
     font-size: 16px;
 }
 
+/* Hover effect for checkout button */
 .checkout-btn:hover {
     background-color: #0056b3;
 }
 
-/* Footer */
+/* Footer styling */
 footer {
     margin-top: auto;
     background-color: #333;

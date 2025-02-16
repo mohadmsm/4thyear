@@ -1,9 +1,11 @@
+/* Body styling for full-height layout with flexbox */
 body {
     display: flex;
     flex-direction: column;
     min-height: 140vh;
 }
 
+/* Container for the sign-up form with centered alignment */
 .signup-container {
     max-width: 500px;
     margin: 100px auto -600px; /* Adjusted top margin to push it below the header */
@@ -12,30 +14,36 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
 }
+
+/* Title styling */
 .signup-container h2 {
     text-align: center;
     margin-bottom: 20px;
 }
+
+/* Styling for form fields */
 .form-group {
     margin-bottom: 10px;
 }
+
 .form-group label {
     display: block;
     margin-bottom: 5px;
 }
+
 .form-group input {
     width: 95%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
 .form-group input:focus {
     border-color: #007BFF;
     outline: none;
 }
-.form-actions {
-    text-align: center;
-}
+
+/* Button styling with hover effect */
 .form-actions button {
     background-color: #007BFF;
     color: white;
@@ -45,10 +53,12 @@ body {
     cursor: pointer;
     font-size: 16px;
 }
+
 .form-actions button:hover {
     background-color: #0056b3;
 }
-/* Footer */
+
+/* Footer styling */
 footer {
     margin-top: auto;
     background-color: #333;
@@ -57,6 +67,8 @@ footer {
     padding: 15px 0;
     width: 100%;
 }
+
+/* Footer text styling */
 footer p {
     font-size: 14px;
     margin: 0;

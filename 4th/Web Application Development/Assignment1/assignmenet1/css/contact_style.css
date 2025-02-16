@@ -1,9 +1,11 @@
+/* Body layout for full-height with flexbox */
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
+/* Contact container with padding, centered content, and shadow effect */
 .contact-container {
     max-width: 500px;
     margin: auto;
@@ -14,25 +16,30 @@ body {
     text-align: center;
 }
 
+/* Heading style for contact form */
 .contact-container h2 {
     margin-bottom: 10px;
 }
 
+/* Paragraph style for contact information */
 .contact-container p {
     font-size: 14px;
     margin-bottom: 20px;
 }
 
+/* Form group styling for individual fields */
 .form-group {
     margin-bottom: 15px;
     text-align: left;
 }
 
+/* Label styling within the form */
 .form-group label {
     display: block;
     margin-bottom: 5px;
 }
 
+/* Input and textarea styling for form fields */
 .form-group input,
 .form-group textarea {
     width: 95%;
@@ -41,20 +48,24 @@ body {
     border-radius: 5px;
 }
 
+/* Resizing textarea for better user experience */
 .form-group textarea {
     resize: vertical;
 }
 
+/* Focus effect for input fields */
 .form-group input:focus,
 .form-group textarea:focus {
     border-color: #007BFF;
     outline: none;
 }
 
+/* Button container with center alignment */
 .form-actions {
     text-align: center;
 }
 
+/* Button styling for form submission */
 .form-actions button {
     background-color: #007BFF;
     color: white;
@@ -65,11 +76,12 @@ body {
     font-size: 16px;
 }
 
+/* Hover effect for button */
 .form-actions button:hover {
     background-color: #0056b3;
 }
 
-/* Footer */
+/* Footer styling */
 footer {
     margin-top: auto;
     background-color: #333;

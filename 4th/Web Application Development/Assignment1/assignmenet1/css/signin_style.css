@@ -1,9 +1,11 @@
+/* Body styling for a full-height flexbox layout */
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
+/* Container for the sign-in form with centered alignment */
 .signin-container {
     max-width: 400px;
     margin: 100px auto -500px;
@@ -14,10 +16,12 @@ body {
     text-align: center;
 }
 
+/* Title styling */
 .signin-container h2 {
     margin-bottom: 20px;
 }
 
+/* General form field and input styling */
 .form-group {
     margin-bottom: 15px;
     text-align: left;
@@ -40,10 +44,7 @@ body {
     outline: none;
 }
 
-.form-actions {
-    text-align: center;
-}
-
+/* Action button styling with hover effect */
 .form-actions button {
     background-color: #007BFF;
     color: white;
@@ -58,6 +59,7 @@ body {
     background-color: #0056b3;
 }
 
+/* Sign-up link styling */
 .signup-link {
     margin-top: 10px;
     font-size: 14px;
@@ -72,7 +74,7 @@ body {
     text-decoration: underline;
 }
 
-/* Footer */
+/* Footer with fixed positioning at the bottom */
 footer {
     margin-top: auto;
     background-color: #333;
