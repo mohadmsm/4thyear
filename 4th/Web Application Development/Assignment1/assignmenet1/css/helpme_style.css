@@ -1,0 +1,50 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.help-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.help-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #007BFF;
+}
+
+.faq {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.faq h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007BFF;
+    margin-bottom: 10px;
+}
+
+.faq p {
+    font-size: 16px;
+    color: #333;
+}
+
+.faq:hover {
+    background-color: #e9ecef;
+}
+
+footer {
+    margin-top: auto;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
+}

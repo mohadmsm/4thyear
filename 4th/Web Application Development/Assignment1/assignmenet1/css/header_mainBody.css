@@ -1,0 +1,58 @@
+
+/* Body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+/* Header styling */
+header {
+    background-color: #fff;
+    border-bottom: 2px solid #eee;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between; /* Space out elements */
+    align-items: center; /* Align items vertically */
+}
+
+/* Logo and title */
+header div:first-child {
+    display: flex;
+    align-items: center;
+}
+
+header div:first-child img {
+    height: 80px;
+    margin-right: 15px; /* Add spacing between the logo and title */
+}
+
+/* Navigation */
+header nav {
+    display: flex;
+    gap: 30px; /* Space between links */
+}
+
+header nav a {
+    color: #333;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: auto;
+}
+
+header nav a:hover {
+    color: #007BFF;
+}
+
+/* Right section (cart and buttons) */
+header div:last-child {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between elements */
+}
+
+header div:last-child img {
+    height: 30px;
+    width: 30px;
+}
