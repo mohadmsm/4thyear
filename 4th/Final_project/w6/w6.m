@@ -32,7 +32,7 @@ grid on
 clear
 clc
 %T = [1e-2, 0.5e-2, 0.2e-2, 0.1e-2, 2e-4];
-f=10:10:1e5;
+f=0:10:1e5;
 wo = 2*pi*f;
 s=1i*wo;
 vo1 = 1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
@@ -75,8 +75,8 @@ b2 = B(6);
 num = [a2,a1,a0];
 deno = [1,b2,b1,b0];
 [A,B,C,D] = create_state_space(num,deno);
-[h_impulse, y_step, t] = AWE(A,B,C,D,0,2e-6);
-f=0:10:1e6;
+%[h_impulse, y_step, t] = AWE(A,B,C,D,0,2e-6);
+f=2.5e5:10:4.8e5;
 w=2*pi*f;
 s=i*w;
 H =(a2*s.^2+a1*s+a0)./(s.^3+b2*s.^2+b1*s+b0);
@@ -129,3 +129,84 @@ grid on
 xlabel('f')
 ylabel('Vo')
 legend('approximation','exact')
+%%
+clear 
+clc
+f=0:10:2e5;
+wo = 2*pi*f;
+s=1i*wo;
+vo1 = 1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
+[H1]=generate_yp(real(vo1),imag(vo1),wo);
+%H2
+f2 = 2e5:10:4.5e5;
+w1 = 2*pi*f2;
+s=1i*w1;
+vo2 = 1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
+H1_w1 = feval(H1,s);
+vo_H1 = vo2- H1_w1;
+[H2]=generate_yp(real(vo_H1),imag(vo_H1),w1);
+%H3
+H12 =@(s) H1(s)+H2(s);
+f3 = 4.5e5:10:6.5e5;
+w2 = 2*pi*f3;
+s=1i*w2;
+vo3_s = 1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
+H12_w2 = feval(H12,s);
+vo_H2 = vo3_s- H12_w2;
+[H3]=generate_yp(real(vo_H2),imag(vo_H2),w2);
+%final
+H = @(s)(H1(s) + H2(s) +H3(s))*30./s;
+vo3 =@(s) 30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
+[y,t]=niltcv(H,50e-6,'pt1');
+[y1,t1]=niltcv(vo3,50e-6,'pt1');
+plot(t,y,t1,y1)
+%plot(f3,H,f3,vo3)
+%%
+clear 
+clc
+H = get_H(9e5,50);
+vo =@(s) 30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
+[y,t]=niltcv(H,50e-6,'pt1');
+[y1,t1]=niltcv(vo,50e-6,'pt1');
+plot(t,y,t1,y1)
+%%
+clear
+clc
+f = 9e5;
+f = linspace(0,f,100+1);
+w = 2*pi*f(2:end);
+s = i *w;
+vo =1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
+N=10; % number of section basicly 100/N
+H_total = @(s)0;
+section_size = ceil(length(vo)/N);  % Points per section (except last)
+for i = 1:N
+    start_idx = (i-1)*section_size + 1;
+    end_idx = min(i*section_size, length(w));
+    seg_idx = start_idx:end_idx;
+    w_i = w(seg_idx);
+    s_i = 1i * w_i;
+    vo_i = vo(seg_idx);
+    H_prev_eval = H_total(s_i);
+    
+    % Calculate residual response
+    vo_residual = vo_i - H_prev_eval;
+    
+    % Fit new model to residual
+    Hi = generate_yp2(real(vo_residual), imag(vo_residual), w_i);
+    
+    % Add to total transfer function
+    H_total = @(s) H_total(s) + Hi(s);
+end
+H = @(s) H_total(s) * 30 ./ s;
+v =@(s)30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
+[y,t]=niltcv(H,50e-6,'pt1');
+[y1,t1]=niltcv(v,50e-6,'pt1');
+RMSE = sqrt(sum((y-y1).^2)/length(y1));
+plot(t,y,t1,y1)
+grid on
+xlabel('time s')
+ylabel('Vo')
+legend('approximated','exact');
+title('approximation at N = ',num2str(N));
+abs(RMSE)
