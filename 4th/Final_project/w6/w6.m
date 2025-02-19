@@ -164,11 +164,13 @@ plot(t,y,t1,y1)
 %%
 clear 
 clc
-H = get_H(9e5,50);
+H = get_H(1e6,50);
 vo =@(s) 30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
 [y,t]=niltcv(H,50e-6,'pt1');
 [y1,t1]=niltcv(vo,50e-6,'pt1');
 plot(t,y,t1,y1)
+RMSE = sqrt(sum((y-y1).^2)/length(y1));
+abs(RMSE)
 %%
 clear
 clc
@@ -177,7 +179,7 @@ f = linspace(0,f,100+1);
 w = 2*pi*f(2:end);
 s = i *w;
 vo =1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
-N=10; % number of section basicly 100/N
+N=2; % number of section basicly 100/N
 H_total = @(s)0;
 section_size = ceil(length(vo)/N);  % Points per section (except last)
 for i = 1:N
@@ -210,3 +212,72 @@ ylabel('Vo')
 legend('approximated','exact');
 title('approximation at N = ',num2str(N));
 abs(RMSE)
+%%
+clear
+clc
+% generate 100 points.
+f = 9e5;
+f = linspace(0,f,100);
+w = 2*pi*f;
+s = i *w;
+vo =1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
+v =@(s)30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
+%H is as H = @(s) a1s+a0/s^2+b1s+b0;
+[H,num,deno] = generate_yp2(real(vo(1:25)),imag(vo(1:25)),w(1:25));
+[A,B,C,D] = create_state_space(num,deno);
+%HAWE is Hs= @(s) resdue/s-pole + ...;30 is the inout, 50e-6 is t for plot
+[h_impulse,HAWE, y, t] = AWE(A,B,C,D,w(1),30,50e-6);
+[y1,t1]=niltcv(v,50e-6,'pt1');
+RMSE = sqrt(sum((y-y1).^2)/length(y1));
+plot(t,y,t1,y1);
+grid on
+xlabel('time s')
+ylabel('Vo')
+legend('approximated','exact');
+abs(RMSE)
+%%
+clear
+clc
+% generate 100 points.
+f = 9e5;
+f = linspace(0,f,100);
+w = 2*pi*f;
+s = i *w;
+vo =1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
+v =@(s)30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
+%H is as H = @(s) a1s+a0/s^2+b1s+b0;
+[Hi,num,deno] = generate_yp2(real(vo(1:15)),imag(vo(1:15)),w(1:15));
+[A,B,C,D] = create_state_space(num,deno);
+%HAWE is Hs= @(s) resdue/s-pole + ...;30 is the inout, 50e-6 is t for plot
+[h_impulse,HAWEi, y, t] = AWE(A,B,C,D,w(1),30,50e-6);
+models =2;
+N = ceil(80/models); %8
+range = 15;
+for i=1:models 
+    range = range(end):N + range(end);
+    range
+    H_diff = vo(range)-HAWEi(s(range));
+    [Hi,numi,denoi] = generate_yp2(real(H_diff),imag(H_diff ),w(range));
+    [A,B,C,D] = create_state_space(numi,denoi);
+    [h_impulse,HAWEi, yi, ti] = AWE(A,B,C,D,w(range(1)),30,50e-6);
+end
+plot(ti,yi,ti,y+(y-yi))
+%{
+r = 15:23; %8 points 
+s0 = i*w(r);
+H_diff = vo(r) - HAWE(s0);
+[H1,num1,deno1] = generate_yp2(real(H_diff),imag(H_diff ),w(r));
+[A,B,C,D] = create_state_space(num1,deno1);
+[h_impulse1,HAWE1, y0, t1] = AWE(A,B,C,D,w(r(1)),30,50e-6);
+%
+r = 24:32;
+s0 = i*w(r);
+H_diff = vo(r) - HAWE1(s0);
+[H1,num1,deno1] = generate_yp2(real(H_diff),imag(H_diff ),w(r));
+[A,B,C,D] = create_state_space(num1,deno1);
+[h_impulse,HAWE2, y1, t1] = AWE(A,B,C,D,w(r(1)),30,50e-6);
+Hs_total =@(s) HAWE(s)+ HAWE1(s)+ HAWE2(s);
+Hs_total= @(s) Hs_total(s)*30./s;
+plot(f,Hs_total(s),f,vo*30./s)
+plot(t1,y1+y0+y)
+%}

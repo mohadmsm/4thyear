@@ -1,4 +1,4 @@
-function [h_impulse, y_step, t] = AWE(A,B,C,D,w,time)   
+function [h_impulse,h_s, y_step, t] = AWE(A,B,C,D,w,input,time)   
     t = linspace(0,time,250);
     q = length(B);
     num_moments = 2 * q;
@@ -45,6 +45,10 @@ function [h_impulse, y_step, t] = AWE(A,B,C,D,w,time)
     for i = 1:approx_order
         h_impulse = h_impulse + residues(i) * exp(poles(i) * t);
     end
+    h_s =@(s) 0;
+    for i = 1:length(poles)
+        h_s =@(s) h_s(s) + residues(i)./(s-poles(i));
+    end
 
     % Step response using recursive convolution
     y_step = zeros(size(t));
@@ -54,7 +58,7 @@ function [h_impulse, y_step, t] = AWE(A,B,C,D,w,time)
         dt = t(n) - t(n-1);
         exp_term = exp(poles * dt);
         for i = 1:length(poles)
-            y(i) = residues(i) * (1 - exp_term(i))/(-poles(i)) * 1 + exp_term(i) * y(i);
+            y(i) = residues(i) * (1 - exp_term(i))/(-poles(i)) * input + exp_term(i) * y(i);
         end
         y_step(n) = sum(y);
     end
