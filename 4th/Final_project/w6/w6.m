@@ -249,19 +249,39 @@ v =@(s)30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
 [Hi,num,deno] = generate_yp2(real(vo(1:15)),imag(vo(1:15)),w(1:15));
 [A,B,C,D] = create_state_space(num,deno);
 %HAWE is Hs= @(s) resdue/s-pole + ...;30 is the inout, 50e-6 is t for plot
-[h_impulse,HAWEi, y, t] = AWE(A,B,C,D,w(1),30,50e-6);
-models =2;
-N = ceil(80/models); %8
-range = 15;
+[h_impulse,HAWEi, y, t] = AWE2(A,B,C,D,w(1),30,50e-6);
+models =1;
+%N = ceil(70/models); %8
+minr = 99;
+for j=1:10 
+N =5; % number of points per section or model 
+range = 16; % starting point of the second mmodel
 for i=1:models 
-    range = range(end):N + range(end);
-    range
-    H_diff = vo(range)-HAWEi(s(range));
-    [Hi,numi,denoi] = generate_yp2(real(H_diff),imag(H_diff ),w(range));
+    range = range(end):N + range(end); % raange of frequency and exact values
+   % range
+    H_diff = vo(range)-Hi(s(range));
+    [Hj,numi,denoi] = generate_yp2(real(H_diff),imag(H_diff ),w(range));
     [A,B,C,D] = create_state_space(numi,denoi);
-    [h_impulse,HAWEi, yi, ti] = AWE(A,B,C,D,w(range(1)),30,50e-6);
+    [h_impulse,HAWEj, yi, ti] = AWE2(A,B,C,D,w(range(1)),30,50e-6);
+    HAWEi = @(s) HAWEi(s)+HAWEj(s);
+    Hi = @(s) Hi(s)+Hj(s);
+    y0=y+yi;
 end
-plot(ti,yi,ti,y+(y-yi))
+[y1,t1]=niltcv(v,50e-6,'pt1');
+RMSE = sqrt(sum((y0-y1).^2)/length(y1));
+figure
+plot(t,y0,t1,y1,t,yi)
+abs(RMSE)
+if (abs(RMSE) < minr)
+minr = abs(RMSE);
+nModel = models + 1;
+end
+grid on
+xlabel('time s')
+legend('AWE Step', 'Exact');
+title('approximation with models = ',num2str(models+1));
+models = models+1;
+end
 %{
 r = 15:23; %8 points 
 s0 = i*w(r);
@@ -281,3 +301,28 @@ Hs_total= @(s) Hs_total(s)*30./s;
 plot(f,Hs_total(s),f,vo*30./s)
 plot(t1,y1+y0+y)
 %}
+%%
+clear
+clc
+% State-space matrices
+A = [-1]; B = [1]; C = [1]; D = 0;
+w = 2; input = 1; time = 5;
+
+% Run AWE
+[h_impulse, h_s, y_step, t] = AWE2(A, B, C, D, w, input, time);
+
+% Exact solutions
+h_exact = exp(-t);
+y_exact = 1 - exp(-t);
+
+% Plot comparisons
+figure;
+subplot(2,1,1);
+plot(t, real(h_impulse), 'r', t, h_exact, 'b--'); % Use real() to discard numerical noise
+legend('AWE Impulse', 'Exact');
+title('Impulse Response (w = 0.5)');
+
+subplot(2,1,2);
+plot(t, real(y_step), 'r', t, y_exact, 'b--');    % Use real() for consistency
+legend('AWE Step', 'Exact');
+title('Step Response (w = 0.5)');
