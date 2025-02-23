@@ -1,7 +1,7 @@
 clear all
 clc
 len=400;
-N = 100; % Number of sections in the transmission line
+N = 20; % Number of sections in the transmission line
 dz=len/N;
 L = 2.5e-7*dz;   % Inductance
 C = 1e-10*dz;    % Capacitance

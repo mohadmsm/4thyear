@@ -1,15 +1,14 @@
-function [h_impulse,h_s, y_step, t] = AWE(A,B,C,D,w,input,time)   
+function [h_impulse,h_s, y_step, t] = AWE(A,B,C,D,input,time)   
     t = linspace(0,time,250);
     q = length(B);
     num_moments = 2 * q;
-    s0=1i*w;
     moments = zeros(1, num_moments);
-    [r,c]=size(C);
+    [r,c]=size(C); % make sure C matrix in correct form
     if r~=1
         C= C';
     end
     for k = 1:num_moments
-        moments(k) = (-1)^(k-1) * C * (s0 * eye(size(A)) - A)^-(k) * B;
+        moments(k) = (-1) * C * (A)^-(k) * B;
     end
     moments(1)=moments(1)+D;
     approx_order = length(B);

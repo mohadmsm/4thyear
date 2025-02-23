@@ -1,10 +1,10 @@
-clear all
+clear
 clc
 % a lossless , two-conductor line with Vs(t)=30,
 % Rs = 0 R, VL(t) = 0, and RL = 100 R. The line is of 
 % length L = 400 m and has TJ = 2 x 10' m/s and ZC = 50 R
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+tic
 L_total = 400;  % Total length of the line (m)
 Zc = 50;  % Characteristic impedance (Ohms)
 v = 2e8;  % Speed of propagation (m/s)
@@ -43,3 +43,4 @@ xlabel('Time (\mus)');
 ylabel('V Load (Volts)');
 title('FDTD Simulation of Transmission Line');
 grid on;
+toc

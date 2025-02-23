@@ -3,5 +3,3 @@
 function plott1(t,ft)
 figure; plot(t,real(ft)); grid on;
 %figure; plot(t,imag(ft)); grid on; % optional
-
-% --

@@ -1,5 +1,5 @@
 function df = fline(t, y,N,L,C,R,Rs,Rl,Vs)
-    % coudn't find a use for t maybe if the source is a sin or cos 
+    % the use of t involves input dependent on time (i.e, sin(t))
     df = zeros(2 * N, 1);  
     % Currents and voltages
     In = y(1:2:2*N);  % Currents

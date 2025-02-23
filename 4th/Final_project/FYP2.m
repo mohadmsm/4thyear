@@ -36,8 +36,7 @@ for n = 1:t_steps-1
         dV_k = V(k+1,n+1) - V(k,n+1);  % Voltage difference between points
         I(k,n+1) = I(k,n) - dt/dz *L^-1 * dV_k; 
 
-    end
- 
+    end 
     V(NDZ+1,n+1) = (((1/2)*dz/dt * RL * C + 1)^(-1)) * (((1/2)*dz/dt * RL * C - 1) * V(NDZ+1,n) ...
                    +  RL * I(NDZ,n) + V(NDZ+1,n));
 end

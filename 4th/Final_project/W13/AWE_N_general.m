@@ -1,6 +1,6 @@
-clear all
+clear
 clc
-Rs =1;
+Rs =0;
 Rdz = 5;
 Ldz = 2;
 Cdz =10;
