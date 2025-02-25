@@ -1,0 +1,164 @@
+/* Body styling for full-height layout with flexbox */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Container for the sign-up form with centered alignment */
+.signup-container {
+    max-width: 500px;
+    margin: 100px auto ;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Title styling */
+.signup-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Styling for form fields */
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group input:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+/* Button styling with hover effect */
+.form-actions button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 200px;
+}
+
+.form-actions button:hover {
+    background-color: #0056b3;
+}
+
+/* Footer styling */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
+    margin-top: auto; 
+    
+}
+.form-content {
+    margin-bottom: 40px; /* Space between form and table */
+}
+/* Footer text styling */
+footer p {
+    font-size: 14px;
+    margin: 0;
+}
+.error {
+    border: 1px solid red;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+.entries-table {
+    margin-top: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+/* Button centering fix */
+.form-actions {
+    text-align: center;
+}
+
+.form-actions button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 auto; /* Center button */
+    display: block;
+}
+
+/* Table responsive styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+/* Error message spacing */
+.error-message {
+    display: block;
+    min-height: 20px;
+    margin-top: 5px;
+}
+
+/* Show entries button styling */
+#showEntriesBtn {
+    margin: 20px 0;
+    width: 100%;
+    padding: 12px;
+}

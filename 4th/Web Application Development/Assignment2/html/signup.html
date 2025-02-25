@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - AutoGadget Hub</title>
+    <link rel="stylesheet" href="../css/header_mainBody.css">
+    <link rel="stylesheet" href="../css/signup_style.css">
+    <script src="../javaScript/menu.js"></script>
+    <script src="../javaScript/signup.js"></script>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div>
+            <img src="../imges and icons/icons/my_logo.png" alt="AutoGadget Hub Logo">
+            <h1>AutoGadget Hub</h1>
+        </div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="help.html">Help❓</a>
+        </nav>
+        <div>
+            <a href="cart.html">
+                <img src="../imges and icons/icons/shopping_cart.png" alt="Shopping Cart">
+            </a>
+            <a href="signin.html" id="signin">Sign In</a>
+            <a href="signup.html" id="signup">Sign Up</a>
+        </div>
+    </header>
+
+    <!-- Sign Up Form Section, Note: this can be adjusted for assignement 2 -->
+    <main>
+        <!-- side menu-->
+        <div class="menu-trigger">
+            <div class="hamburger">☰</div>
+        </div>
+         <!-- Dynamic Side Menu -->
+         <nav id="sideMenu" class="side-menu">
+            <div class="menu-header">
+                <span class="close-btn">&times;</span>
+                <h3>Navigation Menu</h3>
+            </div>
+            <div class="menu-content">
+                <a href="terms.html"><i class="policy"></i>Terms & Conditions</a>   
+                <a href="shop.html#New"><i class="star"></i> Trending</a>
+                <a href="contact.html"><i class="question-circle"></i> Support</a>
+                <div class="setting-item">
+                    <span>Dark Mode</span>
+                    <div class="toggle-switch" id="darkModeToggle"></div>
+                </div>                
+            </div>
+        </nav>
+        <div id="menuOverlay" class="overlay"></div>
+        <div class="signup-container">
+            <h2>Create Your Account</h2>
+            <form action="#" method="POST" id="signupForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="address">Your Address</label>
+                    <input type="text" id="address-line1" name="address-line1" placeholder="Type in your Address" required>
+                    <input type="text" id="address-line2" name="address-line2" placeholder="Type in your Address line 2 (optional)">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-actions">
+                    <button type="submit">Sign Up</button>
+                </div>
+            </form>
+            <!-- After the form -->
+<!-- Show Entries Button -->
+<button id="showEntriesBtn">Show All Responses</button>
+
+<!-- Previous Sign-Ups Table -->
+<div class="entries-table">
+    <h3>Previous Sign-Ups</h3>
+    <table id="signupTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="signupEntriesBody"></tbody>
+    </table>
+</div>
+
+        </div>
+    </main>
+     <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili ECE4 .</p>
+    </footer>
+</body>
+</html>

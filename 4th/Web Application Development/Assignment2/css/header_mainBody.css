@@ -1,0 +1,206 @@
+
+/* Body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+/* Header styling */
+header {
+    background-color: #fff;
+    border-bottom: 2px solid #eee;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between; /* Space out elements */
+    align-items: center; /* Align items vertically */
+}
+
+/* Logo and title */
+header div:first-child {
+    display: flex;
+    align-items: center;
+}
+
+header div:first-child img {
+    height: 80px;
+    margin-right: 15px; /* Add spacing between the logo and title */
+}
+
+/* Navigation */
+header nav {
+    display: flex;
+    gap: 30px; /* Space between links */
+}
+
+header nav a {
+    color: #333;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: auto;
+}
+
+header nav a:hover {
+    color: #007BFF;
+}
+
+/* Right section (cart and buttons) */
+header div:last-child {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between elements */
+}
+
+header div:last-child img {
+    height: 30px;
+    width: 30px;
+}
+/* Dynamic Menu Styles */
+.side-menu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    background-color: #ffffff;
+    overflow-x: hidden;
+    transition: 0.5s;
+    box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+    transform: translateX(-100%);
+}
+
+.side-menu.active {
+    width: 300px;
+    transform: translateX(0);
+}
+
+.menu-header {
+    padding: 30px 25px;
+    background: #374b61;
+    color: white;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 36px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-btn:hover {
+    color: #ff4444;
+}
+
+.menu-content {
+    padding: 20px;
+}
+
+.menu-content a {
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+    margin: 10px 0;
+    transition: 0.3s;
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.menu-content a:hover {
+    background: #f0f0f0;
+    transform: translateX(5px);
+}
+
+.menu-content a i {
+    margin-right: 10px;
+    width: 25px;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    display: none;
+}
+
+.hamburger {
+    font-size: 28px;
+    cursor: pointer;
+    padding: 10px;
+    position: fixed; /* Fix it to always be at the left */
+    top: 110px;
+    left: 5px; /* Moves it to the left corner */
+    transition: 0.3s;
+}
+.hamburger:hover {
+    color: #007BFF;
+}
+/* Dark Mode Toggle */
+.toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    background: #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    left:110px;
+    top:20px;
+}
+
+.toggle-switch::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    top: 1px;
+    left: 2px;
+    transition: 0.3s;
+}
+
+.toggle-switch.active {
+    background: #007BFF;
+}
+
+.toggle-switch.active::before {
+    left: 20px;
+}
+
+/* Dark Mode Styles */
+.dark-mode {
+    background: #1e1e1e;
+    color: #ffffff;
+}
+
+/* Dark mode adjustments */
+.dark-mode header,
+.dark-mode .side-menu {
+    background: #222;
+}
+
+.dark-mode a {
+    color: #fff;
+}
+
+.dark-mode .cta-box {
+    background: #333;
+    color: #fff;
+}
+.dark-mode h2{
+    background: #333;
+    color: #fff;
+}
+.dark-mode main{
+    background: #333;
+}

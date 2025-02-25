@@ -1,0 +1,58 @@
+/* Body layout using flexbox to ensure full-page height */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Help container with centered content and padding */
+.help-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+}
+
+/* Header styling for the help section */
+.help-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #007BFF;
+}
+
+/* FAQ container styling with padding, border, and background */
+.faq {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+/* FAQ question styling with bold text and blue color */
+.faq h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007BFF;
+    margin-bottom: 10px;
+}
+
+/* FAQ answer styling with gray color */
+.faq p {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Hover effect for FAQ container */
+.faq:hover {
+    background-color: #e9ecef;
+}
+
+/* Footer styling for consistent design */
+footer {
+    margin-top: auto;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoGadget Hub</title>
+    <!-- Linking external CSS files for styling -->
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="../css/header_mainBody.css">
+    <script src="../javaScript/menu.js"></script>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div>
+            <!-- Logo and website title -->
+            <img src="../imges and icons/icons/my_logo.png" alt="AutoGadget Hub Logo">
+            <h1>AutoGadget Hub</h1>
+        </div>
+        <!-- Navigation Bar -->
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="help.html">Help❓</a>
+        </nav>
+        <div>
+            <!-- Shopping Cart Icon -->
+            <a href="cart.html">
+                <img src="../imges and icons/icons/shopping_cart.png" alt="Shopping Cart">
+            </a>
+            <!-- Sign-in and Sign-up links -->
+            <a href="signin.html" id="signin">Sign In</a>
+            <a href="signup.html" id="signup">Sign Up</a>
+        </div> 
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <div class="menu-trigger">
+            <div class="hamburger">☰</div>
+        </div>
+         <!-- Dynamic Side Menu -->
+         <nav id="sideMenu" class="side-menu">
+            <div class="menu-header">
+                <span class="close-btn">&times;</span>
+                <h3>Navigation Menu</h3>
+            </div>
+            <div class="menu-content">
+                <a href="terms.html"><i class="policy"></i>Terms & Conditions</a>   
+                <a href="shop.html#New"><i class="star"></i> Trending</a>
+                <a href="contact.html"><i class="question-circle"></i> Support</a>
+                <div class="setting-item">
+                    <span>Dark Mode</span>
+                    <div class="toggle-switch" id="darkModeToggle"></div>
+                </div>                
+            </div>
+        </nav>
+        <div id="menuOverlay" class="overlay"></div>
+        <!-- Call to Action Section -->
+        <section class="cta-box">
+            <img src="../imges and icons/icons/main_page_pic.png" width="250" height="250">
+            <h2>Shop the Best Gadgets with AutoGadget Hub</h2>
+            <p>Discover amazing deals and ship products internationally at unbeatable prices!</p>
+            <a href="signup.html">Sign Up Now - It's Free</a>
+        </section>
+
+        <!-- Steps to Shop Section -->
+        <section class="steps">
+            <!-- Step 1: Sign Up -->
+            <div class="step">
+                <h3>Step 1</h3>             
+                <p>Sign up and instantly start shopping with personalised recommendations.</p>
+                <img src="../imges and icons/icons/step1.png" alt="Step 1" width="100" height="100">  
+            </div>
+            <!-- Step 2: Browse and Checkout -->
+            <div class="step">
+                <h3>Step 2</h3>
+                <p>Shop from a range of products and enjoy an easy checkout experience.</p>
+                <img src="../imges and icons/icons/step2.png" alt="Step 2" width="100" height="100">
+            </div>
+            <!-- Step 3: Delivery -->
+            <div class="step">
+                <h3>Step 3</h3>
+                <p>Get your orders delivered to your door in as fast as 2-4 days.</p>
+                <img src="../imges and icons/icons/step3.png" alt="Step 3" width="100" height="100">
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili ECE4 .</p>
+    </footer>
+</body>
+</html>

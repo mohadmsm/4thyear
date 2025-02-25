@@ -1,0 +1,85 @@
+/* Body styling for a full-height flexbox layout */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Container for the sign-in form with centered alignment */
+.signin-container {
+    max-width: 400px;
+    margin: 100px auto -500px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+/* Title styling */
+.signin-container h2 {
+    margin-bottom: 20px;
+}
+
+/* General form field and input styling */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group input:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+/* Action button styling with hover effect */
+.form-actions button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.form-actions button:hover {
+    background-color: #0056b3;
+}
+
+/* Sign-up link styling */
+.signup-link {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.signup-link a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Footer with fixed positioning at the bottom */
+footer {
+    margin-top: auto;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
+}

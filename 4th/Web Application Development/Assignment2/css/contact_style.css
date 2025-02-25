@@ -1,0 +1,92 @@
+/* Body layout for full-height with flexbox */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Contact container with padding, centered content, and shadow effect */
+.contact-container {
+    max-width: 500px;
+    margin: auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+/* Heading style for contact form */
+.contact-container h2 {
+    margin-bottom: 10px;
+}
+
+/* Paragraph style for contact information */
+.contact-container p {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* Form group styling for individual fields */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Label styling within the form */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Input and textarea styling for form fields */
+.form-group input,
+.form-group textarea {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Resizing textarea for better user experience */
+.form-group textarea {
+    resize: vertical;
+}
+
+/* Focus effect for input fields */
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+/* Button container with center alignment */
+.form-actions {
+    text-align: center;
+}
+
+/* Button styling for form submission */
+.form-actions button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Hover effect for button */
+.form-actions button:hover {
+    background-color: #0056b3;
+}
+
+/* Footer styling */
+footer {
+    margin-top: auto;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
+}
