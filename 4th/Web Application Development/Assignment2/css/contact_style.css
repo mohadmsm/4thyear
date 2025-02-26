@@ -2,7 +2,6 @@
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
 }
 
 /* Contact container with padding, centered content, and shadow effect */
@@ -83,10 +82,81 @@ body {
 
 /* Footer styling */
 footer {
-    margin-top: auto;
     background-color: #333;
     color: #fff;
     text-align: center;
     padding: 15px 0;
     width: 100%;
+    margin-top: 10px;    
+}
+.form-content {
+    margin-bottom: 40px; /* Space between form and table */
+}
+/* Footer text styling */
+footer p {
+    font-size: 14px;
+    margin: 0;
+}
+.error {
+    border: 1px solid red;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+.entries-table {
+    margin-top: 30px;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+/* Button centering fix */
+.form-actions {
+    text-align: center;
+}
+
+.form-actions button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 auto; /* Center button */
+    display: block;
+}
+
+/* Table responsive styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: white;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+/* Show entries button styling */
+#showEntriesBttn {
+    margin: 20px 0;
+    width: 100%;
+    padding: 12px;
 }

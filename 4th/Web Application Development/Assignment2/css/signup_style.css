@@ -65,8 +65,7 @@ footer {
     text-align: center;
     padding: 15px 0;
     width: 100%;
-    margin-top: auto; 
-    
+    margin-top: auto;    
 }
 .form-content {
     margin-bottom: 40px; /* Space between form and table */
@@ -87,22 +86,6 @@ footer p {
 }
 .entries-table {
     margin-top: 30px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
 }
 
 button {
@@ -130,32 +113,24 @@ button {
     display: block;
 }
 
-/* Table responsive styling */
+/* Table  styling */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin-top: 10px;
     background: white;
 }
 
 th, td {
-    padding: 12px;
+    border: 1px solid #ddd;
+    padding: 8px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
 }
 
 th {
     background-color: #f8f9fa;
     font-weight: 600;
 }
-
-/* Error message spacing */
-.error-message {
-    display: block;
-    min-height: 20px;
-    margin-top: 5px;
-}
-
 /* Show entries button styling */
 #showEntriesBtn {
     margin: 20px 0;

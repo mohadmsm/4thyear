@@ -3,13 +3,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const signupTableBody = document.getElementById('signupEntriesBody');
     const signupTable = document.getElementById('signupTable');
     const SIGNUP_STORAGE_KEY = 'signupEntries';
+    const showEntriesBtn = document.getElementById('showEntriesBtn')
+    
+    showEntriesBtn.addEventListener('mouseover', function () {
+        showEntriesBtn.style.backgroundColor = 'green'; // Change color on hover
+        showEntriesBtn.style.color = 'white';
+    });
 
-    // Add missing validation functions
-    function validateEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    }
-
+    showEntriesBtn.addEventListener('mouseout', function () {
+        showEntriesBtn.style.backgroundColor = ''; // Reset to default
+        showEntriesBtn.style.color = '';
+    });
+    // Add validation functions
+    // Note this email validation is adapted from 'https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript'
+    const validateEmail = (email) => {
+        return email.match(
+          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+      };
     function validatePassword(password) {
         return password.length >= 8 && /\d/.test(password);
     }
@@ -102,8 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // If valid, store and update
         if (isValid) {
-            const entry = {
-                ...formData,
+            const entry = {formData,
                 timestamp: new Date().toISOString()
             };
             

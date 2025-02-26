@@ -58,7 +58,7 @@
         <div class="contact-container">
             <h2>Contact Us</h2>
             <p>If you have any questions or inquiries, feel free to reach out to us!</p>
-            <form action="#" method="POST">
+            <form action="#" method="POST" id="ContactForm">
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" placeholder="Enter your full name" required>
@@ -80,9 +80,29 @@
                     <span class="error-message"></span>
                 </div>
                 <div class="form-actions">
-                    <button type="submit">Send Message</button>
+                    <button type="submit" id="sendbtn">Send Message</button>
                 </div>
             </form>
+        <!-- After the form show the table q3 -->
+        <!-- Show Entries Button -->
+        <button id="showEntriesBttn">Show All Responses</button>
+
+        <!-- Previous Sign-Ups Table -->
+        <div class="entries-table">
+            <h3>Previous messages</h3>
+            <table id="ContactTable" style="display: none;">
+                <thead>
+                     <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <!-- This is used to dynamically insert new rows via Js. -->
+                <tbody id="ContactEntriesBody"></tbody>
+            </table>
         </div>
     </main>
 

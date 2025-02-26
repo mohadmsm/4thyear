@@ -204,3 +204,19 @@ header div:last-child img {
 .dark-mode main{
     background: #333;
 }
+
+.dark-mode .signup-container, .dark-mode .contact-container, .dark-mode .faq, .dark-mode .signin-container{
+    background: #424242;
+}
+.dark-mode footer{
+    background: #131313;
+}
+.dark-mode .form-group input, .dark-mode .form-group textarea, .dark-mode table{
+    background: #333;
+}
+.dark-mode .product, .dark-mode .about-container, .dark-mode th, .dark-mode .cart-table th{
+    background: #272727;
+}
+.dark-mode .category-nav ul li a {
+    color: #fff;
+}
