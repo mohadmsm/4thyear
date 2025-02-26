@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const menu = document.getElementById('sideMenu');
     const overlay = document.getElementById('menuOverlay');
     const hamburger = document.querySelector('.hamburger');
@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleMenu() {
         menu.classList.toggle('active');
         overlay.style.display = menu.classList.contains('active') ? 'block' : 'none';
-        
+
         // Animate menu items with stagger effect
         const menuItems = document.querySelectorAll('.menu-content a');
-        if(menu.classList.contains('active')) {
+        if (menu.classList.contains('active')) {
             menuItems.forEach((item, index) => {
                 setTimeout(() => {
                     item.style.opacity = '1';
@@ -49,24 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
     hamburger.addEventListener('click', toggleMenu);
     closeBtn.addEventListener('click', toggleMenu);
     overlay.addEventListener('click', toggleMenu);
-    
+
     // Dark Mode Event Listener
     darkModeToggle.addEventListener("click", toggleDarkMode);
-
-    // Close menu on ESC key
-    document.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape' && menu.classList.contains('active')) {
-            toggleMenu();
-        }
-    });
-
-    // Dynamic positioning for mobile
-    window.addEventListener('resize', () => {
-        if(window.innerWidth > 768 && menu.classList.contains('active')) {
-            toggleMenu();
-        }
-    });
-
     // Load Dark Mode setting on page load
     loadDarkMode();
 });

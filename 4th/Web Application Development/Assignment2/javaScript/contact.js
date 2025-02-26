@@ -56,19 +56,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (isValid) {
-            const entry = {formData,
+            const entry = {
+                formData,
                 timestamp: new Date().toISOString()
             };
             const entries = JSON.parse(localStorage.getItem(Contact_STORAGE_KEY)) || [];
             entries.push(entry);
             localStorage.setItem(Contact_STORAGE_KEY, JSON.stringify(entries));
-            
+
             addTableRow(entry);
             contactForm.reset();
             ContactTable.style.display = 'table'; // Show table after submission
             // alert event q4
             alert('Your message has been sent successfully! We will get back to you as soon as possible');
-            
+
         }
     });
 
@@ -76,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Note this email validation is adapted from 'https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript'
     const validateEmail = (email) => {
         return email.match(
-          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
     };
     function showError(input, message) {
@@ -108,8 +109,8 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${new Date(entry.timestamp).toLocaleString()}</td>
         `;
     }
-     // Table toggle
-     showEntriesBtn.addEventListener('click', () => {
+    // Table toggle
+    showEntriesBtn.addEventListener('click', () => {
         ContactTable.style.display = ContactTable.style.display === 'none' ? 'table' : 'none';
     });
     loadContactEntries();

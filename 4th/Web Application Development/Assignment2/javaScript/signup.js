@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const signupTable = document.getElementById('signupTable');
     const SIGNUP_STORAGE_KEY = 'signupEntries';
     const showEntriesBtn = document.getElementById('showEntriesBtn')
-    
+
     showEntriesBtn.addEventListener('mouseover', function () {
         showEntriesBtn.style.backgroundColor = 'green'; // Change color on hover
         showEntriesBtn.style.color = 'white';
@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Note this email validation is adapted from 'https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript'
     const validateEmail = (email) => {
         return email.match(
-          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
-      };
+    };
     function validatePassword(password) {
         return password.length >= 8 && /\d/.test(password);
     }
@@ -80,32 +80,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Validation checks
         let isValid = true;
-        
+
         if (formData.username.length < 3) {
             showError(signupForm.username, 'Username must be at least 3 characters');
             isValid = false;
         }
-        
+
         if (!validateEmail(formData.email)) {
             showError(signupForm.email, 'Invalid email format');
             isValid = false;
         }
-        
+
         if (!validatePassword(formData.password)) {
             showError(signupForm.password, 'Password needs 8+ chars with a number');
             isValid = false;
         }
-        
+
         if (formData.password !== formData.confirmPassword) {
             showError(signupForm['confirm-password'], 'Passwords do not match');
             isValid = false;
         }
-        
+
         if (!formData.addressLine1) {
             showError(signupForm['address-line1'], 'Address required');
             isValid = false;
         }
-        
+
         if (!validatePhone(formData.phone)) {
             showError(signupForm.phone, 'Invalid phone number (10 digits)');
             isValid = false;
@@ -113,14 +113,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // If valid, store and update
         if (isValid) {
-            const entry = {formData,
+            const entry = {
+                formData,
                 timestamp: new Date().toISOString()
             };
-            
+
             const entries = JSON.parse(localStorage.getItem(SIGNUP_STORAGE_KEY)) || [];
             entries.push(entry);
             localStorage.setItem(SIGNUP_STORAGE_KEY, JSON.stringify(entries));
-            
+
             addTableRow(entry);
             signupForm.reset();
             signupTable.style.display = 'table'; // Show table after submission

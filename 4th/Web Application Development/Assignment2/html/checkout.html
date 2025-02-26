@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="../css/checkout_style.css">
     <script src="../javaScript/menu.js"></script>
 </head>
+
 <body>
     <!-- Header Section -->
     <header>
@@ -23,7 +25,7 @@
             <a href="help.html">Help❓</a>
         </nav>
         <div>
-            
+
             <a href="cart.html">
                 <img src="../imges and icons/icons/shopping_cart.png" alt="Shopping Cart">
             </a>
@@ -34,24 +36,24 @@
 
     <!-- Checkout Section -->
     <main>
-         <!-- side menu-->
+        <!-- side menu-->
         <div class="menu-trigger">
             <div class="hamburger">☰</div>
         </div>
-         <!-- Dynamic Side Menu -->
-         <nav id="sideMenu" class="side-menu">
+        <!-- Dynamic Side Menu -->
+        <nav id="sideMenu" class="side-menu">
             <div class="menu-header">
                 <span class="close-btn">&times;</span>
                 <h3>Navigation Menu</h3>
             </div>
             <div class="menu-content">
-                <a href="terms.html"><i class="policy"></i>Terms & Conditions</a>   
+                <a href="terms.html"><i class="policy"></i>Terms & Conditions</a>
                 <a href="shop.html#New"><i class="star"></i> Trending</a>
                 <a href="contact.html"><i class="question-circle"></i> Support</a>
                 <div class="setting-item">
                     <span>Dark Mode</span>
                     <div class="toggle-switch" id="darkModeToggle"></div>
-                </div>                
+                </div>
             </div>
         </nav>
         <div id="menuOverlay" class="overlay"></div>
@@ -67,7 +69,7 @@
                 </ul>
                 <p><strong>Total: €108.97</strong></p>
             </div>
-             <!-- Checkout Form -->
+            <!-- Checkout Form -->
             <form action="#" method="POST" class="checkout-form">
                 <h3>Shipping Information</h3>
                 <div class="form-group">
@@ -84,7 +86,8 @@
                 </div>
                 <div class="form-group">
                     <label for="postal-code">Postal Code</label>
-                    <input type="text" id="postal-code" name="postal-code" placeholder="Enter your postal code" required>
+                    <input type="text" id="postal-code" name="postal-code" placeholder="Enter your postal code"
+                        required>
                 </div>
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
@@ -96,13 +99,13 @@
                     <!-- Payment Method Selection -->
                     <input type="radio" id="debit-card" name="payment-method" value="debit-card" checked>
                     <label for="debit-card">Debit/Credit Card</label>
-                    
+
                     <input type="radio" id="paypal" name="payment-method" value="paypal">
                     <label for="paypal">PayPal</label>
-                    
+
                     <input type="radio" id="google-pay" name="payment-method" value="google-pay">
                     <label for="google-pay">Google Pay</label>
-                    
+
                     <input type="radio" id="apple-pay" name="payment-method" value="apple-pay">
                     <label for="apple-pay">Apple Pay</label>
                 </div>
@@ -119,4 +122,5 @@
         <p>&copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili ECE4.</p>
     </footer>
 </body>
+
 </html>

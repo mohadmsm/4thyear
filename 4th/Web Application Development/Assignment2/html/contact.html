@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <script src="../javaScript/menu.js"></script>
     <script src="../javaScript/contact.js"></script>
 </head>
+
 <body>
     <!-- Header Section -->
     <header>
@@ -38,20 +40,20 @@
         <div class="menu-trigger">
             <div class="hamburger">☰</div>
         </div>
-         <!-- Dynamic Side Menu -->
-         <nav id="sideMenu" class="side-menu">
+        <!-- Dynamic Side Menu -->
+        <nav id="sideMenu" class="side-menu">
             <div class="menu-header">
                 <span class="close-btn">&times;</span>
                 <h3>Navigation Menu</h3>
             </div>
             <div class="menu-content">
-                <a href="terms.html"><i class="policy"></i>Terms & Conditions</a>   
+                <a href="terms.html"><i class="policy"></i>Terms & Conditions</a>
                 <a href="shop.html#New"><i class="star"></i> Trending</a>
                 <a href="contact.html"><i class="question-circle"></i> Support</a>
                 <div class="setting-item">
                     <span>Dark Mode</span>
                     <div class="toggle-switch" id="darkModeToggle"></div>
-                </div>                
+                </div>
             </div>
         </nav>
         <div id="menuOverlay" class="overlay"></div>
@@ -76,34 +78,35 @@
                 </div>
                 <div class="form-group">
                     <label for="message">Message</label>
-                    <textarea id="message" name="message" rows="5" placeholder="Type your message here..." required></textarea>
+                    <textarea id="message" name="message" rows="5" placeholder="Type your message here..."
+                        required></textarea>
                     <span class="error-message"></span>
                 </div>
                 <div class="form-actions">
                     <button type="submit" id="sendbtn">Send Message</button>
                 </div>
             </form>
-        <!-- After the form show the table q3 -->
-        <!-- Show Entries Button -->
-        <button id="showEntriesBttn">Show All Responses</button>
+            <!-- After the form show the table q3 -->
+            <!-- Show Entries Button -->
+            <button id="showEntriesBttn">Show All Responses</button>
 
-        <!-- Previous Sign-Ups Table -->
-        <div class="entries-table">
-            <h3>Previous messages</h3>
-            <table id="ContactTable" style="display: none;">
-                <thead>
-                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Subject</th>
-                        <th>Message</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <!-- This is used to dynamically insert new rows via Js. -->
-                <tbody id="ContactEntriesBody"></tbody>
-            </table>
-        </div>
+            <!-- Previous Sign-Ups Table -->
+            <div class="entries-table">
+                <h3>Previous messages</h3>
+                <table id="ContactTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <!-- This is used to dynamically insert new rows via Js. -->
+                    <tbody id="ContactEntriesBody"></tbody>
+                </table>
+            </div>
     </main>
 
     <!-- Footer Section -->
@@ -111,4 +114,5 @@
         <p>&copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili ECE4.</p>
     </footer>
 </body>
+
 </html>
