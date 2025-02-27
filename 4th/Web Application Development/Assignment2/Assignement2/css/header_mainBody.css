@@ -136,7 +136,7 @@ header div:last-child img {
     font-size: 28px;
     cursor: pointer;
     padding: 10px;
-    position: fixed; /* Fix it to always be at the left */
+    position: fixed; /* Fixed to always be at the left */
     top: 110px;
     left: 5px; /* Moves it to the left corner */
     transition: 0.3s;

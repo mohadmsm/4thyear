@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - AutoGadget Hub</title>
+    <title>Sign Up - AutoGadget Hub</title>
     <link rel="stylesheet" href="../css/header_mainBody.css">
-    <link rel="stylesheet" href="../css/contact_style.css">
+    <link rel="stylesheet" href="../css/signup_style.css">
     <script src="../javaScript/menu.js"></script>
-    <script src="../javaScript/contact.js"></script>
+    <script src="../javaScript/signup.js"></script>
 </head>
 
 <body>
@@ -34,7 +34,7 @@
         </div>
     </header>
 
-    <!-- Contact Form Section -->
+    <!-- Sign Up Form Section, Note: this can be adjusted for assignement 2 -->
     <main>
         <!-- side menu-->
         <div class="menu-trigger">
@@ -47,9 +47,9 @@
                 <h3>Navigation Menu</h3>
             </div>
             <div class="menu-content">
-                <a href="terms.html"><i class="policy"></i>Terms & Conditions</a>
-                <a href="shop.html#New"><i class="star"></i> Trending</a>
-                <a href="contact.html"><i class="question-circle"></i> Support</a>
+                <a href="terms.html">Terms & Conditions</a>
+                <a href="shop.html#New"> Trending</a>
+                <a href="contact.html">Support</a>
                 <div class="setting-item">
                     <span>Dark Mode</span>
                     <div class="toggle-switch" id="darkModeToggle"></div>
@@ -57,13 +57,12 @@
             </div>
         </nav>
         <div id="menuOverlay" class="overlay"></div>
-        <div class="contact-container">
-            <h2>Contact Us</h2>
-            <p>If you have any questions or inquiries, feel free to reach out to us!</p>
-            <form action="#" method="POST" id="ContactForm">
+        <div class="signup-container">
+            <h2>Create Your Account</h2>
+            <form action="#" method="POST" id="signupForm">
                 <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
                     <span class="error-message"></span>
                 </div>
                 <div class="form-group">
@@ -72,46 +71,59 @@
                     <span class="error-message"></span>
                 </div>
                 <div class="form-group">
-                    <label for="subject">Subject</label>
-                    <input type="text" id="subject" name="subject" placeholder="Enter the subject" required>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
                     <span class="error-message"></span>
                 </div>
                 <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" name="message" rows="5" placeholder="Type your message here..."
-                        required></textarea>
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password"
+                        placeholder="Confirm your password" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="address">Your Address</label>
+                    <input type="text" id="address-line1" name="address-line1" placeholder="Type in your Address"
+                        required>
+                    <input type="text" id="address-line2" name="address-line2"
+                        placeholder="Type in your Address line 2 (optional)">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
                     <span class="error-message"></span>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" id="sendbtn">Send Message</button>
+                    <button type="submit">Sign Up</button>
                 </div>
             </form>
             <!-- After the form show the table q3 -->
             <!-- Show Entries Button -->
-            <button id="showEntriesBttn">Show All Responses</button>
+            <button id="showEntriesBtn">Show All Responses</button>
 
             <!-- Previous Sign-Ups Table -->
             <div class="entries-table">
-                <h3>Previous messages</h3>
-                <table id="ContactTable" style="display: none;">
+                <h3>Previous Sign-Ups</h3>
+                <table id="signupTable" style="display: none;">
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>Username</th>
                             <th>Email</th>
-                            <th>Subject</th>
-                            <th>Message</th>
+                            <th>Address</th>
+                            <th>Phone</th>
                             <th>Date</th>
                         </tr>
                     </thead>
-                    <!-- This is used to dynamically insert new rows via Js. -->
-                    <tbody id="ContactEntriesBody"></tbody>
+                    <!-- The tbody is used to dynamically insert new rows via Js. -->
+                    <tbody id="signupEntriesBody"></tbody>
                 </table>
             </div>
+        </div>
     </main>
-
     <!-- Footer Section -->
     <footer>
-        <p>&copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili ECE4.</p>
+        <p>&copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili ECE4 .</p>
     </footer>
 </body>
 

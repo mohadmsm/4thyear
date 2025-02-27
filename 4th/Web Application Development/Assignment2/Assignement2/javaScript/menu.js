@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             menuItems.forEach(item => {
                 item.style.opacity = '0';
-                item.style.transform = 'translateX(-20px)';
+                item.style.transform = 'translateX(-20px)';//When the menu is closed, reset their appearance 
             });
         }
     }

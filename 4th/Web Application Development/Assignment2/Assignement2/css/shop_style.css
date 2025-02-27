@@ -107,10 +107,14 @@ h3 {
 
 /* Footer styling */
 footer {
-    margin-top: auto;
     background-color: #333;
     color: #fff;
     text-align: center;
     padding: 15px 0;
     width: 100%;
+    margin-top: 10px;    
+}
+footer p {
+    font-size: 14px;
+    margin: 0;
 }
