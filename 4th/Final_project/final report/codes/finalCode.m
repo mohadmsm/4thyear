@@ -35,7 +35,7 @@ y_FDTD = V(NDZ,:);
 toc
 vo = @(s) 30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0 + 2.5e-7.*s).^(1/2)));
 [y1,t1]=niltcv(vo,20e-6,'pp1');
-RMSE = sqrt(sum((y_FDTD-y1).^2)/length(y1));
+RMSE = sqrt(sum(abs(y_FDTD-y1).^2)/length(y1));
 abs(RMSE)
 
 %{
@@ -81,7 +81,7 @@ N = 400; % Number of sections in the transmission line
 dz=len/N;
 L = 2.5e-7*dz;   % Inductance
 C = 1e-10*dz;    % Capacitance
-R = 0;       % Resistance per section
+R = 0.1*dz;       % Resistance per section
 Rs = 0;       % Source resistance
 Rl = 100;     % Load resistance
 Vs  = 30;      % Source voltage (could be a function of time)
@@ -94,8 +94,8 @@ toc
 vo = @(s) 30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0 + 2.5e-7.*s).^(1/2)));
 [y1,t1]=niltcv(vo,20e-6,'pp1');
 yr= y(:,N*2)';
-RMSE = sqrt(sum((yr-y1).^2)/length(y1));
-abs(RMSE)
+RMSE = sqrt(sum(abs(yr-y1).^2)/length(y1));
+RMSE
 %}
 %{
 figure(1);

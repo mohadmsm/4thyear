@@ -1,4 +1,4 @@
-function [H_impulse]=generate_yp(realV,imagV,wo)
+function [H_impulse,num,deno]=generate_yp(realV,imagV,wo)
 Yr = realV;  % Real part of Y11
 Yi = imagV; % Imaginary part of Y11
 w = wo; 
@@ -34,6 +34,8 @@ a1 = B(3);
 b1 = B(4);
 a2 = B(5);
 b2 = B(6);
+num = [a2,a1,a0];
+deno = [1,b2,b1,b0];
 % generated H
 H_impulse =@(s) (a2*s.^2+a1*s+a0)./(s.^3+b2*s.^2+b1*s+b0);
 end

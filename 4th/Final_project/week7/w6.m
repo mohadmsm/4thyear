@@ -226,7 +226,7 @@ v =@(s)30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
 [H,num,deno] = generate_yp2(real(vo(1:25)),imag(vo(1:25)),w(1:25));
 [A,B,C,D] = create_state_space(num,deno);
 %HAWE is Hs= @(s) resdue/s-pole + ...;30 is the inout, 50e-6 is t for plot
-[h_impulse,HAWE, y, t] = AWE(A,B,C,D,w(1),30,50e-6);
+[h_impulse,HAWE, y, t] = AWE2(A,B,C,D,w(1),30,50e-6);
 [y1,t1]=niltcv(v,50e-6,'pt1');
 RMSE = sqrt(sum((y-y1).^2)/length(y1));
 plot(t,y,t1,y1);
@@ -250,27 +250,27 @@ v =@(s)30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
 [A,B,C,D] = create_state_space(num,deno);
 %HAWE is Hs= @(s) resdue/s-pole + ...;30 is the inout, 50e-6 is t for plot
 [h_impulse,HAWEi, y, t] = AWE2(A,B,C,D,w(1),30,50e-6);
-models =1;
+models =5;
 %N = ceil(70/models); %8
 minr = 99;
-for j=1:10 
-N =5; % number of points per section or model 
+N =3; % number of points per section or model 
 range = 16; % starting point of the second mmodel
 for i=1:models 
     range = range(end):N + range(end); % raange of frequency and exact values
    % range
-    H_diff = vo(range)-Hi(s(range));
+    H_diff = vo(range)-HAWEi(s(range));
     [Hj,numi,denoi] = generate_yp2(real(H_diff),imag(H_diff ),w(range));
     [A,B,C,D] = create_state_space(numi,denoi);
-    [h_impulse,HAWEj, yi, ti] = AWE2(A,B,C,D,w(range(1)),30,50e-6);
+    [h_impulse,HAWEj, yi, ti] = AWE2(A,B,C,D,w(range(end)),30,50e-6);
     HAWEi = @(s) HAWEi(s)+HAWEj(s);
-    Hi = @(s) Hi(s)+Hj(s);
-    y0=y+yi;
+   % Hi = @(s) Hi(s)+Hj(s);    
 end
+HS = @(s) HAWEi(s).*30./s;
 [y1,t1]=niltcv(v,50e-6,'pt1');
+[y0,t1]=niltcv(HS,50e-6,'pt1');
 RMSE = sqrt(sum((y0-y1).^2)/length(y1));
 figure
-plot(t,y0,t1,y1,t,yi)
+plot(t1,y0,t1,y1)
 abs(RMSE)
 if (abs(RMSE) < minr)
 minr = abs(RMSE);
@@ -281,7 +281,6 @@ xlabel('time s')
 legend('AWE Step', 'Exact');
 title('approximation with models = ',num2str(models+1));
 models = models+1;
-end
 %{
 r = 15:23; %8 points 
 s0 = i*w(r);
