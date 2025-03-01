@@ -1,5 +1,5 @@
 function [ft,t]=niltcv(F,tm,depict);
-alfa=0; M=250; P=3; Er=1e-10; % adjustable
+alfa=0; M=1000; P=3; Er=1e-10; % adjustable
 N=2*M; qd=2*P+1; t=linspace(0,tm,M); NT=2*tm*N/(N-2);
 omega=2*pi/NT;
 c=alfa+log(1+1/Er)/NT; s=c-i*omega*(0:N+qd-1);

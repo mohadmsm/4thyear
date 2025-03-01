@@ -1,19 +1,24 @@
-function [h_impulse, h_s, y_step, t,poles] = AWE2(A, B, C, D, w, input, time)
-    t = linspace(0, time, 1000);
-    q = length(B);
-    num_moments = 2 * q;
-    s0 = 1i * w;
+function [h_impulse,h_s, y_step, t,poles]= AWE_CFH(A, B, C, D, M, w0, input, t)
+    L=M;
+    t = linspace(0, t, 1000);
+    num_moments = L + M + 1; % Moments from m₀ to m_{L+M}
+    s0 = 1i * w0; % Complex frequency point
     moments = zeros(1, num_moments);
-    [r, c] = size(C);
+    
+    % Ensure C is a row vector
+    [r, ~] = size(C);
     if r ~= 1
         C = C';
     end
-    for k = 1:num_moments
-        moments(k) = (-1)^(k-1) * C * (s0 * eye(size(A)) - A)^-(k) * B;
-    end
-    moments(1) = moments(1) + D;  % Include D in the zeroth moment
     
-    approx_order = q;
+    % Compute moments m₀ to m_{L+M}
+    for k = 1:num_moments
+        moments(k) = (-1)^(k-1) * C * (s0 * eye(size(A)) - A) ^-(k) *(B);
+        % For k > 1, replace with iterative LU solves for efficiency
+    end
+    moments(1) = moments(1) + D; % Add direct coupling term D to m₀
+
+    approx_order = M;
     
     % Construct moment matrix and vector for denominator coefficients
     moment_matrix = zeros(approx_order);
@@ -60,4 +65,5 @@ function [h_impulse, h_s, y_step, t,poles] = AWE2(A, B, C, D, w, input, time)
         end
         y_step(n) = sum(y);
     end
+
 end

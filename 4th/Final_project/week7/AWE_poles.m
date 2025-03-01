@@ -1,5 +1,5 @@
 function [poles, moments,h_s] = AWE_poles(A,B,C,D,w)   
-    q = 10;
+    q = length(B);
     num_moments = 2 * q;
     s0=1i*w;
     moments = zeros(1, num_moments);

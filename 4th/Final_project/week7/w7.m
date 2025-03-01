@@ -79,18 +79,22 @@ Rs = 10;
 G = 0;            
 l = 150e-6;        % Length of the transmission line 
 f_max = 100e10;    % Maximum frequency (100 GHz)
-f = linspace(0, f_max, 100); 
-w = 2*pi*f;        
-s = 1i*w;         
-
+%f = linspace(0, f_max, 100); 
+w = 2*pi*f_max;        
+s = 1i*w; 
+vs_sine = @(s) w./(s.^2 + w^2);% Laplace transform of sin(wt)
 % Transfer function (exact solution)
 vo = @(s) 1 ./ (cosh(l .* sqrt((R + L.*s) .* (G + C.*s))));
-vo_step = @(s) 1000./s.* vo(s);
+vo_step = @(s) 10./s.* vo(s);
+vo_sine = @(s) vs_sine(s).*vo(s);
+time =10e-12;
+%[y_step,t] = niltcv(vo_step,time,'pp');
+[y_sine,t] = niltcv(vo_sine,time,'pp');
 % Plot the frequency response
 %plot(f / 1e9, 20*log10(abs(vo(s)))); %20*log10 for scaling  
-plot(f/1e9, 20*log10(vo_step(s)))
-xlabel('Frequency (GHz)');
-ylabel('|Vo| (dB)');
+plot(t, y_sine)
+xlabel('time (s)');
+ylabel('Vo');
 grid on;
 %%
 clear
@@ -142,39 +146,39 @@ end
 clear
 clc
 % generate 100 points.
-f = 1e6;
+f = 9e5;
 f = linspace(0,f,100);
 w = 2*pi*f;
 s = i *w;
 vo =1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
 v =@(s)30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
 %H is as H = @(s) a1s+a0/s^2+b1s+b0;
-first_idx = 1:15;
+first_idx = 1:20;
 %HAWE is Hs= @(s) resdue/s-pole + ...;30 is the inout, 50e-6 is t for plot
 %[h_impulse,HAWEi, y0, t] = AWE2(A,B,C,D,w(1),30,20e-6);
 models =1;
 minr = 99;
 minr1 = 99;
 minr2 = 99;
-for j=1:3
+for j=1:20
 [Hi,num,deno] = generate_yp2(real(vo(first_idx)),imag(vo(first_idx)),w(first_idx));
 [A,B,C,D] = create_state_space(num,deno);
-[h_impulse,HAWEi, y0, t] = AWE2(A,B,C,D,w(1),30,20e-6);
-N =10; % number of points per section or model 
-range = 15; % starting point of the second mmodel
+[h_impulse,HAWEi, y0, t] = AWE2(A,B,C,D,w(1),30,50e-6);
+N =3; % number of points per section or model 
+range = 21; % starting point of the second mmodel
 for i=1:models 
-    range = range(end)+1:N + range(end); % raange of frequency and exact values
+    range = range(end):N + range(end); % raange of frequency and exact values
    % range
     H_diff = vo(range)-HAWEi(s(range));
     [~,numi,denoi] = generate_yp2(real(H_diff),imag(H_diff ),w(range));
     [Hj,~,~] = generate_yp2(real(H_diff),imag(H_diff ),w(range));
     [A,B,C,D] = create_state_space(numi,denoi);
-    [h_impulse,HAWEj, yi, ti] = AWE2(A,B,C,D,w(range(1)),30,20e-6);
+    [h_impulse,HAWEj, yi, ti] = AWE2(A,B,C,D,w(range(1)),30,50e-6);
     HAWEi = @(s) HAWEi(s)+HAWEj(s);
     y0 = y0+yi;    
 end
 HS = @(s) HAWEi(s).*30./s;
-[y1,t1]=niltcv(v,20e-6,'pt1');
+[y1,t1]=niltcv(v,50e-6,'pt1');
 %[y0,t1]=niltcv(HS,50e-6,'pt1');
 RMSE = sqrt(sum(abs(y0-y1).^2)/length(y1));
 RMSE2 = sqrt(sum(abs(HAWEi(s)-vo).^2)/length(vo));
@@ -182,8 +186,8 @@ RMSE3 = sqrt(sum(abs(Hi(s)-vo).^2)/length(vo));
 %figure
 %plot(t1,y0,t1,y1)
 %abs(RMSE)
-if (RMSE < minr)
-minr = RMSE;
+if (abs(RMSE) < minr)
+minr = abs(RMSE);
 nModel = models + 1;
 end
 if (RMSE2 < minr1)
@@ -203,31 +207,36 @@ end
 %%
 clear; clc;
 % Generate frequency points
-f = linspace(0, 1e6, 100);
+f = linspace(0, 9e5, 100);
 w = 2*pi*f;
 s = 1i * w;
+M = 6;
 first_idx = 1:15;
 vo =1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
 [Hi,num,deno] = generate_yp2(real(vo(first_idx)),imag(vo(first_idx)),w(first_idx));
 [A,B,C,D] = create_state_space(num,deno);
-[~,H,y1,~,p1]=AWE2(A,B,C,D,w(1),30,20e-6);
+[~,H,y1,~,p1]=AWE_CFH(A,B,C,D,M,w(1),30,20e-6);
+RMSE = sqrt(sum(abs(Hi(s(first_idx))-vo(first_idx)).^2)/length(vo(first_idx)));
+%second model ----------------------------------------------------------
 idx = 16:25;
 H_diff = vo(idx)-H(s(idx));
 [Hi,num,deno] = generate_yp2(real(H_diff),imag(H_diff),w(idx));
 [A,B,C,D] = create_state_space(num,deno);
 [poles,m] = AWE_poles(A,B,C,D,w(idx(1)));
-[~,H2,y2,~,p2]=AWE2(A,B,C,D,w(16),30,20e-6);
+[~,H2,y2,~,p2]=AWE_CFH(A,B,C,D,M,w(16),30,20e-6);
+% Third model ---------------------------------------------
 idx = 26:35;
 H = @(s) H(s)+H2(s);
 H_diff = vo(idx)-H(s(idx));
 [Hi,num,deno] = generate_yp2(real(H_diff),imag(H_diff),w(idx));
 [A,B,C,D] = create_state_space(num,deno);
-[~,H3,y3,~,p3]=AWE2(A,B,C,D,w(idx(1)),30,20e-6);
+[~,H3,y3,~,p3]=AWE_CFH(A,B,C,D,M,w(idx(1)),30,20e-6);
+% Forth model ---------------------------------------------------
 idx = 36:45;
 H = @(s) H(s)+H3(s);
 H_diff = vo(idx)-H(s(idx));
 [Hi,num,deno] = generate_yp2(real(H_diff),imag(H_diff),w(idx));
 [A,B,C,D] = create_state_space(num,deno);
-[~,H4,y4,t,p4]=AWE2(A,B,C,D,w(idx(1)),30,20e-6);
+[~,H4,y4,t,p4]=AWE_CFH(A,B,C,D,M,w(idx(1)),30,20e-6);
 y_t = y1+y2+y3+y4;
 plot(t,y_t);
