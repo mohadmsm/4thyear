@@ -1,6 +1,5 @@
-function [h_impulse,h_s, y_step, t,poles]= AWE_CFH(A, B, C, D, M, w0, input, t)
+function [poles,poles_unshifted,residues,moments]= AWE_CFH_poles(A, B, C, D, M, w0)
     L=M;
-    t = linspace(0, t, 1000);
     num_moments = L + M + 1; % Moments from m₀ to m_{L+M}
     s0 = 1i * w0; % Complex frequency point
     moments = zeros(1, num_moments);
@@ -28,7 +27,7 @@ function [h_impulse,h_s, y_step, t,poles]= AWE_CFH(A, B, C, D, M, w0, input, t)
     end
     
     % Solve for denominator coefficients
-    b_matrix = pinv(moment_matrix) *Vector_c;
+    b_matrix = moment_matrix\ Vector_c;
     poles_unshifted = roots([b_matrix; 1]);  % Unshifted poles (s' = s - s0)
     
     % Compute residues using unshifted poles
@@ -44,26 +43,5 @@ function [h_impulse,h_s, y_step, t,poles]= AWE_CFH(A, B, C, D, M, w0, input, t)
     
     % Shift poles to s-plane
     poles = poles_unshifted + s0;
-    
-    % Impulse response using shifted poles
-    h_impulse = zeros(size(t));
-    for i = 1:approx_order
-        h_impulse = h_impulse + residues(i) * exp(poles(i) * t);
-    end
-    
-    % Transfer function in s-domain
-    h_s = @(s) sum(residues ./ (s - poles), 1);
-    
-    % Step response using recursive convolution
-    y_step = zeros(size(t));
-    y = zeros(length(poles), 1);
-    for n = 2:length(t)
-        dt = t(n) - t(n-1);
-        exp_term = exp(poles * dt);
-        for i = 1:length(poles)
-            y(i) = residues(i) * (1 - exp_term(i))/(-poles(i)) * input + exp_term(i) * y(i);
-        end
-        y_step(n) = sum(y);
-    end
-
+ 
 end

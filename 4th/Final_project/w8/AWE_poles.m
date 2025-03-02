@@ -1,6 +1,5 @@
-function [h_impulse, h_s, y_step, t,poles] = AWE2(A, B, C, D, w, input, time)
-    t = linspace(0, time, 1000);
-    q = length(B);
+function [poles,poles_unshifted,residues,moments]= AWE_poles(A, B, C, D, w)
+   q = length(B);
     num_moments = 2 * q;
     s0 = 1i * w;
     moments = zeros(1, num_moments);
@@ -23,7 +22,7 @@ function [h_impulse, h_s, y_step, t,poles] = AWE2(A, B, C, D, w, input, time)
     end
     
     % Solve for denominator coefficients
-    b_matrix = pinv(moment_matrix) * Vector_c;
+    b_matrix = moment_matrix \ Vector_c;
     poles_unshifted = roots([b_matrix; 1]);  % Unshifted poles (s' = s - s0)
     
     % Compute residues using unshifted poles
@@ -39,25 +38,5 @@ function [h_impulse, h_s, y_step, t,poles] = AWE2(A, B, C, D, w, input, time)
     
     % Shift poles to s-plane
     poles = poles_unshifted + s0;
-    
-    % Impulse response using shifted poles
-    h_impulse = zeros(size(t));
-    for i = 1:approx_order
-        h_impulse = h_impulse + residues(i) * exp(poles(i) * t);
-    end
-    
-    % Transfer function in s-domain
-    h_s = @(s) sum(residues ./ (s - poles), 1);
-    
-    % Step response using recursive convolution
-    y_step = zeros(size(t));
-    y = zeros(length(poles), 1);
-    for n = 2:length(t)
-        dt = t(n) - t(n-1);
-        exp_term = exp(poles * dt);
-        for i = 1:length(poles)
-            y(i) = residues(i) * (1 - exp_term(i))/(-poles(i)) * input + exp_term(i) * y(i);
-        end
-        y_step(n) = sum(y);
-    end
+ 
 end
