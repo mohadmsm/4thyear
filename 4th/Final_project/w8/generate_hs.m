@@ -1,6 +1,6 @@
 function [h_s,residues]= generate_hs(poles,q,moments)
     approx_order =q;
-    % Compute residues using unshifted poles
+    % Compute residues using given poles and moments
     V = zeros(approx_order);
     for i = 1:approx_order
         for j = 1:approx_order

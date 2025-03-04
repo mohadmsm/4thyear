@@ -6,7 +6,7 @@ C = 1e-10;         % Capacitance per unit length (F/m)
 Rs = 10;           
 G = 0;            
 l = 150e-6;        % Length of the transmission line 
-f_max = 100e10;    % Maximum frequency (100 GHz)
+f_max = 100e9;    % Maximum frequency (100 GHz)
 %f = linspace(0, f_max, 100); 
 w = 2*pi*f_max;        
 s = 1i*w; 
@@ -16,8 +16,8 @@ vo = @(s) 1 ./ (cosh(l .* sqrt((R + L.*s) .* (G + C.*s))));
 vo_step = @(s) 10./s.* vo(s);
 vo_sine = @(s) vs_sine(s).*vo(s);
 time =10e-12;
-%[y_step,t] = niltcv(vo_step,time,'pp');
-[y_sine,t] = niltcv(vo_sine,time,'pp');
+[y_step,t] = niltcv(vo_step,time);
+[y_sine,t] = niltcv(vo_sine,time);
 % Plot the frequency response
 %plot(f / 1e9, 20*log10(abs(vo(s)))); %20*log10 for scaling  
 plot(t, y_sine)
@@ -55,7 +55,7 @@ vo_pulse = @(s) Vpulse(s) .* vo(s);
 Tsim = 20e-12; 
 
 % Compute inverse Laplace transform numerically
-[y_pulse, t] = niltcv(vo_pulse, Tsim, 'pp');
+[y_pulse, t] = niltcv(vo_pulse, Tsim);
 
 plot(t, y_pulse)
 xlabel('Time (s)')
@@ -99,7 +99,7 @@ Vo_sine = @(s) Vs_sine(s) .* H_mismatch_source(s);
 % Inverse Laplace to get time-domain
 %-------------------------------
 Tmax = 50e-12;   % ~50 ps to see several cycles (period ~10 ps)
-[y_out, t] = niltcv(Vo_sine, Tmax, 'pp');
+[y_out, t] = niltcv(Vo_sine, Tmax);
 
 %-------------------------------
 % Plot the result

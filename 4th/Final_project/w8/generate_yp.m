@@ -26,7 +26,8 @@ for k = 1:length(w)
 end
 
 % Solve for B = [a0; b0; a1; b1]
-B = pinv(A)* C;
+B = A\ C;
+D = 0;
 % get cof
 a0 = B(1);
 b0 = B(2);
