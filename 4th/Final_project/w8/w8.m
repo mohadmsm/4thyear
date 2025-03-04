@@ -81,7 +81,7 @@ vo =1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
 [~,H1]=AWE2(A,B,C,D,w(1),30,t);
 [p1,np1,r1,m1] = AWE_poles(A,B,C,D,w(first_idx(1)));
 %second model ----------------------------------------------------------
-idx = 15:30;
+idx = 21:30;
 H_diff = vo(idx)-H1a(s(idx));
 [H2a,num,deno] = generate_yp(real(H_diff),imag(H_diff),w(idx));
 %[H2a,num,deno] = generate_yp(real(vo(idx)),imag(vo(idx)),w(idx));
@@ -106,7 +106,7 @@ H_diff = vo(idx)-H3s(s(idx));
 [~,H4]=AWE2(A,B,C,D,w(idx(1)),30,t);
 poles = [p1,p2,p3,p4]; % AWE with q = lenght(B)
 polesn = [np1,np2,np3,np4]; %shifted poles
-pt = [np2',np3'];
+pt = [p1',p2'];
 ptest = 0;
 % remove unstable poles 
 for i=1:length(pt)
@@ -116,7 +116,7 @@ end
 end
 %ptest = [ptest(3:4),ptest(end)];
 ptest = ptest(2:end);
-%ptest = [ptest(1:2),ptest(4:end)];
+%ptest = [ptest(2:3),ptest(end)];
 mtest = m2; %% moments from the first model has 1 value and zeros
 [hs,r]= generate_hs(ptest,length(ptest),mtest);
 %hs = @(s) hs(s)+H1(s);
