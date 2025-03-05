@@ -117,43 +117,17 @@ dz=len/N;
 L = 250e-9*dz;   % Inductance
 C = 1e-10*dz;    % Capacitance
 R = 1200*dz;       % Resistance per section
-Rs = 10;       % Source resistance
-Vs  = 1;     % Source voltage 
-Vs_sine = @(t) sin(2*pi*100e9*t);% input sin with 0.1THz 
-y0 = zeros(2 * N, 1);
-tspan = 0:1e-15:10e-12;  
-% Solve using ode45
-[t, y_step] = ode45(@(t, y) fline_noR(t, y, N, L, C, R, Rs, Vs), tspan, y0);
-[t, y_sine] = ode45(@(t, y) fline_noR(t, y, N, L, C, R, Rs, Vs_sine), tspan, y0);
-
-% Plot voltage at the end of the transmission line (VN)
-figure(1);
-%plot(t, y_step(:,N*2));  % Plot voltage at the load (VN)
-plot(t, y_sine(:,N*2));
-xlabel('Time (s)');
-ylabel('Voltage (V)');
-title('RLC with unit step input and R_s=10');
-grid on 
-%%
-%RLC input as pulse 
-clear 
-clc
-len=150e-6;
-N = 200; % Number of sections in the transmission line
-dz=len/N;
-L = 250e-9*dz;   % Inductance
-C = 1e-10*dz;    % Capacitance
-R = 1200*dz;       % Resistance per section
-Rs = 10;       % Source resistance
-vs_pulse = @(t) trapezoidalPulse(t);
+Rs = 0;       % Source resistance
+Vs  = 1;     % Source voltage (could be a function of time)
 y0 = zeros(2 * N, 1);
 tspan = linspace(0,10e-12,10e4);  
 % Solve using ode45
-[t, y_pulse] = ode45(@(t, y) fline_noR(t, y, N, L, C, R, Rs, vs_pulse), tspan, y0);
+[t, y_step] = ode45(@(t, y) fline_noR(t, y, N, L, C, R, Rs, Vs), tspan, y0);
 % Plot voltage at the end of the transmission line (VN)
+yr= y(:,N*2)';
 figure(1);
-plot(t, y_pulse(:,N*2));
+plot(t, y_step(:,N*2));  % Plot voltage at the load (VN)
 xlabel('Time (s)');
 ylabel('Voltage (V)');
-title('RLC with Trapezoidal Pulse input with R_s=10');
+title('RLC over Time');
 grid on 
