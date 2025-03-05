@@ -1,5 +1,7 @@
-function [h_s,residues]= generate_hs(poles,q,moments)
+function [h_s,residues]= generate_hs(poles,q,moments,w)
+    s0=1i*w;
     approx_order =q;
+    
     % Compute residues using given poles and moments
     V = zeros(approx_order);
     for i = 1:approx_order
@@ -10,10 +12,16 @@ function [h_s,residues]= generate_hs(poles,q,moments)
     A_diag = diag(1 ./ poles);
     r_moments = moments(1:approx_order);
     residues = -A_diag \ (V \ r_moments(:));
-
+    
     % Transfer function in s-domain
     h_s = @(s)0;
     for i =1:length(poles)
         h_s = @(s) h_s(s)+residues(i) ./ (s - poles(i));
+    end
+    % this for testing only
+    poles = poles+s0;
+    hs = @(s)0;
+    for i =1:length(poles)
+        hs = @(s) hs(s)+residues(i) ./ ((s) - poles(i));
     end
 end

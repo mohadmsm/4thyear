@@ -38,7 +38,7 @@ function [h_impulse, h_s, y_step, t,poles] = AWE2(A, B, C, D, w, input, time)
     residues = -A_diag \ (V \ r_moments(:));
     
     % Shift poles to s-plane
-    poles = poles_unshifted + s0;
+    poles = poles_unshifted+s0;
     
     % Impulse response using shifted poles
     h_impulse = zeros(size(t));
@@ -47,7 +47,7 @@ function [h_impulse, h_s, y_step, t,poles] = AWE2(A, B, C, D, w, input, time)
     end
     
     % Transfer function in s-domain
-    h_s = @(s) sum(residues ./ (s - poles), 1);
+    h_s = @(s) sum(residues ./ ((s) - poles), 1);
     
     % Step response using recursive convolution
     y_step = zeros(size(t));

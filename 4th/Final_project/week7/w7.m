@@ -147,25 +147,25 @@ clear
 clc
 % generate 100 points.
 f = 1e6;
-f = linspace(0,f,1000);
+f = linspace(0,f,100);
 w = 2*pi*f;
 s = i *w;
 vo =1./(cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
 v =@(s)30./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
 %H is as H = @(s) a1s+a0/s^2+b1s+b0;
-first_idx = 1:50;
+first_idx = 1:15;
 %HAWE is Hs= @(s) resdue/s-pole + ...;30 is the inout, 50e-6 is t for plot
 %[h_impulse,HAWEi, y0, t] = AWE2(A,B,C,D,w(1),30,20e-6);
 models =1;
 minr = 99;
 minr1 = 99;
 minr2 = 99;
-for j=1:100
+for j=1:20
 [Hi,num,deno] = generate_yp2(real(vo(first_idx)),imag(vo(first_idx)),w(first_idx));
 [A,B,C,D] = create_state_space(num,deno);
 [h_impulse,HAWEi, y0, t] = AWE2(A,B,C,D,w(1),30,50e-6);
-N =10; % number of points per section or model 
-range = 50; % starting point of the second mmodel
+N =4; % number of points per section or model 
+range = 15; % starting point of the second mmodel
 for i=1:models 
     range = range(end):N + range(end); % raange of frequency and exact values
    % range
