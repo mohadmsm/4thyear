@@ -169,20 +169,24 @@ v = 2e8;  % Speed of propagation (m/s)
 % Compute inductance and capacitance
 C = 1 / (v * Zc); 
 L = Zc/v;
-NDZ = 50;  % Number of spatial steps
+NDZ = 100;  % Number of spatial steps
 dz = L_total / NDZ;  % Spatial step delta z
-dt = 1e-16;  % Time step delta t 
+dt = 1e-17;  % Time step delta t 
 t_max = 10e-12;
 t_steps = round(t_max / dt);  % Number of time steps
 % allocate voltage and current arrays
 V = zeros(NDZ+1, t_steps);
 time = (0:t_steps-1)*dt;
-Vs = sin(2*pi*100e9.*time);
-V(1,:)=Vs.*ones(1,t_steps);
+%Vs = sin(2*pi*100e9.*time);
+%Vs = 1;
+%V(1,:)=Vs.*ones(1,t_steps);
+V(1,1) = trapezoidalPulse(time(1));
 I = zeros(NDZ, t_steps);   
 % FDTD Loop for Time Stepping
 for n = 1:t_steps-1
-    V(1,n+1) = V(1,n);
+    %V(1,n+1) = V(1,n);
+    %V(1, n+1) = sin(2*pi*100e9 * time(n+1));
+    V(1,n+1) = trapezoidalPulse(time(n+1));
     for k = 1:NDZ
     if k>1
         V(k,n+1) = V(k,n) + dt/(dz *C)* (I(k-1,n) - I(k,n));  % Update voltag        
@@ -199,54 +203,6 @@ plot((0:t_steps-1)*dt/1e-12, V(NDZ,:));
 xlabel('Time (ps)');
 ylabel('V Load (Volts)');
 %title('FDTD Simulation of Transmission Line with unit step input');
-title('FDTD Simulation of Transmission Line with 100 GHz Sine Wave Input');
+%title('FDTD Simulation of Transmission Line with 100 GHz Sine Wave Input');
+title('FDTD Simulation of Transmission Line with Trapezoidal Pulse Input');
 grid on;
-%%
-clear
-clc
-L_total = 150e-6;  % Total length of the line (m)
-R = 1200;
-l = 250e-9;
-c = 1e-10;
-Zc = sqrt((R+l)/(c));  % Characteristic impedance (Ohms)
-v = 2e8;  % Speed of propagation (m/s)
-Rs = 0;  % Source resistance (Ohms)
-% Compute inductance and capacitance
-C = 1 / (v * Zc); 
-L = Zc/v;
-NDZ = 100;  % Number of spatial steps
-dz = L_total / NDZ;  % Spatial step delta z
-dt = 1e-17;  % Time step delta t 
-t_max = 10e-12;
-t_steps = round(t_max / dt);  % Number of time steps
-
-% Create a time vector
-time = (0:t_steps-1)*dt;
-
-V = zeros(NDZ+1, t_steps);
-% Define the source voltage as a sine wave at 100 GHz
-V(1,:) = sin(2*pi*100e9 * time);
-I = zeros(NDZ, t_steps);   
-
-% FDTD Loop for Time Stepping
-for n = 1:t_steps-1
-    V(1,n+1) = V(1,n);  % Maintain the excitation at the source
-    for k = 1:NDZ
-        if k > 1
-            V(k,n+1) = V(k,n) + dt/(dz * C)*(I(k-1,n) - I(k,n));        
-            dV_k = V(k-1,n) - V(k,n);  % Voltage difference between adjacent points
-            I(k-1,n+1) = I(k-1,n) + dt/(dz * L) * dV_k; 
-        end
-    end
-    V(NDZ,n+1) = V(NDZ,n) + dt*(I(NDZ-1,n)/(C*dz));
-end
-y_FDTD = V(NDZ,:);
-
-% Plot the results for the voltage at the load
-figure(1)
-plot(time/1e-13, V(NDZ,:));
-xlabel('Time (ps)');
-ylabel('V Load (Volts)');
-title('FDTD Simulation of Transmission Line with 100 GHz Sine Wave Input');
-grid on;
-
