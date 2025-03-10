@@ -58,54 +58,6 @@ xlabel('Time (s)')
 ylabel('Vo (V)')
 title('Transmission Line Response to 1 V Trapezoidal Pulse')
 grid on
-%%
-clear
-clc
-
-R  = 1200;       % ohms per meter
-L  = 250e-9;     % H per meter
-C  = 1e-10;      % F per meter
-G  = 0;          % S per meter
-l  = 150e-6;     % line length in meters
-
-Z0_approx = 0;
-
-% Source resistor (not matched to Z0)
-Rs = 0;   % ohms
-
-%-------------------------------
-% Sine wave parameters
-%-------------------------------
-f = 100e9;              % 100 GHz
-omega = 2*pi*f;
-A = 1;                  % amplitude (1 V)
-Vs_sine = @(s) A*(omega./(s.^2 + omega^2));  % Laplace transform of sin(omega*t)
-
-%-------------------------------
-% Define propagation constant
-%-------------------------------
-gamma = @(s) sqrt((R + L.*s).*(G + C.*s));
-
-H_mismatch_source = @(s) (Z0_approx ./ (Rs + Z0_approx)) .* exp(-gamma(s)*l);
-
-% Overall output in Laplace domain
-Vo_sine = @(s) Vs_sine(s) .* H_mismatch_source(s);
-
-%-------------------------------
-% Inverse Laplace to get time-domain
-%-------------------------------
-Tmax = 50e-12;   % ~50 ps to see several cycles (period ~10 ps)
-[y_out, t] = niltcv(Vo_sine, Tmax);
-
-%-------------------------------
-% Plot the result
-%-------------------------------
-figure
-plot(t, y_out, 'LineWidth',1.2)
-grid on
-xlabel('Time (s)')
-ylabel('V_{out} (V)')
-title('Line Response to 100 GHz Sine (R_s=10 \Omega, Matched Load)')
 
 %%
 % RLC ladder
@@ -205,4 +157,252 @@ ylabel('V Load (Volts)');
 %title('FDTD Simulation of Transmission Line with unit step input');
 %title('FDTD Simulation of Transmission Line with 100 GHz Sine Wave Input');
 title('FDTD Simulation of Transmission Line with Trapezoidal Pulse Input');
+grid on;
+%%
+% exact solution 
+clear
+clc
+R = 1200;          % Resistance per unit length (Ω/m)
+L = 250e-9;        % Inductance per unit length (H/m)
+C = 1e-10;         % Capacitance per unit length (F/m)
+Rs = 10;           
+G = 0;            
+l = 150e-6;        % Length of the transmission line 
+f_max = 100e9;    % Maximum frequency (100 GHz)
+w = 2*pi*f_max;         
+vs_sine = @(s) w./(s.^2 + w^2);% sin wave input
+Tr = 1e-12;  % 1 ps rise/fall
+Tp = 5e-12;  % 5 ps high
+Amp = 1;     % 1 V amplitude
+% Laplace transform of the trapezoid
+vpulse = @(s) (Amp./(Tr*s.^2)).*(1 - exp(-Tr*s))- (Amp./(Tr*s.^2)).*(exp(-(Tr+Tp)*s) - exp(-(2*Tr+Tp)*s));
+% Z = R+sL, Y = G+sC, so sqrt(YZ) = sqrt(s*C*(R+s*L))
+vo = @(s) sqrt(s*C.*(R+s*L))./(sqrt(s*C.*(R+s*L)).*cosh(l*sqrt(s*C.*(R+s*L)))+Rs*s*C.*sinh(l*sqrt(s*C.*(R+s*L))));
+vo_step = @(s) vo(s).*1./s;
+vo_sin = @(s) vo(s).*vs_sine(s);
+vo_pulse = @(s) vo(s).*vpulse(s);
+[y,t] = niltcv(vo_pulse,10e-12);
+plot(t, y)
+xlabel('time (s)');
+ylabel('Vo');
+grid on;
+%%
+%FDTD
+clear
+clc
+L_total = 150e-6;  % Total length of the line (m)
+R = 1200;
+L = 250e-9;
+C = 1e-10;
+NDZ = 100;  % Number of spatial steps
+dz = L_total / NDZ;  % Spatial step delta z
+dt = 1e-17;  % Time step delta t 
+t_max = 10e-12;
+t_steps = round(t_max / dt);  % Number of time steps
+% allocate voltage and current arrays
+V = zeros(NDZ+1, t_steps);
+time = (0:t_steps-1)*dt;
+%Vs = sin(2*pi*100e9.*time);
+Vs = 1;
+V(1,:)=Vs.*ones(1,t_steps);
+V(1,1) = trapezoidalPulse(time(1));
+I = zeros(NDZ, t_steps);   
+% FDTD Loop for Time Stepping
+for n = 1:t_steps-1
+    %V(1,n+1) = V(1,n)-Rs*I(1,n+1);
+    %V(1, n+1) = sin(2*pi*100e9 * time(n+1));
+    V(1,n+1) = trapezoidalPulse(time(n+1));
+    for k = 1:NDZ
+    if k>1
+        V(k,n+1) = V(k,n) + dt/(dz *C)* (I(k-1,n) - I(k,n));  % Update voltag        
+        dV_k = V(k-1,n) - V(k,n);  % Voltage difference between points 
+        I(k-1,n+1) = I(k-1,n) + dt/(dz *L) * (dV_k-R*dz*I(k-1,n));
+    end
+    end
+    V(NDZ,n+1) =V(NDZ,n)+dt*(I(NDZ-1,n)/(C*dz));
+end
+y_FDTD = V(NDZ,:);
+% Plot the results for the voltage at the load
+figure(1)
+plot((0:t_steps-1)*dt/1e-12, V(NDZ,:));
+xlabel('Time (ps)');
+ylabel('V Load (Volts)');
+%title('FDTD Simulation of Transmission Line with unit step input');
+%title('FDTD Simulation of Transmission Line with 100 GHz Sine Wave Input');
+title('FDTD Simulation of Transmission Line with Trapezoidal Pulse Input');
+grid on
+%%
+%FDTD
+clear
+clc
+tic
+L_total = 150e-6;  % Total length of the line (m)
+R = 1200;
+L = 250e-9;
+C = 1e-10;
+Rs = 10;
+NDZ = 50;  % Number of spatial steps
+dz = L_total / NDZ;  % Spatial step delta z
+v = 1/sqrt(L*C); % Phase velocity (m/s)
+dt = dz / v;   % Magic time step (dt = dz/v)
+%dt = 1e-15;  % Time step delta t 
+t_max = 10e-12;
+t_steps = round(t_max / dt);  % Number of time steps
+% allocate voltage and current arrays
+time = (0:t_steps-1)*dt;
+V = zeros(NDZ+1, t_steps);
+I = zeros(NDZ, t_steps);
+% 1.Step input (1V source)
+Vs = 1 * ones(1, t_steps); 
+% 2. Sine wave (100 GHz)
+%freq = 100e9; % Frequency in Hz
+%Vs = sin(2*pi*freq * time);
+% 3. Trapezoidal pulse (custom function)
+%for i=1:length(time)
+    %Vs(i) = trapezoidalPulse(time(i));
+%end
+ 
+% FDTD Loop for Time Stepping
+for n = 1:t_steps-1
+     V(1, n+1) = (Rs*C/2*dz/dt+0.5)^-1*((Rs *C/2 *dz/dt-0.5)*V(1,n)-Rs*I(1,n)+0.5*(Vs(n+1)+Vs(n)));
+    for k = 1:NDZ
+    if k>1
+        V(k,n+1) = V(k,n) + dt/(dz *C)* (I(k-1,n) - I(k,n));  % Update voltag            
+        I(k-1,n+1) = I(k-1,n)-(dt/(L*dz))*(V(k,n+1)-V(k-1,n+1))-(R*dt/L)*I(k-1,n);% Update current
+    end
+    end
+    V(NDZ,n+1) =V(NDZ,n)+dt*(I(NDZ-1,n)/(C*dz));
+end
+y_FDTD = V(NDZ,:);
+toc
+% Plot the results for the voltage at the load
+vo = @(s) sqrt(s*C.*(R+s*L))./(sqrt(s*C.*(R+s*L)).*cosh(L_total*sqrt(s*C.*(R+s*L)))+Rs*s*C.*sinh(L_total*sqrt(s*C.*(R+s*L))));
+vo_step = @(s) vo(s).*1./s;
+[y1,t] = niltcv(vo_step,10e-12);
+R =RMSE(y_FDTD,y1);
+figure(1)
+plot(time/1e-12, V(NDZ,:),t*1e12,y1);
+xlabel('Time (ps)');
+ylabel('V Load (Volts)');
+title('FDTD Simulation of Transmission Line with unit step input');
+%title('FDTD Simulation of Transmission Line with 100 GHz Sine Wave Input');
+%title('FDTD Simulation of Transmission Line with Trapezoidal Pulse Input');
+legend('FDTD(magic t step)', 'Exact');
+grid on
+%%
+% FDTD Simulation with Source Resistance (R_s)
+clear
+clc
+tic
+% Parameters
+L_total = 150e-6;    % Total length of the line (m)
+R = 1200;            % Resistance per unit length (Ω/m)
+L = 250e-9;          % Inductance per unit length (H/m)
+C = 1e-10;           % Capacitance per unit length (F/m)
+Rs = 10;             % Source resistance (Ω)
+NDZ = 50;            % Number of spatial steps
+dz = L_total / NDZ;  % Spatial step (Δz)
+v_phase = 1/sqrt(L*C); % Phase velocity (m/s)
+dt = dz / v_phase;   % Magic time step (Δt = Δz/v)
+%dt = 1e-16;
+t_max = 10e-12;      % Simulation time (s)
+t_steps = round(t_max / dt); % Number of time steps
+
+V = zeros(NDZ+1, t_steps); % Voltage nodes (spatial: 1 to NDZ+1)
+I = zeros(NDZ, t_steps);    % Current nodes (spatial: 1 to NDZ)
+
+% Time vector and source voltage definition
+time = (0:t_steps-1)*dt;
+Vs = 1 * ones(1, t_steps); % Step input (1V source)
+
+% FDTD Loop (staggered time-stepping)
+for n = 1:t_steps-1
+    % Using equation (10a) from the paper:
+    V(1, n+1) = (Rs*C/2*dz/dt+0.5)^-1*((Rs *C/2 *dz/dt-0.5)*V(1,n)-Rs*I(1,n)+0.5*(Vs(n+1)+Vs(n)));    
+    % Update Interior Voltages (k=2 to NDZ)
+    % Using equation (10b) from the paper:
+    for k = 2:NDZ
+        V(k,n+1) = V(k,n)-(dt/(C*dz))*(I(k, n)-I(k-1, n));
+    end
+    % Update Load-End Voltage (z=l)
+    % Assuming open circuit (no R_L)
+    V(NDZ+1,n+1) = V(NDZ+1,n)+(dt/(C*dz))*I(NDZ,n);
+    % Update All Currents (k=1 to NDZ)
+    % Using equation (10d) from the paper:
+    for k = 1:NDZ
+        I(k,n+1) = I(k,n)-(dt/(L*dz))*(V(k+1,n+1)-V(k,n+1))-(R*dt/L)*I(k,n);
+    end
+end
+
+% Plot load voltage
+figure(1);
+plot(time/1e-12, V(NDZ+1, :));
+xlabel('Time (ps)');
+ylabel('Load Voltage (V)');
+title('FDTD Simulation with R_s = 10');
+grid on;
+toc
+%%
+clear
+clc
+% Parameters
+L_total = 150e-6;    % Total length of the line (m)
+R = 1200;            % Resistance per unit length (Ω/m)
+L = 250e-9;          % Inductance per unit length (H/m)
+C = 1e-10;           % Capacitance per unit length (F/m)
+Rs = 10;             % Source resistance (Ω)
+NDZ = 50;            % Number of spatial steps
+dz = L_total / NDZ;  % Spatial step (Δz)
+v_phase = 1/sqrt(L*C); % Phase velocity (m/s)
+dt = dz / v_phase;   % Magic time step (Δt = Δz/v)
+t_max = 10e-12;      % Simulation time (s)
+t_steps = round(t_max / dt); % Number of time steps
+
+% Initialize staggered voltage and current arrays
+V = zeros(NDZ+1, t_steps); % Voltage nodes (spatial: 1 to NDZ+1)
+I = zeros(NDZ, t_steps);    % Current nodes (spatial: 1 to NDZ)
+
+% Time vector and source voltage definition
+time = (0:t_steps-1)*dt;
+
+% ============================================
+% Choose input type: Uncomment ONE of the following
+% ============================================
+% 1. Sine wave (100 GHz)
+freq = 100e9; % Frequency in Hz
+Vs = sin(2*pi*freq * time);
+
+% 2. Trapezoidal pulse (custom function)
+% Vs = trapezoidalPulse(time); % Ensure this function is defined
+% ============================================
+
+% FDTD Loop (staggered time-stepping)
+for n = 1:t_steps-1
+    % Update Source-End Voltage (z=0) with Rs
+    numerator = (Rs * (C * dz) / (2 * dt) - 0.5) * V(1, n) ...
+                - Rs * I(1, n) + 0.5 * (Vs(n+1) + Vs(n));
+    denominator = Rs * (C * dz) / (2 * dt) + 0.5;
+    V(1, n+1) = numerator / denominator;
+    
+    % Update Interior Voltages (k=2 to NDZ)
+    for k = 2:NDZ
+        V(k, n+1) = V(k, n) - (dt / (C * dz)) * (I(k, n) - I(k-1, n));
+    end
+    
+    % Update Load-End Voltage (z=ℒ)
+    V(NDZ+1, n+1) = V(NDZ+1, n) + (dt / (C * dz)) * I(NDZ, n);
+    
+    % Update All Currents (k=1 to NDZ)
+    for k = 1:NDZ
+        I(k, n+1) = I(k, n) - (dt / (L * dz)) * (V(k+1, n+1) - V(k, n+1)) ...
+                     - (R * dt / L) * I(k, n);
+    end
+end
+
+% Plot load voltage
+figure(1);
+plot(time/1e-12, V(NDZ+1, :));
+xlabel('Time (ps)');
+ylabel('Load Voltage (V)');
+title('FDTD Simulation with R_s = 10 Ω and Custom Input');
 grid on;
