@@ -1,4 +1,4 @@
-function [h_s,residues]= generate_hs(poles,q,moments,w)
+function [h_s,hs,residues]= generate_hs(poles,q,moments,w)
     s0=1i*w;
     approx_order =q;
     

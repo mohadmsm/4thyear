@@ -12,7 +12,7 @@ end
 % Extract coefficients for state-space representation
 g = D(2:end);  % Exclude leading coefficient ( g terms )
 % f terms 
-if R(1) ==0
+if R(1) ==0 &&length(R)>2
     f=R(2:end);
 else
     f = R; 
