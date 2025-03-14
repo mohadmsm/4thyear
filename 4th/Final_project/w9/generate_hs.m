@@ -1,5 +1,4 @@
-function [h_s,hs,residues]= generate_hs(poles,q,moments,w)
-    s0=1i*w;
+function [h_s,residues]= generate_hs(poles,q,moments)
     approx_order =q;
     
     % Compute residues using given poles and moments
@@ -17,11 +16,5 @@ function [h_s,hs,residues]= generate_hs(poles,q,moments,w)
     h_s = @(s)0;
     for i =1:length(poles)
         h_s = @(s) h_s(s)+residues(i) ./ (s - poles(i));
-    end
-    % this for testing only
-    poles = poles+s0;
-    hs = @(s)0;
-    for i =1:length(poles)
-        hs = @(s) hs(s)+residues(i) ./ ((s) - poles(i));
     end
 end

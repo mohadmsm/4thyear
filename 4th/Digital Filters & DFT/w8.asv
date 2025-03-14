@@ -1,0 +1,134 @@
+clear
+clc
+T = 0.1;
+f = 0:0.001:1/(2*T); % cutt of if you want to 2 decimal then step = 0.01 and so on
+w = 2*pi*f;
+s= i*w;
+z = exp(i*w*T);
+Hs = (s.^2+9)./(s.^2+s+9);
+s0 = 2/T * ((z-1)./(z+1));
+Hz = (s0.^2+9)./(s0.^2+s0+9);
+%Hz = (z+1)./(z*(T+1));
+a = (4-9*T^2)/(9*T^2+2*T+4); % to be continue 
+b = 2*T/(2+2*T);
+Hz_claclated = b*(z+1)./(z-a);
+plot(f,abs(Hs),f,abs(Hz),'r')
+Hdiff = abs(Hz)-1/sqrt(2);
+[aa,ff] = min(abs(Hdiff));
+fc=f(ff);% 5/2pi
+%actal cut off
+c=(2-2*T)/(2+2*T);
+a= 2*T/(2+2*T);
+fcc = 1/(2*pi*T) *acos((1+c^2-4*a^2)/(4*a^2+2*c));
+fc
+fcc
+%%
+clear
+clc
+fc = 800;
+T =1/fc;
+wa = 2*pi*fc;
+Ha = tf(wa,[1 wa]);
+Hd = tf([2*T/(2+2*T) 2*T/(2+2*T)], [1 (-2+2*T)/(2+2*T)], T);
+t = 0:T:2;
+[y,t] = impulse(Ha,t);
+[yd,td] = impulse(Hd,t);% change to step if you want step
+plot(t,y)
+hold on
+plot(td,yd)
+xlabel('time ')
+legend('Analog','Discrete')
+f = 0:0.0001:fc/2;
+w=2*pi*f;
+s= i*w;
+fpw= 1/(pi*T)*tan(pi*100/800);
+w2 = 2*pi*fpw;
+Ha2 = w2./s+w2;
+z = exp(i*w*T);
+s0 = 2/T * (z-1)/(z+1);
+Hz2 = w2./s0+w2;
+plot(f,Ha2)
+%%
+clear
+clc
+T = 1/2000;
+f = 0:0.001:1/(2*T); % cutt of if you want to 2 decimal then step = 0.01 and so on
+w = 2*pi*f;
+s= i*w;
+z = exp(i*w*T);
+Hs = 200*pi./(s+200*pi);
+Hz= 200*pi*z./(z-exp(-0.1*pi));
+Hz = T*Hz;
+%Hz = (z+1)./(z*(T+1));
+a = (4-9*T^2)/(9*T^2+2*T+4); % to be continue 
+b = 2*T/(2+2*T);
+Hz_claclated = b*(z+1)./(z-a);
+plot(f,abs(Hs),f,abs(Hz),'r')
+Hdiff = abs(Hz)-1/sqrt(2);
+[aa,ff] = min(abs(Hdiff));
+fc=f(ff);% 5/2pi
+%actal cut off
+c=(2-2*T)/(2+2*T);
+a= 2*T/(2+2*T);
+fcc = 1/(2*pi*T) *acos((1+c^2-4*a^2)/(4*a^2+2*c));
+%%
+clear 
+clc
+T = 1/800;
+sys_a = tf([200*pi],[1 200*pi]);
+sys_z = tf([200*pi],[1 -exp(-0.25*pi)],1/800);
+[y,t] = impulse(sys_a);
+[yd,td] = impulse(sys_z);
+plot(t,y,td,yd*T);
+xlabel('time ')
+legend('Analog','Discrete')
+%%
+clear
+clc
+T = 0.1;
+f = 0:0.001:1/(2*T); % cutt of if you want to 2 decimal then step = 0.01 and so on
+w = 2*pi*f;
+s= i*w;
+z = exp(i*w*T);
+k1 = 0.5+0.1291i;
+k2 = 0.5-0.1291i;
+Hs = (s)./(s.^2+s+4);
+z1= exp((-0.5+i*1.9365)*T);
+z2=exp((-0.5-i*1.9365)*T);
+Hz = k1*z./(z-z1)+k2*z./(z-z2);
+plot(f,abs(Hs),f,abs(Hz*T),'r')
+xlabel('freaquency (Hz)')
+Hdiff = abs(Hz)-1/sqrt(2);
+[aa,ff] = min(abs(Hdiff));
+fc=f(ff);% 5/2pi
+fc
+%%
+clear
+clc
+T = 0.1;
+f = 0:0.001:1/(2*T); % cutt of if you want to 2 decimal then step = 0.01 and so on
+w = 2*pi*f;
+s= i*w;
+z = exp(i*w*T);
+k1 = 4/3;
+k2 = -1/3;
+Hs = (s)./(s.^2+5*s+4);
+z1= exp((-4)*T);
+z2=exp((-1)*T);
+Hz = k1*z./(z-z1)+k2*z./(z-z2);
+plot(f,abs(Hs),f,abs(Hz*T),'r')
+xlabel('freaquency (Hz)')
+Hdiff = abs(Hz)-1/sqrt(2);
+[aa,ff] = min(abs(Hdiff));
+fc=f(ff);% 5/2pi
+%%
+clear 
+clc
+T = 0.1;
+sys_a = tf([1 0],[1 200*pi]);
+sys_z = tf([1 -(4/3*exp(-0.1)-1/3*exp(-0.4)) 0],[1 -(exp(-0.1)+exp(-0.4)) exp(-0.5)],T);
+[y,t] = impulse(sys_a);
+[yd,td] = impulse(sys_z);
+plot(t,y,td,yd*T);
+xlabel('time ')
+legend('Analog','Discrete')

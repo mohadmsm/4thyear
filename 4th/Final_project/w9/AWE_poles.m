@@ -37,5 +37,5 @@ function [poles,poles_unshifted,residues,moments]= AWE_poles(A, B, C, D, w)
     residues = -A_diag \ (V \ r_moments(:));
     
     % Shift poles to s-plane
-    poles = poles_unshifted + s0;
+    poles = poles_unshifted+s0;
 end
