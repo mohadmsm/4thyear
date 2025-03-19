@@ -1,0 +1,16 @@
+function [y,t]=RLC(R,L,C,length,t_max)
+N = 200; % Number of sections in the transmission line
+dz=length/N;
+L = L*dz;   % Inductance
+C = C*dz;    % Capacitance
+R =R*dz;       % Resistance per section
+Rs = 10;       % Source resistance
+Vs  = 1;     % Source voltage 
+Vs_sine = @(t) sin(2*pi*100e9*t);% input sin with 0.1THz 
+y0 = zeros(2 * N, 1);
+tspan = 0:10e-16:t_max;  
+% Solve using ode45
+[t, y_step] = ode45(@(t, y) fline_noR(t, y, N, L, C, R, Rs, Vs), tspan, y0);
+%[t, y_sine] = ode45(@(t, y) fline_noR(t, y, N, L, C, R, Rs, Vs_sine), tspan, y0);
+y =  y_step(:,N*2);
+end

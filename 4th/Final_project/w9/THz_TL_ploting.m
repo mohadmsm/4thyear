@@ -212,17 +212,27 @@ clc
 R = 1200;          % Resistance per unit length (Ω/m)
 L = 250e-9;        % Inductance per unit length (H/m)
 C = 1e-10;         % Capacitance per unit length (F/m)
-Rs = 10;           
+Rs = 0;           
 G = 0;            
 l = 150e-6;        % Length of the transmission line 
 f_max = 100e9;    % Maximum frequency (100 GHz)
-w = 2*pi*f_max;        
-%s = 1i*w; 
-vs_sine = @(s) w./(s.^2 + w^2);%
-vo = @(s) ((R + L.*s)./(G + C.*s)).^(1/2)./(tanh((l.*((G + C.*s).*(R + L.*s)).^(1/2))./2).*(Rs + sinh(l.*((G + C.*s).*(R + L.*s)).^(1/2)).*((R + L.*s)./(G + C.*s)).^(1/2) + ((R + L.*s)./(G + C.*s)).^(1/2)./tanh((l.*((G + C.*s).*(R + L.*s)).^(1/2))./2)));
-vo = @(s) vo(s).*vs_sine(s);
-[y,t] = niltcv(vo,10e-12);
-plot(t, y)
+t_max = 10e-12;
+w = 2*pi*f_max;         
+vs_sine = @(s) w./(s.^2 + w^2);% sin wave input
+Tr = 1e-12;  % 1 ps rise/fall
+Tp = 5e-12;  % 5 ps high
+Amp = 1;     % 1 V amplitude
+% Laplace transform of the trapezoid
+vpulse = @(s) (Amp./(Tr*s.^2)).*(1 - exp(-Tr*s))- (Amp./(Tr*s.^2)).*(exp(-(Tr+Tp)*s) - exp(-(2*Tr+Tp)*s));
+% Z = R+sL, Y = G+sC, so sqrt(YZ) = sqrt(s*C*(R+s*L))
+vo = @(s) sqrt(s*C.*(R+s*L))./(sqrt(s*C.*(R+s*L)).*cosh(l*sqrt(s*C.*(R+s*L)))+Rs*s*C.*sinh(l*sqrt(s*C.*(R+s*L))));
+vo_step = @(s) vo(s).*1./s;
+vo_sin = @(s) vo(s).*vs_sine(s);
+vo_pulse = @(s) vo(s).*vpulse(s);
+[y,t] = niltcv(vo_step,t_max);
+[y_RLC,t1]=RLC(R,L,C,l,t_max);
+[y_FDTD,t2]=FDTD(R,L,C,l,t_max);
+plot(t2,y_FDTD)
 xlabel('time (s)');
 ylabel('Vo');
 grid on;
