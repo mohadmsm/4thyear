@@ -11,10 +11,11 @@ f = 100e9;
 f = linspace(1,f,100);
 w = 2*pi*f;
 s = i *w; 
+R = R+Rs*(1+1j)*sqrt(w);
 % exact solution and generating 100 points 
-vo = 1 ./ (cosh(l .* sqrt((R + L.*s) .* (G + C.*s))));
+vo = sqrt(s*C.*(R+s*L))./(sqrt(s*C.*(R+s*L)).*cosh(l*sqrt(s*C.*(R+s*L)))+Rs*s*C.*sinh(l*sqrt(s*C.*(R+s*L))));
 % to be used in NILT
-v =@(s) 1 ./ (s.*cosh(l .* sqrt((R + L.*s) .* (G + C.*s))));
+v = @(s) sqrt(s*C.*(R+s*L))./(sqrt(s*C.*(R+s*L)).*cosh(l*sqrt(s*C.*(R+s*L)))+Rs*s*C.*sinh(l*sqrt(s*C.*(R+s*L))));
 %v =@(s)1./(s.*cosh(400.*(0 + 1e-10.*s).^(1/2).*(0.1 + 2.5e-7.*s).^(1/2)));
 first_idx = 1:5;
 time = 10e-12;
@@ -35,12 +36,14 @@ for i=1:models
     HAWEi = @(s) HAWEi(s)+HAWEj(s);
     y0 = y0+yi;    
 end
-[y1,t1]=niltcv(v,time);
+hss = @(s)HAWEi(s)*1./s;
+[y1,t1]=niltcv(hss,time);
+
 %RMSE = sqrt(sum(abs(y0-y1).^2)/length(y1)); %unit step 
 %RMSE2 = sqrt(sum(abs(HAWEi(s)-vo).^2)/length(vo));% impulse
 figure(1)
-plot(t1,y0,ti,y1)% step response
-%plot(f,abs(HAWEi(s)),f,abs(vo)); % frequency response
+%plot(t1,y0,ti,y1)% step response
+plot(f,abs(HAWEi(s)),f,abs(vo)); % frequency response
 grid on
 %xlabel('Frequency (Hz)')
 xlabel('time (s)')

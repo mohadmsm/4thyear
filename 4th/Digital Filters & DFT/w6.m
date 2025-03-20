@@ -13,17 +13,17 @@ plot(f,abs(Hs),f,abs(Hz),'r')
 %%
 clear
 clc
-T = 0.1;
+T = 0.05;
 f = 0:0.001:1/(2*T); % cutt of if you want to 2 decimal then step = 0.01 and so on
 w = 2*pi*f;
 s= i*w;
 z = exp(i*w*T);
-Hs = 2./(s+2);
+Hs = 3./(3+2);
 s0 = 2/T * ((z-1)./(z+1));
-Hz = 2./(s0+2);
+Hz = 3./(s0+3);
 %Hz = (z+1)./(z*(T+1));
 a = (2-2*T)/(2+2*T);
-b = 2*T/(2+2*T);
+b = 3*T/(2+3*T);
 Hz_claclated = b*(z+1)./(z-a);
 plot(f,abs(Hs),f,abs(Hz_claclated),'r')
 Hdiff = abs(Hz)-1/sqrt(2);
@@ -34,7 +34,6 @@ c=(2-2*T)/(2+2*T);
 a= 2*T/(2+2*T);
 fcc = 1/(2*pi*T) *acos((1+c^2-4*a^2)/(4*a^2+2*c));
 fc
-fcc
 %%
 clear
 clc
