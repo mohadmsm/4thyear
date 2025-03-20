@@ -11,7 +11,6 @@ f = 100e9;
 f = linspace(1,f,100);
 w = 2*pi*f;
 s = i *w; 
-R = R+Rs*(1+1j)*sqrt(w);
 % exact solution and generating 100 points 
 vo = sqrt(s*C.*(R+s*L))./(sqrt(s*C.*(R+s*L)).*cosh(l*sqrt(s*C.*(R+s*L)))+Rs*s*C.*sinh(l*sqrt(s*C.*(R+s*L))));
 % to be used in NILT
