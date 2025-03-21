@@ -7,15 +7,15 @@ t_steps = round(t_max / dt);  % Number of time steps
 time = (0:t_steps-1)*dt;
 V = zeros(NDZ+1, t_steps);
 I = zeros(NDZ, t_steps);
+%f = 100e9;
 % 1.Step input (1V source)
 Vs = 1 * ones(1, t_steps); 
 % 2. Sine wave (100 GHz)
-%freq = 100e9; % Frequency in Hz
-%Vs = sin(2*pi*freq * time);
+%Vs = sin(2*pi*f* time);
 % 3. Trapezoidal pulse (custom function)
-%for i=1:length(time)
-    %Vs(i) = trapezoidalPulse(time(i));
-%end 
+for ii=1:length(time)
+    Vs(ii) = trapezoidalPulse(time(ii));
+end 
 % FDTD Loop for Time Stepping
 for n = 1:t_steps-1
      V(1, n+1) = (Rs*C/2*dz/dt+0.5)^-1*((Rs *C/2 *dz/dt-0.5)*V(1,n)-Rs*I(1,n)+0.5*(Vs(n+1)+Vs(n)));

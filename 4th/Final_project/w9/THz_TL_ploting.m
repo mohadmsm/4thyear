@@ -228,20 +228,21 @@ vpulse = @(s) (Amp./(Tr*s.^2)).*(1 - exp(-Tr*s))- (Amp./(Tr*s.^2)).*(exp(-(Tr+Tp
 % Z = R+sL, Y = G+sC, so sqrt(YZ) = sqrt(s*C*(R+s*L))
 vo = @(s) sqrt(s*C.*(R+s*L))./(sqrt(s*C.*(R+s*L)).*cosh(l*sqrt(s*C.*(R+s*L)))+Rs*s*C.*sinh(l*sqrt(s*C.*(R+s*L))));
 vo_step = @(s) vo(s).*1./s;
-vo_sin = @(s) vo(s).*vs_sine(s);
+vo_sine = @(s) vo(s).*vs_sine(s);
 vo_pulse = @(s) vo(s).*vpulse(s);
-N = 400;
+N = 50;
 tic
 [y_RLC,t1]=RLC(R,L,C,l,Rs,t_max,N);
 toc
-[y_FDTD,t2]=FDTD(R,L,C,l,Rs,t_max,N);
-[y,t] = niltcv(vo_step,t_max,length(y_FDTD));
-R = RMSE(y,y_FDTD);
+%FDTD
+[y,t] = niltcv(vo_pulse,t_max,length(y_RLC));
+R = RMSE(y,y_RLC');
 %{
-plot(t,y_RLC,t,y)
+plot(t,y_FDTD,t,y)
 xlabel('time (s)')
 grid on 
-title('RLC Simulation of TL with unit step input with Rs =10');
-legend('RLC', 'EXACT')
+%title('RLC Simulation of Transmission Line with 100 GHz Sine Wave Input'); 
+title('FDTD Simulation of Transmission Line with Trapezoidal Pulse Input'); 
+legend('FDTD', 'EXACT')
 %}
 R

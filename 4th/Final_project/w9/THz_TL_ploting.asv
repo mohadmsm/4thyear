@@ -228,20 +228,45 @@ vpulse = @(s) (Amp./(Tr*s.^2)).*(1 - exp(-Tr*s))- (Amp./(Tr*s.^2)).*(exp(-(Tr+Tp
 % Z = R+sL, Y = G+sC, so sqrt(YZ) = sqrt(s*C*(R+s*L))
 vo = @(s) sqrt(s*C.*(R+s*L))./(sqrt(s*C.*(R+s*L)).*cosh(l*sqrt(s*C.*(R+s*L)))+Rs*s*C.*sinh(l*sqrt(s*C.*(R+s*L))));
 vo_step = @(s) vo(s).*1./s;
-vo_sin = @(s) vo(s).*vs_sine(s);
+vo_sine = @(s) vo(s).*vs_sine(s);
 vo_pulse = @(s) vo(s).*vpulse(s);
-N = 100;
-tic
+N = 200;
 [y_RLC,t1]=RLC(R,L,C,l,Rs,t_max,N);
-toc
+tic
 [y_FDTD,t2]=FDTD(R,L,C,l,Rs,t_max,N);
-[y,t] = niltcv(vo_step,t_max,length(y_FDTD));
+toc
+[y,t] = niltcv(vo_pulse,t_max,length(y_FDTD));
 R = RMSE(y,y_FDTD);
-%{
-plot(t,y_RLC,t,y)
+plot(t,y_FDTD,t,y)
 xlabel('time (s)')
 grid on 
-title('RLC Simulation of TL with unit step input with Rs =10');
-legend('RLC', 'EXACT')
+%title('RLC Simulation of Transmission Line with 100 GHz Sine Wave Input'); 
+title('FDTD Simulation of Transmission Line with Trapezoidal Pulse Input'); 
+legend('FDTD', 'EXACT')
 %}
 R
+NDZ = N;  % Number of spatial steps
+dz = l / NDZ;  % Spatial step delta z
+dt = 1e-16;  % Time step delta t or Magic time step (dt = dz/v) for a lossles case
+t_steps = round(t_max / dt);  % Number of time steps
+% allocate voltage and current arrays
+time = (0:t_steps-1)*dt;
+% allocate voltage and current arrays
+V = zeros(NDZ+1, t_steps);
+I = zeros(NDZ, t_steps);
+for i=1:length(time)
+    Vs(i) = trapezoidalPulse(time(i));
+end 
+% FDTD Loop for Time Stepping
+for n = 1:t_steps-1
+     V(1, n+1) = (Rs*C/2*dz/dt+0.5)^-1*((Rs *C/2 *dz/dt-0.5)*V(1,n)-Rs*I(1,n)+0.5*(Vs(n+1)+Vs(n)));
+    for k = 1:NDZ
+    if k>1
+        V(k,n+1) = V(k,n) + dt/(dz *C)* (I(k-1,n) - I(k,n));  % Update voltag            
+        I(k-1,n+1) = I(k-1,n)-(dt/(L*dz))*(V(k,n+1)-V(k-1,n+1))-(R*dt/L)*I(k-1,n);% Update current
+    end
+    end
+    V(NDZ,n+1) =V(NDZ,n)+dt*(I(NDZ-1,n)/(C*dz));
+end
+y = V(NDZ,:);
+t = time;
