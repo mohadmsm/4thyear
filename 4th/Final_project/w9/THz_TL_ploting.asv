@@ -230,7 +230,7 @@ vo = @(s) sqrt(s*C.*(R+s*L))./(sqrt(s*C.*(R+s*L)).*cosh(l*sqrt(s*C.*(R+s*L)))+Rs
 vo_step = @(s) vo(s).*1./s;
 vo_sin = @(s) vo(s).*vs_sine(s);
 vo_pulse = @(s) vo(s).*vpulse(s);
-N = 400;
+N = 100;
 tic
 [y_RLC,t1]=RLC(R,L,C,l,Rs,t_max,N);
 toc

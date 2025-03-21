@@ -1,7 +1,7 @@
-function [y,t]=FDTD(R,L,C,length,Rs,t_max)
-NDZ = 100;  % Number of spatial steps
+function [y,t]=FDTD(R,L,C,length,Rs,t_max,N)
+NDZ = N;  % Number of spatial steps
 dz = length / NDZ;  % Spatial step delta z
-dt = 1e-17;  % Time step delta t or Magic time step (dt = dz/v) for a lossles case
+dt = 1e-16;  % Time step delta t or Magic time step (dt = dz/v) for a lossles case
 t_steps = round(t_max / dt);  % Number of time steps
 % allocate voltage and current arrays
 time = (0:t_steps-1)*dt;
@@ -28,5 +28,5 @@ for n = 1:t_steps-1
     V(NDZ,n+1) =V(NDZ,n)+dt*(I(NDZ-1,n)/(C*dz));
 end
 y = V(NDZ,:);
-t = time;% at (ps)
+t = time;
 end

@@ -1,17 +1,7 @@
-%FDTD
-clear
-clc
-L_total = 150e-6;  % Total length of the line (m)
-R = 1200;
-L = 250e-9;
-C = 1e-10;
-Rs = 10;
-NDZ = 50;  % Number of spatial steps
-dz = L_total / NDZ;  % Spatial step delta z
-v = 1/sqrt(L*C); % Phase velocity (m/s)
-%dt = dz/v;   % Magic time step (dt = dz/v)
-dt = 1e-16;  % Time step delta t 
-t_max = 10e-12;
+function [y,t]=FDTD(R,L,C,length,Rs,t_max)
+NDZ = 100;  % Number of spatial steps
+dz = length / NDZ;  % Spatial step delta z
+dt = 1e-15;  % Time step delta t or Magic time step (dt = dz/v) for a lossles case
 t_steps = round(t_max / dt);  % Number of time steps
 % allocate voltage and current arrays
 time = (0:t_steps-1)*dt;
@@ -25,8 +15,7 @@ Vs = 1 * ones(1, t_steps);
 % 3. Trapezoidal pulse (custom function)
 %for i=1:length(time)
     %Vs(i) = trapezoidalPulse(time(i));
-%end
- 
+%end 
 % FDTD Loop for Time Stepping
 for n = 1:t_steps-1
      V(1, n+1) = (Rs*C/2*dz/dt+0.5)^-1*((Rs *C/2 *dz/dt-0.5)*V(1,n)-Rs*I(1,n)+0.5*(Vs(n+1)+Vs(n)));
@@ -38,14 +27,6 @@ for n = 1:t_steps-1
     end
     V(NDZ,n+1) =V(NDZ,n)+dt*(I(NDZ-1,n)/(C*dz));
 end
-y_FDTD = V(NDZ,:);
-
-% Plot the results for the voltage at the load
-figure(1)
-plot(time/1e-12, V(NDZ,:));
-xlabel('Time (ps)');
-ylabel('V Load (Volts)');
-title('FDTD Simulation of Transmission Line with unit step input');
-%title('FDTD Simulation of Transmission Line with 100 GHz Sine Wave Input');
-%title('FDTD Simulation of Transmission Line with Trapezoidal Pulse Input');
-grid on
+y = V(NDZ,:);
+t = time;
+end
