@@ -1,6 +1,6 @@
 function [h_impulse, h_s, y_step, t,poles,moments] = AWE2(A, B, C, D, w, input, time)
     t = linspace(0, time, 1000);
-    q = 2;
+    q = length(B);
     num_moments = 2 * q;
     s0 = 1i * w;
     moments = zeros(1, num_moments);
@@ -39,7 +39,11 @@ function [h_impulse, h_s, y_step, t,poles,moments] = AWE2(A, B, C, D, w, input, 
     
     % Shift poles to s-plane
     poles = poles_unshifted + s0;
-    
+    % Filter out unstable poles (Re(poles) >= 0)
+    stable_indices = real(poles) < 0;
+    poles = poles(stable_indices);
+    residues = residues(stable_indices);
+    approx_order = length(poles);  % Update approximation order
     % Impulse response using shifted poles
     h_impulse = zeros(size(t));
     for i = 1:approx_order
@@ -47,7 +51,10 @@ function [h_impulse, h_s, y_step, t,poles,moments] = AWE2(A, B, C, D, w, input, 
     end
     
     % Transfer function in s-domain
-    h_s = @(s) sum(residues ./ (s - poles), 1);
+    h_s = @(s) 0;
+    for i=1:length(poles)
+        h_s = @(s) h_s(s)+residues(i)./(s-poles(i));
+    end
     
     % Step response using recursive convolution
     y_step = zeros(size(t));
