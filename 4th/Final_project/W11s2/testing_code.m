@@ -71,8 +71,15 @@ poles = pol(2:end);
 residues = res(2:end);
 %{
 t = linspace(0,time,1000);
-wo =2*pi*100e9;
-v_sine = @(s) wo./(s.^2+wo^2).*vs(s);
+Tr = 1e-12;  % 1 ps rise/fall
+Tp = 5e-12;  % 5 ps high
+Amp = 1;     % 1 V amplitude
+wo = 2*pi*100e9;
+vs_sine = @(s) wo./(s.^2 + wo^2);% Laplace transform of sin(wt)
+
+% Laplace transform of the trapezoid
+vpulse = @(s) (Amp./(Tr*s.^2)).*(1 - exp(-Tr.*s))- (Amp./(Tr.*s.^2)).*(exp(-(Tr+Tp).*s) - exp(-(2*Tr+Tp).*s));
+v_sine = @(s) vs(s).*vs_sine(s);
 [y,t]=sine_response2(poles,residues,t);
 [y2,t2] = niltcv(v_sine,time,1000);
 R4 =RMSE(y,y2);
@@ -81,7 +88,7 @@ plot(t1,y,t2,y2)% step response
 xlabel('time (s)')
 grid on
 legend('AWE approximation', 'Exact');
-title("AWE approximation Vs the Exact simulation with 0.1 THz Sine Wave input")
+title("AWE approximation Vs the Exact simulation with Trapezoidal pulse input")
 %}
 %{
 wo = 2*pi*100e9;
