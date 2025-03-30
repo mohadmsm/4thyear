@@ -22,7 +22,7 @@ vo_step = @(s) vo(s)./s;
 vo_sine = @(s) vs_sine(s).*vo(s);
 vo_pulse = @(s) vpulse(s).*vo(s);
 time =10e-12;
-[y_sine,t] = niltcv(vo_step,time,1000);
+[y_sine,t] = niltcv(vo_sine,time,1000);
 % Plot the Results
 plot(t, y_sine)
 xlabel('time (s)');

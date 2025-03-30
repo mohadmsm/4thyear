@@ -1,4 +1,4 @@
-function [h_impulse, h_s, y_step, t,poles,moments] = AWE2(A, B, C, D, w, input, time)
+function [h_impulse, h_s, y_step, t,poles,residues] = AWE2(A, B, C, D, w, input, time)
     t = linspace(0, time, 1000);
     q = length(B);
     num_moments = 2 * q;
