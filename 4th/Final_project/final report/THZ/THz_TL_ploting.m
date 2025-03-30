@@ -1,9 +1,9 @@
 clear
 clc
-R = 1200;          % Resistance per unit length (Ω/m)
+Ro = 1200;          % Resistance per unit length (Ω/m)
 L = 250e-9;        % Inductance per unit length (H/m)
 C = 1e-10;         % Capacitance per unit length (F/m)
-Rs = 10;           
+Rs = 0;           
 G = 0;            
 l = 150e-6;        % Length of the transmission line 
 f_max = 100e9;    % Maximum frequency (100 GHz)
@@ -11,14 +11,25 @@ w = 2*pi*f_max;
 s = 1i*w; 
 vs_sine = @(s) w./(s.^2 + w^2);% Laplace transform of sin(wt)
 % Transfer function (exact solution)
-vo = @(s) 1 ./ (cosh(l .* sqrt((R + L.*s) .* (G + C.*s))));
+R1 = @(s) Ro+0.06*sqrt(s)*sqrt(2);
+Tr = 1e-12;  % 1 ps rise/fall
+Tp = 5e-12;  % 5 ps high
+Amp = 1;     % 1 V amplitude
+% Laplace transform of the trapezoid
+vpulse = @(s) (Amp./(Tr*s.^2)).*(1 - exp(-Tr.*s))- (Amp./(Tr.*s.^2)).*(exp(-(Tr+Tp).*s) - exp(-(2*Tr+Tp).*s));
+vo = @(s) sqrt(s*C.*(R1(s)+s*L))./(sqrt(s*C.*(R1(s)+s*L)).*cosh(l*sqrt(s*C.*(R1(s)+s*L)))+Rs*s*C.*sinh(l*sqrt(s*C.*(R1(s)+s*L))));
+vo_step = @(s) vo(s)./s;
 vo_sine = @(s) vs_sine(s).*vo(s);
+vo_pulse = @(s) vpulse(s).*vo(s);
 time =10e-12;
-[y_sine,t] = niltcv(vo_sine,time);
-% Plot the frequency response
+[y_sine,t] = niltcv(vo_step,time,1000);
+% Plot the Results
 plot(t, y_sine)
 xlabel('time (s)');
 ylabel('Vo');
+title("Unit Step Response with Frequency-Dependent Resistance")
+%title("The exact TL simulation with 0.1 THz Sine Wave input")
+%title("The exact TL simulation with Trapezoidal pulse input")
 grid on;
 %%
 clear
@@ -240,3 +251,53 @@ R = RMSE(y_RLC',y);
 xlabel('time (s)');
 ylabel('Vo');
 grid on;
+
+%%
+clear
+clc
+Ro = 1200;          % Resistance per unit length (Ω/m)
+L = 250e-9;        % Inductance per unit length (H/m)
+C = 1e-10;         % Capacitance per unit length (F/m)
+Rs = 10;           % Source resistence (Ω)
+G = 0;            
+l = 150e-6;        % Length of the transmission line 
+f_max = 100e9;    % Maximum frequency (100 GHz)
+t_max = 10e-12;
+f = linspace(1,f_max,1000);
+w = 2*pi*f;
+wo=2*pi*f_max;
+vs_sine = @(s) wo./(s.^2 + wo^2);% sin wave input
+R =0;
+Rs = 0;
+vol = @(s) sqrt(s*C.*(R+s*L))./(sqrt(s*C.*(R+s*L)).*cosh(l*sqrt(s*C.*(R+s*L)))+Rs*s*C.*sinh(l*sqrt(s*C.*(R+s*L))));
+R = Ro;
+[y_RLC,t1]=RLC(R,L,C,l,Rs,t_max);
+vo1 = @(s) sqrt(s*C.*(R+s*L))./(sqrt(s*C.*(R+s*L)).*cosh(l*sqrt(s*C.*(R+s*L)))+Rs*s*C.*sinh(l*sqrt(s*C.*(R+s*L))));
+R = @(s) Ro+0.06*sqrt(s)*sqrt(2);
+vo = @(s) sqrt(s*C.*(R(s)+s*L))./(sqrt(s*C.*(R(s)+s*L)).*cosh(l*sqrt(s*C.*(R(s)+s*L)))+Rs*s*C.*sinh(l*sqrt(s*C.*(R(s)+s*L))));
+vo_step = @(s) vo(s).*1./s;
+vo_sin = @(s) vo(s).*vs_sine(s);
+vo1_sin= @(s) vo1(s).*vs_sine(s);
+R = Ro;
+[y_FDTD,t2]=FDTD(R,L,C,l,Rs,t_max);
+[y,t] = niltcv(vo_sin,t_max,length(y_RLC));
+[y1,t1] = niltcv(vo1_sin,t_max,length(y_RLC));
+[y2,t2] = niltcv(vs_sine,t_max,length(y_RLC));
+plot(t1,y1,t,y)
+%R = RMSE(y_RLC',y);
+xlabel('time (s)');
+ylabel('Vo');
+grid on;
+legend('integer model',"fractional model")
+%%
+clear;
+clc;
+Ro = 1200;          % DC resistance (Ω/m)
+Rs_skin = 0.06;     % Skin effect coefficient (Ω/(m·√Hz))
+L = 250e-9;         % Inductance (H/m)
+C = 1e-10;          % Capacitance (F/m)
+Rs = 10;            % Source resistance (Ω)
+l = 150e-6;         % Line length (m)
+t_max = 10e-12;     % Simulation time (s)
+
+[y_FDTD, t] = FDTD_skin(Ro, Rs_skin, L, C, l, Rs, t_max);
