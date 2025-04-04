@@ -35,10 +35,10 @@ residues = H.C';
 [y_step,t]=step_response(poles,residues,t);
 [y_sine,t]=sine_response2(poles,residues,t);
 [y_pulse,t]=pulse_response(poles,residues,t);
-[y_NILT,t]=niltcv(vo_pulse,t_max,1000);
+[y_NILT,t]=niltcv(vo_step,t_max,1000);
 error=RMSE(y_pulse,y_NILT); %RMSE error
-plot(t,y_pulse,t,y_NILT)
+plot(t,y_step,t,y_NILT)
 grid on
 xlabel('time (s)')
-title("trapezoidal response with Frequency-Dependent Resistance of exact vs approximated")
+%title("trapezoidal response with Frequency-Dependent Resistance of exact vs approximated")
 legend("Approximated","Exact")

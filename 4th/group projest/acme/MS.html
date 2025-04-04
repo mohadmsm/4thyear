@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACME - Machine Status</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        /* Inherit main styles from index.html */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        .status-ok { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; }
+        .status-fault { background-color: #dc3545; }
+
+        .machine-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .history-table {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .history-table th {
+            background: #2754e9;
+            color: #fff;
+        }
+
+        .export-options {
+            border-left: 3px solid #2754e9;
+            padding-left: 20px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="{% static 'acme/images/ACME.png' %}" style="max-height: 75px;" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'machine_status' %}">Machines</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'reports' %}">Reports</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container py-5">
+        <!-- Machine Status Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Machine Status Monitor</h1>
+            <div class="status-legend">
+                <span class="status-indicator status-ok"></span> Operational 
+                <span class="status-indicator status-warning mx-3"></span> Warning
+                <span class="status-indicator status-fault"></span> Fault
+            </div>
+        </div>
+
+        <!-- Real-time Status Grid -->
+        <div class="row g-4">
+            {% for machine in machines %}
+            <div class="col-md-4">
+                <div class="machine-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3>{{ machine.name }}</h3>
+                        <span class="status-indicator status-{{ machine.status|lower }}"></span>
+                    </div>
+                    <div class="machine-details mt-3">
+                        <p><i class="fas fa-microchip"></i> {{ machine.model }}</p>
+                        <p><i class="fas fa-calendar-alt"></i> Last Maintenance: {{ machine.last_maintenance|date:"Y-m-d" }}</p>
+                        <p><i class="fas fa-chart-line"></i> Uptime: {{ machine.uptime }}%</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Fault History Section -->
+        <h2 class="mt-5 mb-3">Fault History</h2>
+        <div class="history-table">
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Machine</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in history %}
+                    <tr>
+                        <td>{{ event.timestamp|date:"Y-m-d H:i" }}</td>
+                        <td>{{ event.machine.name }}</td>
+                        <td>
+                            <span class="status-indicator status-{{ event.status|lower }}"></span>
+                            {{ event.get_status_display }}
+                        </td>
+                        <td>{{ event.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Report Export Section -->
+        <div class="export-options">
+            <h3>Generate Reports</h3>
+            <form method="post" class="row g-3">
+                {% csrf_token %}
+                <div class="col-md-4">
+                    <select class="form-select bg-dark text-white" name="machine_group">
+                        <option value="">All Machines</option>
+                        {% for group in machine_groups %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select bg-dark text-white" name="report_type">
+                        <option value="pdf">PDF Report</option>
+                        <option value="csv">CSV Export</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-tech">
+                        <i class="fas fa-download"></i> Generate Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <!-- Same footer as previous pages -->
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Add auto-refresh for real-time updates -->
+    <script>
+        // Refresh every 60 seconds
+        setTimeout(function(){
+            window.location.reload(1);
+        }, 60000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACME Manufacturing Corp. - PC Components Catalog</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        /* Inherit main styles from index.html */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .component-nav {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            position: sticky;
+            top: 100px; /* below main navbar */
+            z-index: 1000;
+        }
+
+        .component-nav .nav-link {
+            color: #fff !important;
+            margin: 0 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .component-nav .nav-link:hover {
+            color: #2754e9 !important;
+            transform: translateY(-2px);
+        }
+
+        .component-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            transition: transform 0.3s;
+            height: 100%;
+        }
+
+        .component-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(39, 84, 233, 0.2);
+        }
+
+        .component-img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .spec-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .spec-list li {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .spec-badge {
+            background: #2754e9;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Navigation (Same as index.html) -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="{% static 'acme/images/ACME.png' %}" style="max-height: 75px;" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'catalog' %}">Components</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Component Category Navigation -->
+    <nav class="component-nav">
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item"><a class="nav-link" href="#processors">Processors</a></li>
+                <li class="nav-item"><a class="nav-link" href="#gpus">GPUs</a></li>
+                <li class="nav-item"><a class="nav-link" href="#memory">Memory</a></li>
+                <li class="nav-item"><a class="nav-link" href="#storage">Storage</a></li>
+                <li class="nav-item"><a class="nav-link" href="#cooling">Cooling</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Processors Section -->
+        <section id="processors" class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-5"><i class="fas fa-microchip me-2"></i>Processors</h2>
+                <div class="row">
+                    <!-- CPU 1 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="component-card">
+                            <img src="{% static 'acme/images/cpu1.png' %}" class="component-img" alt="High-Performance CPU">
+                            <h3>QuantumCore i9-13900K</h3>
+                            <ul class="spec-list">
+                                <li><span class="spec-badge">Cores:</span> 24 (8P+16E)</li>
+                                <li><span class="spec-badge">Threads:</span> 32</li>
+                                <li><span class="spec-badge">Base Clock:</span> 3.0 GHz</li>
+                                <li><span class="spec-badge">Boost Clock:</span> 5.8 GHz</li>
+                                <li><span class="spec-badge">TDP:</span> 125W</li>
+                            </ul>
+                            <a href="#" class="btn btn-tech w-100">Spec Sheet</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Add more CPU cards -->
+                </div>
+            </div>
+        </section>
+
+        <!-- GPUs Section -->
+        <section id="gpus" class="py-5 bg-dark">
+            <div class="container">
+                <h2 class="text-center mb-5"><i class="fas fa-gamepad me-2"></i>Graphics Cards</h2>
+                <div class="row">
+                    <!-- GPU 1 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="component-card">
+                            <img src="{% static 'acme/images/gpu1.png' %}" class="component-img" alt="High-End GPU">
+                            <h3>TitanForce RTX 4090</h3>
+                            <ul class="spec-list">
+                                <li><span class="spec-badge">VRAM:</span> 24GB GDDR6X</li>
+                                <li><span class="spec-badge">CUDA Cores:</span> 16384</li>
+                                <li><span class="spec-badge">Boost Clock:</span> 2.52 GHz</li>
+                                <li><span class="spec-badge">Power:</span> 450W</li>
+                            </ul>
+                            <a href="#" class="btn btn-tech w-100">Benchmarks</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Add more GPU cards -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Memory Section -->
+        <section id="memory" class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-5"><i class="fas fa-memory me-2"></i>Memory Kits</h2>
+                <div class="row">
+                    <!-- RAM 1 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="component-card">
+                            <img src="{% static 'acme/images/ram1.png' %}" class="component-img" alt="DDR5 Memory">
+                            <h3>HyperX Fury DDR5 64GB</h3>
+                            <ul class="spec-list">
+                                <li><span class="spec-badge">Speed:</span> 6400MHz</li>
+                                <li><span class="spec-badge">Latency:</span> CL32</li>
+                                <li><span class="spec-badge">Voltage:</span> 1.35V</li>
+                                <li><span class="spec-badge">Kit:</span> 2x32GB</li>
+                            </ul>
+                            <a href="#" class="btn btn-tech w-100">Compatibility</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Add more RAM cards -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer (Same as index.html) -->
+        <!-- ... -->
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACME Manufacturing Corp. - Privacy Policy</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        /* Inherit main styles from index.html */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .policy-hero {
+            padding: 80px 0;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .policy-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .compliance-badge {
+            background: #2754e9;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 10px 5px;
+            display: inline-block;
+        }
+
+        .policy-list {
+            list-style-type: square;
+            padding-left: 20px;
+        }
+
+        .policy-list li {
+            margin-bottom: 10px;
+        }
+
+        .regulation-icon {
+            color: #2754e9;
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="{% static 'acme/images/ACME.png' %}" style="max-height: 75px;" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'catalog' %}">Catalog</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'privacy' %}">Privacy</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="policy-hero">
+            <div class="container">
+                <h1>Privacy Policy</h1>
+                <p>Last Updated: July 20, 2023</p>
+            </div>
+        </section>
+
+        <!-- Policy Content -->
+        <div class="container py-5">
+            <!-- Compliance Badges -->
+            <div class="text-center mb-5">
+                <span class="compliance-badge">
+                    <i class="fas fa-shield-alt"></i> GDPR Compliant
+                </span>
+                <span class="compliance-badge">
+                    <i class="fas fa-balance-scale"></i> CCPA Ready
+                </span>
+                <span class="compliance-badge">
+                    <i class="fas fa-globe-europe"></i> ISO 27001 Certified
+                </span>
+            </div>
+
+            <!-- Data Collection -->
+            <div class="policy-section">
+                <h3><i class="fas fa-database regulation-icon"></i>Data Collection</h3>
+                <ul class="policy-list">
+                    <li>Personal identification information (Name, email address, phone number)</li>
+                    <li>Technical data (IP address, browser type, device information)</li>
+                    <li>Usage data (pages visited, features used)</li>
+                    <li>Cookies and tracking technologies</li>
+                </ul>
+            </div>
+
+            <!-- Data Usage -->
+            <div class="policy-section">
+                <h3><i class="fas fa-chart-line regulation-icon"></i>Data Usage</h3>
+                <p>We use collected information to:</p>
+                <ul class="policy-list">
+                    <li>Provide and maintain our services</li>
+                    <li>Improve user experience</li>
+                    <li>Process transactions</li>
+                    <li>Comply with legal obligations</li>
+                </ul>
+            </div>
+
+            <!-- Data Sharing -->
+            <div class="policy-section">
+                <h3><i class="fas fa-handshake regulation-icon"></i>Data Sharing</h3>
+                <p>We may share information with:</p>
+                <ul class="policy-list">
+                    <li>Service providers (payment processors, hosting services)</li>
+                    <li>Legal authorities when required</li>
+                    <li>Affiliated companies for business operations</li>
+                </ul>
+            </div>
+
+            <!-- User Rights -->
+            <div class="policy-section">
+                <h3><i class="fas fa-user-check regulation-icon"></i>Your Rights</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="policy-list">
+                            <li>Right to access your data</li>
+                            <li>Right to rectification</li>
+                            <li>Right to erasure</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="policy-list">
+                            <li>Right to restrict processing</li>
+                            <li>Right to data portability</li>
+                            <li>Right to object</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Measures -->
+            <div class="policy-section">
+                <h3><i class="fas fa-lock regulation-icon"></i>Security Measures</h3>
+                <ul class="policy-list">
+                    <li>SSL/TLS encryption</li>
+                    <li>Regular security audits</li>
+                    <li>Access control protocols</li>
+                    <li>Data anonymization techniques</li>
+                </ul>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="policy-section text-center">
+                <h3><i class="fas fa-envelope regulation-icon"></i>Contact Us</h3>
+                <p>For privacy concerns or data requests:</p>
+                <p>Email: privacy@acme.com</p>
+                <p>Phone: +1 (800) 555-0199</p>
+                <address>
+                    Data Protection Officer<br>
+                    123 Industrial Way<br>
+                    Tech Valley, CA 94105
+                </address>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>Company</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'about' %}" class="text-white">About Us</a></li>
+                        <li><a href="{% url 'services' %}" class="text-white">Services</a></li>
+                        <li><a href="{% url 'faq' %}" class="text-white">FAQ</a></li>
+                    </ul>          
+                </div>
+                <div class="col-md-4">
+                    <h4>Support</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="contact.html" class="text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center">
+                    <h4>Connect With Us</h4>
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-linkedin fa-lg"></i></a>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <p>&copy; 2025 ACME Manufacturing Corp. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

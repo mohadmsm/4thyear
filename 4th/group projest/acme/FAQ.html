@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACME Manufacturing Corp. - FAQ</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        /* Inherit main styles from index.html */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .faq-hero {
+            padding: 80px 0;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .faq-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .faq-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .faq-answer {
+            padding: 0 20px 20px 20px;
+            display: none;
+        }
+
+        .faq-icon {
+            color: #2754e9;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            transition: transform 0.3s;
+        }
+
+        .active .faq-icon {
+            transform: rotate(90deg);
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: rgba(39, 84, 233, 0.1);
+            color: #fff;
+        }
+
+        .accordion-button:focus {
+            box-shadow: none;
+        }
+
+        .accordion-body {
+            background: rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar (Same as index.html) -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="{% static 'acme/images/ACME.png' %}" style="max-height: 75px;" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'catalog' %}">Catalog</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'faq' %}">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="faq-hero">
+            <div class="container">
+                <h1>Frequently Asked Questions</h1>
+                <p>Find answers to common questions about our products and services</p>
+            </div>
+        </section>
+
+        <!-- FAQ Content -->
+        <div class="container py-5">
+            <div class="accordion" id="faqAccordion">
+                <!-- Question 1 -->
+                <div class="faq-card">
+                    <div class="accordion-header">
+                        <button class="accordion-button collapsed faq-question" type="button" 
+                                data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            <i class="fas fa-question-circle faq-icon"></i>
+                            How do I report a technical fault?
+                        </button>
+                    </div>
+                    <div id="collapseOne" class="accordion-collapse collapse" 
+                         data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>To report a technical fault:</p>
+                            <ol>
+                                <li>Log in to your account on our support portal</li>
+                                <li>Navigate to "Technical Support" section</li>
+                                <li>Fill out the fault report form with details</li>
+                                <li>Attach any relevant logs or documentation</li>
+                                <li>Our support team will respond within 24 hours</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="faq-card">
+                    <div class="accordion-header">
+                        <button class="accordion-button collapsed faq-question" type="button" 
+                                data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                            <i class="fas fa-tools faq-icon"></i>
+                            What is your warranty policy?
+                        </button>
+                    </div>
+                    <div id="collapseTwo" class="accordion-collapse collapse" 
+                         data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Our standard warranty includes:</p>
+                            <ul>
+                                <li>3-year limited hardware warranty</li>
+                                <li>1-year software support</li>
+                                <li>90-day replacement guarantee</li>
+                            </ul>
+                            <p>Contact support@acme.com for warranty claims.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add more questions following the same pattern -->
+                
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer (Same as index.html) -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>Company</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'about' %}" class="text-white">About Us</a></li>
+                        <li><a href="{% url 'services' %}" class="text-white">Services</a></li>
+                        <li><a href="{% url 'faq' %}" class="text-white">FAQ</a></li>
+                    </ul>          
+                </div>
+                <div class="col-md-4">
+                    <h4>Support</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="contact.html" class="text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center">
+                    <h4>Connect With Us</h4>
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-linkedin fa-lg"></i></a>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <p>&copy; 2025 ACME Manufacturing Corp. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

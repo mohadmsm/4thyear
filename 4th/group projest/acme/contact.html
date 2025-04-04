@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    /*ensures the footer stays at bottom*/ 
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #222 !important;
+            height: 100px; /* fixed height for the navbar */
+          }
+          .navbar-brand {
+            height: 100%;
+          }
+          .navbar-brand img {
+            height: 100%;  /* ensures the image fills the navbar height */
+            width: auto;   /* maintains aspect ratio */
+          }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; 
+        }
+        
+        main {
+            flex: 1;
+        }
+        
+        .site-footer {
+            background-color: #222; 
+            color: white;
+            padding: 40px 0;
+            width: 100%;
+            position: relative; 
+            z-index: 10;
+        }
+        main {
+            margin-bottom: 100px; 
+        }
+        section.container.mt-5 {
+            margin-bottom: 50px; /* ensures space between the form and footer */
+        }
+    /*hover effect on links*/
+         .nav-item .nav-link:hover {
+            color: #2754e9 !important; 
+            text-decoration: none !important;
+        }
+        
+        .site-footer a:hover {
+            color: #2754e9 !important; 
+        }
+        
+          .card:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease-in-out;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+</style> 
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+          <div class="container">
+            <a class="navbar-brand" href="index.html">
+              <img src="{% static 'acme/images/ACME.png' %}" style="max-height: 75px;" />
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'catalog' %}">Catalog</a></li>
+                  </ul>    
+              <div class="d-flex">
+                <a href="signup.html" class="btn btn-primary me-2">Sign Up</a>
+                <a href="signin.html" class="btn btn-secondary">Sign In</a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+    <section class="container mt-5">
+        <h2>Contact Us</h2>
+        <form id="contact-form" action="#" method="POST" onsubmit="return validateForm()">
+            <div class="mb-3">
+                <label for="name" class="form-label">Your Name:</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Your Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="subject" class="form-label">Subject:</label>
+                <input type="text" id="subject" name="subject" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="message" class="form-label">Your Message:</label>
+                <textarea id="message" name="message" rows="5" class="form-control" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+    </section>
+
+    <footer class="site-footer text-white py-4 bg-dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>Company</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'about' %}" class="text-white">About Us</a></li>
+                        <li><a href="{% url 'services' %}" class="text-white">Services</a></li>
+                        <li><a href="{% url 'faq' %}" class="text-white">FAQ</a></li>
+                      </ul>                      
+                </div>
+                <div class="col-md-4">
+                    <h4>Support</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="contact.html" class="text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center">
+                    <h4>Connect With Us</h4>
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-linkedin fa-lg"></i></a>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <p>&copy; 2025 ACME Manufacturing Corp. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function validateForm() {
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const subject = document.getElementById("subject").value;
+            const message = document.getElementById("message").value;
+
+            // Simple validation for now
+            if (name === "" || email === "" || subject === "" || message === "") {
+                alert("All fields must be filled out.");
+                return false; // stops form submission
+            }
+            
+            // further validations here to be added later, such as validating email format
+            return true; // Form will be submitted
+        }
+    </script>
+</body>
+</html>
