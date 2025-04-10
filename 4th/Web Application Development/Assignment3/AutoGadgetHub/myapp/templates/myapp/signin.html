@@ -2,34 +2,35 @@
 <html lang="en">
 
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - AutoGadget Hub</title>
-    <link rel="stylesheet" href="../css/header_mainBody.css">
-    <link rel="stylesheet" href="../css/signin_style.css">
-    <script src="../javaScript/menu.js"></script>
+    <link rel="stylesheet" href="{% static 'myapp/css/header_mainBody.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/css/signin_style.css' %}">
+    <script src="{% static 'myapp/js/menu.js' %}"></script>
 </head>
 
 <body>
     <!-- Header Section -->
     <header>
         <div>
-            <img src="../imges and icons/icons/my_logo.png" alt="AutoGadget Hub Logo">
+            <img src="{% static 'myapp/images/my_logo.png' %}" alt="AutoGadget Hub Logo">
             <h1>AutoGadget Hub</h1>
         </div>
         <nav>
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
-            <a href="help.html">Help❓</a>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'shop' %}">Shop</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'help' %}">Help❓</a>
         </nav>
         <div>
-            <a href="cart.html">
-                <img src="../imges and icons/icons/shopping_cart.png" alt="Shopping Cart">
+            <a href="{% url 'cart' %}">
+                <img src="{% static 'myapp/images/shopping_cart.png' %}" alt="Shopping Cart">
             </a>
-            <a href="signin.html" id="signin">Sign In</a>
-            <a href="signup.html" id="signup">Sign Up</a>
+            <a href="{% url 'signin' %}" id="signin">Sign In</a>
+            <a href="{% url 'signup' %}" id="signup">Sign Up</a>
         </div>
     </header>
 
@@ -46,9 +47,9 @@
                 <h3>Navigation Menu</h3>
             </div>
             <div class="menu-content">
-                <a href="terms.html">Terms & Conditions</a>
-                <a href="shop.html#New">Trending</a>
-                <a href="contact.html"> Support</a>
+                <a href="{% url 'terms' %}">Terms & Conditions</a>
+                <a href="{% url 'shop' %}#New">Trending</a>
+                <a href="{% url 'contact' %}"> Support</a>
                 <div class="setting-item">
                     <span>Dark Mode</span>
                     <div class="toggle-switch" id="darkModeToggle"></div>
@@ -58,7 +59,8 @@
         <div id="menuOverlay" class="overlay"></div>
         <div class="signin-container">
             <h2>Sign In to Your Account</h2>
-            <form action="#" method="POST">
+            <form action="{% url 'signin' %}" method="POST">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="Enter your email" required>
@@ -70,7 +72,7 @@
                 <div class="form-actions">
                     <button type="submit">Sign In</button>
                 </div>
-                <p class="signup-link">Don't have an account? <a href="signup.html">Sign up</a></p>
+                <p class="signup-link">Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
             </form>
         </div>
     </main>
