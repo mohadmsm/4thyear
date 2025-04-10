@@ -33,9 +33,14 @@
             <a href="{% url 'cart' %}">
                 <img src="{% static 'myapp/images/shopping_cart.png' %}" alt="Shopping Cart">
             </a>
+            {% if user.is_authenticated %}
+    <span class="welcome-msg">Welcome, {{ user.username }}!</span>
+    <a href="{% url 'signout' %}" id="signout">Sign Out</a>
+{% else %}
             <!-- Sign-in and Sign-up links -->
             <a href="{% url 'signin' %}" id="signin">Sign In</a>
             <a href="{% url 'signup' %}" id="signup">Sign Up</a>
+            {% endif %}
         </div>
     </header>
 

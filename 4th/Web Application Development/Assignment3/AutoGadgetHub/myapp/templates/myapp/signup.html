@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{% static 'myapp/css/header_mainBody.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/css/signup_style.css' %}">
     <script src="{% static 'myapp/js/menu.js' %}"></script>
-    <script src="{% static 'myapp/js/signup.js' %}"></script>
 </head>
 
 <body>
@@ -30,8 +29,12 @@
             <a href="{% url 'cart' %}">
                 <img src="{% static 'myapp/images/shopping_cart.png' %}" alt="Shopping Cart">
             </a>
-            <a href="{% url 'signin' %}" id="signin">Sign In</a>
-            <a href="{% url 'signup' %}" id="signup">Sign Up</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'signout' %}" id="signout">Sign Out</a>
+            {% else %}
+                <a href="{% url 'signin' %}" id="signin">Sign In</a>
+                <a href="{% url 'signup' %}" id="signup">Sign Up</a>
+            {% endif %}
         </div>
     </header>
 
@@ -60,66 +63,77 @@
         <div id="menuOverlay" class="overlay"></div>
         <div class="signup-container">
             <h2>Create Your Account</h2>
-            <form action="{% url 'signup' %}" method="POST" id="signupForm">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <form method="POST" action="{% url 'signup' %}">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
-                    <span class="error-message"></span>
+                    <input type="text" id="username" name="username" 
+                           value="{{ form.username.value|default_if_none:'' }}" 
+                           placeholder="Enter your username" required>
+                    {% if form.username.errors %}
+                    <div class="error-message">{{ form.username.errors }}</div>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                    <span class="error-message"></span>
+                    <input type="email" id="email" name="email" 
+                           value="{{ form.email.value|default_if_none:'' }}"
+                           placeholder="Enter your email" required>
+                    {% if form.email.errors %}
+                    <div class="error-message">{{ form.email.errors }}</div>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                    <span class="error-message"></span>
+                    <input type="password" id="password" name="password" 
+                           placeholder="Enter your password" required>
+                    {% if form.password.errors %}
+                    <div class="error-message">{{ form.password.errors }}</div>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="confirm-password">Confirm Password</label>
                     <input type="password" id="confirm-password" name="confirm_password"
-                        placeholder="Confirm your password" required>
-                    <span class="error-message"></span>
+                           placeholder="Confirm your password" required>
+                    {% if form.confirm_password.errors %}
+                    <div class="error-message">{{ form.confirm_password.errors }}</div>
+                    {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="address">Your Address</label>
-                    <input type="text" id="address-line1" name="address_line1" placeholder="Type in your Address"
-                        required>
+                    <label for="address-line1">Address</label>
+                    <input type="text" id="address-line1" name="address_line1" 
+                           value="{{ form.address_line1.value|default_if_none:'' }}"
+                           placeholder="Type in your Address" required>
                     <input type="text" id="address-line2" name="address_line2"
-                        placeholder="Type in your Address line 2 (optional)">
-                    <span class="error-message"></span>
+                           value="{{ form.address_line2.value|default_if_none:'' }}"
+                           placeholder="Type in your Address line 2 (optional)">
+                    {% if form.address_line1.errors %}
+                    <div class="error-message">{{ form.address_line1.errors }}</div>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
-                    <span class="error-message"></span>
+                    <input type="tel" id="phone" name="phone" 
+                           value="{{ form.phone.value|default_if_none:'' }}"
+                           placeholder="Enter your phone number" required>
+                    {% if form.phone.errors %}
+                    <div class="error-message">{{ form.phone.errors }}</div>
+                    {% endif %}
                 </div>
                 <div class="form-actions">
                     <button type="submit">Sign Up</button>
                 </div>
+                <p class="login-link">Already have an account? <a href="{% url 'signin' %}">Sign in</a></p>
             </form>
-            <!-- Show Entries Button -->
-            <button id="showEntriesBtn">Show All Responses</button>
-
-            <!-- Previous Sign-Ups Table -->
-            <div class="entries-table">
-                <h3>Previous Sign-Ups</h3>
-                <table id="signupTable" style="display: none;">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Address</th>
-                            <th>Phone</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <!-- The tbody is used to dynamically insert new rows via Js. -->
-                    <tbody id="signupEntriesBody"></tbody>
-                </table>
-            </div>
         </div>
     </main>
 
