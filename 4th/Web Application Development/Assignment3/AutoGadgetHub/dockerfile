@@ -1,0 +1,30 @@
+# Use Python 3.13 as the base image
+FROM python:3.13
+
+# Create necessary directories
+RUN mkdir -p /app /app/storage
+WORKDIR /app
+
+# Environment setup
+ENV PYTHONPATH="/app" \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+# Install Python dependencies
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application source code
+COPY . /app/
+
+# Project specific configuration
+ENV DJANGO_SUPERUSER_USERNAME "admin"
+ENV DJANGO_SUPERUSER_PASSWORD "admin"
+ENV DJANGO_SUPERUSER_EMAIL "admin@localhost"
+ENV DATABASE_URL "sqlite:////app/storage/db.sqlite3"
+# Expose the port Django will run on
+EXPOSE 8000
+
+# Entry point for the container
+ENTRYPOINT ["sh", "/app/docker_entrypoint.sh"]

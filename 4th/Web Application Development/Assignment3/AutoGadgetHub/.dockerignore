@@ -1,0 +1,29 @@
+# Python and Django
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.db
+.env
+*.env
+.env.local
+.env.prod
+
+# Dependency directories
+venv/
+env/
+.venv/
+pip-selfcheck.json
+
+# Version control
+.git/
+.gitignore
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Static and media (if collected separately)
+/media/
+/staticfiles/
