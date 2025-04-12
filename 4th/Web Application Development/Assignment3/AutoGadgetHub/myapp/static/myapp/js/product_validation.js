@@ -1,13 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const productForm = document.querySelector('form#productForm');
+    const productForm = document.getElementById('productForm');
     
     if (productForm) {
         productForm.addEventListener('submit', function (e) {
-            // Prevent default form submission until validation passes
             e.preventDefault();
             clearErrors(productForm);
             
-            // Get form values
             const formData = {
                 name: productForm.querySelector('#id_name').value.trim(),
                 product_code: productForm.querySelector('#id_product_code').value.trim(),
@@ -16,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 description: productForm.querySelector('#id_description').value.trim()
             };
             
-            // Validation checks
             let isValid = true;
             
             // Product name validation
@@ -26,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             
             // Product code validation
-            if (!formData.product_code || formData.product_code.length < 2) {
+            if (!formData.product_code || formData.product_code.length < 1) {
                 showError(productForm.querySelector('#id_product_code'), 'Product code is required');
                 isValid = false;
             }
@@ -37,9 +34,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 isValid = false;
             }
             
-            // Stock validation
-            if (formData.stock === '' || isNaN(formData.stock) || parseInt(formData.stock) < 0) {
-                showError(productForm.querySelector('#id_stock'), 'Stock must be a non-negative number');
+            // Stock validation (allow zero)
+            if (formData.stock === '' || isNaN(formData.stock) || parseInt(formData.stock) <= 0) {
+                showError(productForm.querySelector('#id_stock'), 'Stock must be a positive number');
                 isValid = false;
             }
             
@@ -49,31 +46,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 isValid = false;
             }
             
-            // Submit the form if valid
             if (isValid) {
                 productForm.submit();
             }
         });
     }
     
-    // Error handling functions
     function showError(input, message) {
-        // Create error element if it doesn't exist
-        let errorElement = input.parentElement.querySelector('.error-message');
-        if (!errorElement) {
-            errorElement = document.createElement('div');
-            errorElement.className = 'error-message';
-            input.parentElement.appendChild(errorElement);
-        }
-        
+        const formGroup = input.closest('.form-group');
+        if (!formGroup) return;
+        const errorElement = formGroup.querySelector('.error-message');
         errorElement.textContent = message;
         input.classList.add('error');
     }
     
     function clearErrors(form) {
-        const errors = form.querySelectorAll('.error-message');
-        errors.forEach(error => error.textContent = '');
-        const inputs = form.querySelectorAll('input, textarea, select');
-        inputs.forEach(input => input.classList.remove('error'));
+        form.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        form.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
     }
 });
