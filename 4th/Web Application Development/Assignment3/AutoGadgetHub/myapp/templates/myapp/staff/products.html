@@ -1,0 +1,41 @@
+{% extends "myapp/base.html" %}
+{% block title %}Manage Products{% endblock %}
+
+{% block content %}
+<div class="staff-container">
+    <h1>Product Management</h1>
+    
+    <div class="actions">
+        <a href="{% url 'add_product' %}" class="btn-primary">Add New Product</a>
+    </div>
+
+    <table class="product-list">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>${{ product.price }}</td>
+                <td>{{ product.stock }}</td>
+                <td>
+                    <a href="{% url 'edit_product' product.id %}" class="btn-edit">Edit</a>
+                    <a href="{% url 'delete_product' product.id %}" class="btn-delete"
+                       onclick="return confirm('Delete this product?')">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No products found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

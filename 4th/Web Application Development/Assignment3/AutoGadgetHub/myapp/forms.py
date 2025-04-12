@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
-
+from .models import Product, ProductCategory
 # user reg form Q4
 class UserRegistrationForm(forms.Form):
     username = forms.CharField(
@@ -67,3 +67,37 @@ class UserRegistrationForm(forms.Form):
             self.add_error('confirm_password', "Passwords don't match")
 
         return cleaned_data
+    
+ # Product Management Form
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['category', 'name', 'description', 'product_code', 'image', 'price', 'stock']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 3}),
+            'image': forms.ClearableFileInput(),
+        }
+        labels = {
+            'product_code': 'SKU/Product Code'
+        }
+
+
+class ProductEditForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['category', 'description', 'image', 'price', 'stock']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 3}),
+            'image': forms.ClearableFileInput(),
+        }
+
+class ProductCategoryForm(forms.ModelForm):
+    class Meta:
+        model = ProductCategory
+        fields = ['name']
+        labels = {
+            'name': 'Category Name'
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Enter category name'})
+        }

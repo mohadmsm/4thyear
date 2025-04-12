@@ -115,3 +115,33 @@ footer p {
     font-size: 14px;
     margin: 0;
 }
+
+.quantity-input {
+    width: 60px;
+    padding: 5px;
+}
+
+.btn-update {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.remove-item {
+    color: #ff4444;
+    text-decoration: none;
+}
+
+.remove-item:hover {
+    text-decoration: underline;
+}
+
+.cart-count {
+    background: #ff4444;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 8px;
+    margin-left: 5px;
+}

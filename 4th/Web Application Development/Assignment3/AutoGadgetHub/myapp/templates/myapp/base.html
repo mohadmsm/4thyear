@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AutoGadget Hub{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/css/header_mainBody.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/css/staff.css' %}">
+    {% block css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div>
+            <img src="{% static 'myapp/images/my_logo.png' %}" alt="AutoGadget Hub Logo">
+            <h1>AutoGadget Hub</h1>
+        </div>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'shop' %}">Shop</a>
+            <a href="{% url 'about' %}">About</a>
+            {% if user.is_staff %}
+            <a href="{% url 'manage_products' %}">Manage Products</a>
+            <a href="{% url 'manage_categories' %}">Manage Categories</a>
+            {% endif %}
+        </nav>
+        <div class="auth-section">
+            {% if user.is_authenticated %}
+                <span>Welcome, {{ user.username }}!</span>
+                <a href="{% url 'signout' %}">Sign Out</a>
+            {% else %}
+                <a href="{% url 'signin' %}">Sign In</a>
+                <a href="{% url 'signup' %}">Sign Up</a>
+            {% endif %}
+            <a href="{% url 'cart' %}" class="cart-link">
+                <img src="{% static 'myapp/images/shopping_cart.png' %}" alt="Cart">
+                <span class="cart-count">
+                    {% if user.is_authenticated %}{{ user.cartitem_set.count }}{% else %}0{% endif %}
+                </span>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 AutoGadget Hub. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'myapp/js/menu.js' %}"></script>
+    {% block js %}{% endblock %}
+</body>
+</html>
