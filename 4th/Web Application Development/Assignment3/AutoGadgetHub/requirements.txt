@@ -1,7 +1,7 @@
 Django==5.1.8
 
 dj-database-url==2.3.0 
-gunicorn==21.2.0
+gunicorn==23.0.0
 # Uncomment for MySQL Database Support
 mysqlclient==2.2.7
 
