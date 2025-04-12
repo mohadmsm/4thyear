@@ -1,147 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    {% load static %}
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AutoGadget Hub</title>
-    <!-- Linking external CSS files for styling -->
-    <link rel="stylesheet" href="{% static 'myapp/css/main_style.css' %}" />
-    <link
-      rel="stylesheet"
-      href="{% static 'myapp/css/header_mainBody.css' %}"
-    />
-    <script src="{% static 'myapp/js/menu.js' %}"></script>
-  </head>
 
-  <body>
-    <!-- Header Section -->
-    <header>
-      <div>
-        <!-- Logo and website title -->
-        <img
-          src="{% static 'myapp/images/my_logo.png'%}"
-          alt="AutoGadget Hub Logo"
-        />
-        <h1>AutoGadget Hub</h1>
+<head>
+  {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoGadget Hub</title>
+  <!-- Linking external CSS files for styling -->
+  <link rel="stylesheet" href="{% static 'myapp/css/main_style.css' %}" />
+  <link rel="stylesheet" href="{% static 'myapp/css/header_mainBody.css' %}" />
+  <script src="{% static 'myapp/js/menu.js' %}"></script>
+</head>
+
+<body>
+  <!-- Header Section -->
+  <header>
+    <div>
+      <!-- Logo and website title -->
+      <img src="{% static 'myapp/images/my_logo.png'%}" alt="AutoGadget Hub Logo" />
+      <h1>AutoGadget Hub</h1>
+    </div>
+    <!-- Navigation Bar -->
+    <nav>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'shop' %}">Shop</a>
+      <a href="{% url 'about' %}">About</a>
+      <a href="{% url 'contact' %}">Contact</a>
+      <a href="{% url 'help' %}">Help❓</a>
+      {% if user.is_staff %}
+      <a href="{% url 'manage_products' %}">Manage Products</a>
+      <a href="{% url 'manage_categories' %}">Manage Categories</a>
+      {% endif %}
+    </nav>
+    <div>
+      <!-- Shopping Cart Icon -->
+      <a href="{% url 'cart' %}" class="cart-link">
+        <img src="{% static 'myapp/images/shopping_cart.png' %}" alt="Cart">
+        <span class="cart-count">
+          {% if user.is_authenticated %}{{ user.cartitem_set.count }}{% else %}0{% endif %}
+        </span>
+      </a>
+      {% if user.is_authenticated %}
+      <span class="welcome-msg">Welcome, {{ user.username }}!</span>
+      <a href="{% url 'signout' %}" id="signout">Sign Out</a>
+      {% else %}
+      <!-- Sign-in and Sign-up links -->
+      <a href="{% url 'signin' %}" id="signin">Sign In</a>
+      <a href="{% url 'signup' %}" id="signup">Sign Up</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Main Content Section -->
+  <main>
+    <div class="menu-trigger">
+      <div class="hamburger">☰</div>
+    </div>
+    <!-- Dynamic Side Menu -->
+    <nav id="sideMenu" class="side-menu">
+      <div class="menu-header">
+        <span class="close-btn">&times;</span>
+        <h3>Navigation Menu</h3>
       </div>
-      <!-- Navigation Bar -->
-      <nav>
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'shop' %}">Shop</a>
-        <a href="{% url 'about' %}">About</a>
-        <a href="{% url 'contact' %}">Contact</a>
-        <a href="{% url 'help' %}">Help❓</a>
-        {% if user.is_staff %}
-<li><a href="{% url 'manage_products' %}">Manage Products</a></li>
-<li><a href="{% url 'manage_categories' %}">Manage Categories</a></li>
-{% endif %}
-      </nav>
-      <div>
-        <!-- Shopping Cart Icon -->
-        <a href="{% url 'cart' %}">
-          <img
-            src="{% static 'myapp/images/shopping_cart.png' %}"
-            alt="Shopping Cart"
-          />
-        </a>
-        {% if user.is_authenticated %}
-        <span class="welcome-msg">Welcome, {{ user.username }}!</span>
-        <a href="{% url 'signout' %}" id="signout">Sign Out</a>
-        {% else %}
-        <!-- Sign-in and Sign-up links -->
-        <a href="{% url 'signin' %}" id="signin">Sign In</a>
-        <a href="{% url 'signup' %}" id="signup">Sign Up</a>
-        {% endif %}
+      <div class="menu-content">
+        <a href="{% url 'terms' %}">Terms & Conditions</a>
+        <a href="{% url 'shop' %}#New">Trending</a>
+        <a href="{% url 'contact' %}"> Support</a>
+        <div class="setting-item">
+          <span>Dark Mode</span>
+          <div class="toggle-switch" id="darkModeToggle"></div>
+        </div>
       </div>
-    </header>
-
-    <!-- Main Content Section -->
-    <main>
-      <div class="menu-trigger">
-        <div class="hamburger">☰</div>
-      </div>
-      <!-- Dynamic Side Menu -->
-      <nav id="sideMenu" class="side-menu">
-        <div class="menu-header">
-          <span class="close-btn">&times;</span>
-          <h3>Navigation Menu</h3>
-        </div>
-        <div class="menu-content">
-          <a href="{% url 'terms' %}">Terms & Conditions</a>
-          <a href="{% url 'shop' %}#New">Trending</a>
-          <a href="{% url 'contact' %}"> Support</a>
-          <div class="setting-item">
-            <span>Dark Mode</span>
-            <div class="toggle-switch" id="darkModeToggle"></div>
-          </div>
-        </div>
-      </nav>
-      <div id="menuOverlay" class="overlay"></div>
-      <!-- Call to Action Section -->
-      <section class="cta-box">
-        <img
-          src="{% static 'myapp/images/main_page_pic.png' %}"
-          width="250"
-          height="250"
-        />
-        <h2>Shop the Best Gadgets with AutoGadget Hub</h2>
-        <p>
-          Discover amazing deals and ship products internationally at unbeatable
-          prices!
-        </p>
-        <a href="{% url 'signup' %}">Sign Up Now - It's Free</a>
-      </section>
-
-      <!-- Steps to Shop Section -->
-      <section class="steps">
-        <!-- Step 1: Sign Up -->
-        <div class="step">
-          <h3>Step 1</h3>
-          <p>
-            Sign up and instantly start shopping with personalised
-            recommendations.
-          </p>
-          <img
-            src="{% static 'myapp/images/step1.png' %}"
-            alt="Step 1"
-            width="100"
-            height="100"
-          />
-        </div>
-        <!-- Step 2: Browse and Checkout -->
-        <div class="step">
-          <h3>Step 2</h3>
-          <p>
-            Shop from a range of products and enjoy an easy checkout experience.
-          </p>
-          <img
-            src="{% static 'myapp/images/step2.png' %}"
-            alt="Step 2"
-            width="100"
-            height="100"
-          />
-        </div>
-        <!-- Step 3: Delivery -->
-        <div class="step">
-          <h3>Step 3</h3>
-          <p>Get your orders delivered to your door in as fast as 2-4 days.</p>
-          <img
-            src="{% static 'myapp/images/step3.png' %}"
-            alt="Step 3"
-            width="100"
-            height="100"
-          />
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer Section -->
-    <footer>
+    </nav>
+    <div id="menuOverlay" class="overlay"></div>
+    <!-- Call to Action Section -->
+    <section class="cta-box">
+      <img src="{% static 'myapp/images/main_page_pic.png' %}" width="250" height="250" />
+      <h2>Shop the Best Gadgets with AutoGadget Hub</h2>
       <p>
-        &copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili
-        ECE4 .
+        Discover amazing deals and ship products internationally at unbeatable
+        prices!
       </p>
-    </footer>
-  </body>
+      <a href="{% url 'signup' %}">Sign Up Now - It's Free</a>
+    </section>
+
+    <!-- Steps to Shop Section -->
+    <section class="steps">
+      <!-- Step 1: Sign Up -->
+      <div class="step">
+        <h3>Step 1</h3>
+        <p>
+          Sign up and instantly start shopping with personalised
+          recommendations.
+        </p>
+        <img src="{% static 'myapp/images/step1.png' %}" alt="Step 1" width="100" height="100" />
+      </div>
+      <!-- Step 2: Browse and Checkout -->
+      <div class="step">
+        <h3>Step 2</h3>
+        <p>
+          Shop from a range of products and enjoy an easy checkout experience.
+        </p>
+        <img src="{% static 'myapp/images/step2.png' %}" alt="Step 2" width="100" height="100" />
+      </div>
+      <!-- Step 3: Delivery -->
+      <div class="step">
+        <h3>Step 3</h3>
+        <p>Get your orders delivered to your door in as fast as 2-4 days.</p>
+        <img src="{% static 'myapp/images/step3.png' %}" alt="Step 3" width="100" height="100" />
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>
+      &copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili
+      ECE4 .
+    </p>
+  </footer>
+</body>
+
 </html>

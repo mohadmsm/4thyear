@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'myapp/css/header_mainBody.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/css/signup_style.css' %}">
     <script src="{% static 'myapp/js/menu.js' %}"></script>
+    <script src="{% static 'myapp/js/signup.js' %}"></script>
 </head>
 
 <body>
@@ -18,22 +19,30 @@
             <img src="{% static 'myapp/images/my_logo.png' %}" alt="AutoGadget Hub Logo">
             <h1>AutoGadget Hub</h1>
         </div>
+        <!-- Navigation Menu -->
         <nav>
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'shop' %}">Shop</a>
             <a href="{% url 'about' %}">About</a>
             <a href="{% url 'contact' %}">Contact</a>
             <a href="{% url 'help' %}">Help❓</a>
+            {% if user.is_staff %}
+            <a href="{% url 'manage_products' %}">Manage Products</a>
+            <a href="{% url 'manage_categories' %}">Manage Categories</a>
+            {% endif %}
         </nav>
         <div>
-            <a href="{% url 'cart' %}">
-                <img src="{% static 'myapp/images/shopping_cart.png' %}" alt="Shopping Cart">
+            <a href="{% url 'cart' %}" class="cart-link">
+                <img src="{% static 'myapp/images/shopping_cart.png' %}" alt="Cart">
+                <span class="cart-count">
+                    {% if user.is_authenticated %}{{ user.cartitem_set.count }}{% else %}0{% endif %}
+                </span>
             </a>
             {% if user.is_authenticated %}
-                <a href="{% url 'signout' %}" id="signout">Sign Out</a>
+            <a href="{% url 'signout' %}" id="signout">Sign Out</a>
             {% else %}
-                <a href="{% url 'signin' %}" id="signin">Sign In</a>
-                <a href="{% url 'signup' %}" id="signup">Sign Up</a>
+            <a href="{% url 'signin' %}" id="signin">Sign In</a>
+            <a href="{% url 'signup' %}" id="signup">Sign Up</a>
             {% endif %}
         </div>
     </header>
@@ -66,65 +75,58 @@
             {% if messages %}
             <div class="messages">
                 {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}" {% endif %}>
                     {{ message }}
                 </div>
                 {% endfor %}
             </div>
             {% endif %}
-            <form method="POST" action="{% url 'signup' %}">
+            <form method="POST" action="{% url 'signup' %}" id="signupForm">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" 
-                           value="{{ form.username.value|default_if_none:'' }}" 
-                           placeholder="Enter your username" required>
-                    {% if form.username.errors %}
-                    <div class="error-message">{{ form.username.errors }}</div>
-                    {% endif %}
+                    <input type="text" id="username" name="username"
+                        value="{{ form.username.value|default_if_none:'' }}" placeholder="Enter your username" required>
+                    <div class="error-message"></div>
+                    {% if form.username.errors %}{{ form.username.errors }}{% endif %}
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" 
-                           value="{{ form.email.value|default_if_none:'' }}"
-                           placeholder="Enter your email" required>
-                    {% if form.email.errors %}
-                    <div class="error-message">{{ form.email.errors }}</div>
-                    {% endif %}
+                    <input type="email" id="email" name="email" value="{{ form.email.value|default_if_none:'' }}"
+                        placeholder="Enter your email" required>
+                    <div class="error-message"></div>
+                    {% if form.email.errors %}{{ form.email.errors }}{% endif %}
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" 
-                           placeholder="Enter your password" required>
-                    {% if form.password.errors %}
-                    <div class="error-message">{{ form.password.errors }}</div>
-                    {% endif %}
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+                    <div class="error-message"></div>
+                    {% if form.password.errors %}{{ form.password.errors }}{% endif %}
                 </div>
                 <div class="form-group">
                     <label for="confirm-password">Confirm Password</label>
                     <input type="password" id="confirm-password" name="confirm_password"
-                           placeholder="Confirm your password" required>
-                    {% if form.confirm_password.errors %}
-                    <div class="error-message">{{ form.confirm_password.errors }}</div>
-                    {% endif %}
+                        placeholder="Confirm your password" required>
+                    <div class="error-message"></div>
+                    {% if form.confirm_password.errors %}{{ form.confirm_password.errors }}{% endif %}
                 </div>
                 <div class="form-group">
                     <label for="address-line1">Address</label>
-                    <input type="text" id="address-line1" name="address_line1" 
-                           value="{{ form.address_line1.value|default_if_none:'' }}"
-                           placeholder="Type in your Address" required>
+                    <input type="text" id="address-line1" name="address_line1"
+                        value="{{ form.address_line1.value|default_if_none:'' }}" placeholder="Type in your Address"
+                        required>
                     <input type="text" id="address-line2" name="address_line2"
-                           value="{{ form.address_line2.value|default_if_none:'' }}"
-                           placeholder="Type in your Address line 2 (optional)">
+                        value="{{ form.address_line2.value|default_if_none:'' }}"
+                        placeholder="Type in your Address line 2 (optional)">
                     {% if form.address_line1.errors %}
                     <div class="error-message">{{ form.address_line1.errors }}</div>
                     {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" 
-                           value="{{ form.phone.value|default_if_none:'' }}"
-                           placeholder="Enter your phone number" required>
+                    <input type="tel" id="phone" name="phone" value="{{ form.phone.value|default_if_none:'' }}"
+                        placeholder="Enter your phone number" required>
                     {% if form.phone.errors %}
                     <div class="error-message">{{ form.phone.errors }}</div>
                     {% endif %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -217,10 +217,19 @@ def category_edit(request, category_id):
 
 @staff_member_required
 def category_delete(request, category_id):
-    category = get_object_or_404(ProductCategory, id=category_id)
-    category.delete()
-    messages.success(request, 'Category deleted successfully')
-    return redirect('manage_categories')
+    if request.method == 'POST':
+        category = get_object_or_404(ProductCategory, id=category_id)
+        try:
+            # Prevent deletion of categories with associated products
+            if category.product_set.exists():
+                messages.error(request, 'Cannot delete category with associated products')
+            else:
+                category.delete()
+                messages.success(request, 'Category deleted successfully')
+        except Exception as e:
+            messages.error(request, f'Error deleting category: {str(e)}')
+        return redirect('manage_categories')
+    return HttpResponse("Invalid request method", status=405)
 
 
 # Authentication views

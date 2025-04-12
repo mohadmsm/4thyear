@@ -1,15 +1,18 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}AutoGadget Hub{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'myapp/css/header_mainBody.css' %}">
+
     <link rel="stylesheet" href="{% static 'myapp/css/staff.css' %}">
-    {% block css %}{% endblock %}
+    {% block css %} {% endblock %}
+    <script src="{% static 'myapp/js/menu.js' %}"></script>
 </head>
+
 <body>
     <header>
         <div>
@@ -20,37 +23,69 @@
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'shop' %}">Shop</a>
             <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'help' %}">Help❓</a>
             {% if user.is_staff %}
             <a href="{% url 'manage_products' %}">Manage Products</a>
             <a href="{% url 'manage_categories' %}">Manage Categories</a>
             {% endif %}
         </nav>
         <div class="auth-section">
-            {% if user.is_authenticated %}
-                <span>Welcome, {{ user.username }}!</span>
-                <a href="{% url 'signout' %}">Sign Out</a>
-            {% else %}
-                <a href="{% url 'signin' %}">Sign In</a>
-                <a href="{% url 'signup' %}">Sign Up</a>
-            {% endif %}
             <a href="{% url 'cart' %}" class="cart-link">
                 <img src="{% static 'myapp/images/shopping_cart.png' %}" alt="Cart">
                 <span class="cart-count">
                     {% if user.is_authenticated %}{{ user.cartitem_set.count }}{% else %}0{% endif %}
                 </span>
             </a>
+            {% if user.is_authenticated %}
+            <span>Welcome, {{ user.username }}!</span>
+            <a href="{% url 'signout' %}">Sign Out</a>
+            {% else %}
+            <a href="{% url 'signin' %}">Sign In</a>
+            <a href="{% url 'signup' %}">Sign Up</a>
+            {% endif %}
         </div>
     </header>
 
     <main>
+        <div class="menu-trigger">
+            <div class="hamburger">☰</div>
+        </div>
+        <!-- Dynamic Side Menu -->
+        <nav id="sideMenu" class="side-menu">
+            <div class="menu-header">
+                <span class="close-btn">&times;</span>
+                <h3>Navigation Menu</h3>
+            </div>
+            <div class="menu-content">
+                <a href="{% url 'terms' %}">Terms & Conditions</a>
+                <a href="{% url 'shop' %}#New">Trending</a>
+                <a href="{% url 'contact' %}"> Support</a>
+                <div class="setting-item">
+                    <span>Dark Mode</span>
+                    <div class="toggle-switch" id="darkModeToggle"></div>
+                </div>
+            </div>
+        </nav>
+        <div id="menuOverlay" class="overlay"></div>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Footer Section -->
     <footer>
-        <p>&copy; 2025 AutoGadget Hub. All rights reserved.</p>
+        <p>&copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili ECE4.</p>
     </footer>
 
-    <script src="{% static 'myapp/js/menu.js' %}"></script>
-    {% block js %}{% endblock %}
 </body>
+
 </html>

@@ -1,33 +1,37 @@
 document.addEventListener('DOMContentLoaded', function () {
     const signupForm = document.getElementById('signupForm');
-    const signupTableBody = document.getElementById('signupEntriesBody');
-    const signupTable = document.getElementById('signupTable');
-    const SIGNUP_STORAGE_KEY = 'signupEntries';
-    const showEntriesBtn = document.getElementById('showEntriesBtn')
-
-    showEntriesBtn.addEventListener('mouseover', function () {
-        showEntriesBtn.style.backgroundColor = 'green'; // Change color on hover
-        showEntriesBtn.style.color = 'white';
-    });
-
-    showEntriesBtn.addEventListener('mouseout', function () {
-        showEntriesBtn.style.backgroundColor = ''; // Reset to default
-        showEntriesBtn.style.color = '';
-    });
+    
     // Add validation functions
     // Note this email validation is adapted from 'https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript'
+
     const validateEmail = (email) => {
         return email.match(
             /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
     };
+
     function validatePassword(password) {
-        return password.length >= 8 && /\d/.test(password);
+        // At least 8 characters
+        const isLengthValid = password.length >= 8;
+        // Contains at least one digit
+        const hasNumber = /\d/.test(password);
+        // Contains at least one letter (uppercase or lowercase)
+        const hasLetter = /[a-zA-Z]/.test(password);
+        // Contains at least one special character (@, ., /, etc.)
+        const hasSpecialChar = /[@./\\!@#$%^&*(),.?":{}|<>]/.test(password);
+        
+        return isLengthValid && hasNumber && hasLetter && hasSpecialChar;
     }
 
     function validatePhone(phone) {
-        const regex = /^\d{10}$/; // 10-digit validation
+        const regex = /^\d{10}$/;
         return regex.test(phone);
+    }
+
+    function validateUsername(username) {
+        return username.length >= 3 && 
+               /^[a-zA-Z]/.test(username) && // Starts with letter
+               /^[a-zA-Z0-9_]+$/.test(username); 
     }
 
     // Error handling functions
@@ -42,24 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
         errors.forEach(error => error.textContent = '');
         const inputs = form.querySelectorAll('input');
         inputs.forEach(input => input.classList.remove('error'));
-    }
-
-    // Table functions
-    function loadSignupEntries() {
-        signupTableBody.innerHTML = '';
-        const entries = JSON.parse(localStorage.getItem(SIGNUP_STORAGE_KEY)) || [];
-        entries.forEach(entry => addTableRow(entry));
-    }
-
-    function addTableRow(entry) {
-        const row = signupTableBody.insertRow();
-        row.innerHTML = `
-            <td>${entry.username}</td>
-            <td>${entry.email}</td>
-            <td>${entry.addressLine1}${entry.addressLine2 ? ', ' + entry.addressLine2 : ''}</td>
-            <td>${entry.phone}</td>
-            <td>${new Date(entry.timestamp).toLocaleString()}</td>
-        `;
     }
 
     // Form submission handler
@@ -81,8 +67,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Validation checks
         let isValid = true;
 
-        if (formData.username.length < 3) {
-            showError(signupForm.username, 'Username must be at least 3 characters');
+        if (!validateUsername(formData.username)) {
+            showError(signupForm.username, 'Username must start with a letter and contain only letters, numbers, and underscores (3+ characters)');
             isValid = false;
         }
 
@@ -92,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (!validatePassword(formData.password)) {
-            showError(signupForm.password, 'Password needs 8+ chars with a number');
+            showError(signupForm.password, 'Password needs 8+ characters with at least one number, letter and spec char ');
             isValid = false;
         }
 
@@ -107,33 +93,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (!validatePhone(formData.phone)) {
-            showError(signupForm.phone, 'Invalid phone number (10 digits)');
+            showError(signupForm.phone, 'Invalid phone number (10 digits required)');
             isValid = false;
         }
 
-        // If valid, store and update
         if (isValid) {
-            const entry = {
-                formData,
-                timestamp: new Date().toISOString()
-            };
-
-            const entries = JSON.parse(localStorage.getItem(SIGNUP_STORAGE_KEY)) || [];
-            entries.push(entry);
-            localStorage.setItem(SIGNUP_STORAGE_KEY, JSON.stringify(entries));
-
-            addTableRow(entry);
-            signupForm.reset();
-            signupTable.style.display = 'table'; // Show table after submission
-            alert('Registration successful!');
+            // Submit the form if valid
+            signupForm.submit();
         }
     });
-
-    // Table toggle
-    document.getElementById('showEntriesBtn').addEventListener('click', () => {
-        signupTable.style.display = signupTable.style.display === 'none' ? 'table' : 'none';
-    });
-
-    // Initial load
-    loadSignupEntries();
 });

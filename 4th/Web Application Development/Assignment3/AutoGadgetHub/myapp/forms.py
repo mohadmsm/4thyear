@@ -80,6 +80,17 @@ class ProductForm(forms.ModelForm):
         labels = {
             'product_code': 'SKU/Product Code'
         }
+    def clean_price(self):
+        price = self.cleaned_data['price']
+        if price <= 0:
+            raise forms.ValidationError("Price must be greater than 0.")
+        return price
+
+    def clean_stock(self):
+        stock = self.cleaned_data['stock']
+        if stock < 0:
+            raise forms.ValidationError("Stock cannot be negative.")
+        return stock
 
 
 class ProductEditForm(forms.ModelForm):
