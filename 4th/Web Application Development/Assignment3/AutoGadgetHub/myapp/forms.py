@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from .models import Product, ProductCategory
+from datetime import datetime
 # user reg form Q4
 class UserRegistrationForm(forms.Form):
     username = forms.CharField(
@@ -112,3 +113,99 @@ class ProductCategoryForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Enter category name'})
         }
+
+
+class checkout_form(forms.Form):
+    credit_card_number = forms.CharField(
+        max_length=16,
+        min_length=13,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{13,16}$',
+                message='Credit card number must be between 13 and 16 digits and contain only numbers.'
+            )
+        ],
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Credit Card Number',
+            'autocomplete': 'cc-number'
+        }),
+        label='Credit Card Number'
+    )
+    
+    cvv = forms.CharField(
+        max_length=4,
+        min_length=3,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{3,4}$',
+                message='CVV must be 3 or 4 digits and contain only numbers.'
+            )
+        ],
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'CVV',
+            'autocomplete': 'off'
+        }),
+        label='Security Code (CVV)'
+    )
+    
+    expiry_month = forms.ChoiceField(
+        choices=[(str(i).zfill(2), str(i).zfill(2)) for i in range(1, 13)],
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'autocomplete': 'cc-exp-month'
+        }),
+        label='Expiration Month'
+    )
+    
+    expiry_year = forms.ChoiceField(
+        choices=[(str(year), str(year)) for year in range(datetime.now().year, datetime.now().year + 15)],
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'autocomplete': 'cc-exp-year'
+        }),
+        label='Expiration Year'
+    )
+
+    def clean_credit_card_number(self):
+        card_number = self.cleaned_data.get('credit_card_number')
+        # First check if it contains only digits
+        if not card_number.isdigit():
+            raise forms.ValidationError("Credit card number must contain only digits.")
+            
+        # Then validate using Luhn algorithm
+        if not self.luhn_checksum(card_number):
+            raise forms.ValidationError("Invalid credit card number.")
+        return card_number
+    
+    def luhn_checksum(self, card_number):
+        """Implementation of the Luhn algorithm to validate credit card numbers"""
+        def digits_of(n):
+            return [int(d) for d in str(n)]
+            
+        digits = digits_of(card_number)
+        odd_digits = digits[-1::-2]
+        even_digits = digits[-2::-2]
+        
+        checksum = sum(odd_digits)
+        
+        for d in even_digits:
+            checksum += sum(digits_of(d * 2))
+            
+        return checksum % 10 == 0
+
+    def clean(self):
+        cleaned_data = super().clean()
+        expiry_month = cleaned_data.get('expiry_month')
+        expiry_year = cleaned_data.get('expiry_year')
+        
+        if expiry_month and expiry_year:
+            # Check if card is expired
+            current_year = datetime.now().year
+            current_month = datetime.now().month
+            
+            if int(expiry_year) == current_year and int(expiry_month) < current_month:
+                raise forms.ValidationError("This credit card has expired.")
+        
+        return cleaned_data

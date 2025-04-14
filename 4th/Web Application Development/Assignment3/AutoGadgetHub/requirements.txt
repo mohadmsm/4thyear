@@ -1,5 +1,5 @@
 Django==5.1.8
-
+Pillow # to use ImageField in product modul
 dj-database-url==2.3.0 
 gunicorn==23.0.0
 # Uncomment for MySQL Database Support

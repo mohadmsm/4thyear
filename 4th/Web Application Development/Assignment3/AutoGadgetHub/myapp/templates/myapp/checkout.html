@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{% static 'myapp/css/header_mainBody.css' %}" />
   <link rel="stylesheet" href="{% static 'myapp/css/checkout_style.css' %}" />
   <script src="{% static 'myapp/js/menu.js' %}"></script>
+  <script src="{% static 'myapp/js/payment_toggle.js' %}"></script>
 </head>
 
 <body>
@@ -73,56 +74,86 @@
     <div id="menuOverlay" class="overlay"></div>
     <div class="checkout-container">
       <h2>Checkout</h2>
-      <!-- Order Summary Section, Note: this is only an example and can be changed -->
+
+      <!-- Dynamic Order Summary -->
       <div class="order-summary">
         <h3>Order Summary</h3>
         <ul>
-          <li>Product 1 - €8.99</li>
-          <li>Product 2 - €49.99</li>
-          <li>Product 3 - €49.99</li>
+          {% for item in cart_items %}
+          <li>
+            {{ item.product.name }} -
+            {{ item.quantity }} x €{{ item.product.price }}
+          </li>
+          {% endfor %}
         </ul>
-        <p><strong>Total: €108.97</strong></p>
+        <p><strong>Total: €{{ cart_total|floatformat:2 }}</strong></p>
       </div>
       <!-- Checkout Form -->
-      <form action="#" method="POST" class="checkout-form">
+      <!-- Shipping Information Form -->
+      <form method="POST" class="checkout-form">
+        {% csrf_token %}
         <h3>Shipping Information</h3>
+
+        <!-- Address from UserProfile -->
         <div class="form-group">
-          <label for="full-name">Full Name</label>
-          <input type="text" id="full-name" name="full-name" placeholder="Enter your full name" required />
-        </div>
-        <div class="form-group">
-          <label for="address">Shipping Address</label>
-          <input type="text" id="address" name="address" placeholder="Enter your shipping address" required />
-        </div>
-        <div class="form-group">
-          <label for="city">City</label>
-          <input type="text" id="city" name="city" placeholder="Enter your city" required />
-        </div>
-        <div class="form-group">
-          <label for="postal-code">Postal Code</label>
-          <input type="text" id="postal-code" name="postal-code" placeholder="Enter your postal code" required />
-        </div>
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required />
+          <label>Address Line 1</label>
+          <input type="text" name="address_line1" value="{{ user.profile.address_line1 }}" required>
         </div>
 
+        <div class="form-group">
+          <label>Address Line 2 (Optional)</label>
+          <input type="text" name="address_line2" value="{{ user.profile.address_line2|default_if_none:'' }}">
+        </div>
+        <!-- Phone Number from UserProfile -->
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" name="phone" value="{{ user.profile.phone_number }}" required>
+        </div>
         <h3>Payment Information</h3>
         <div class="payment-methods">
           <!-- Payment Method Selection -->
-          <input type="radio" id="debit-card" name="payment-method" value="debit-card" checked />
+          <input type="radio" id="debit-card" name="payment_method" value="debit" checked />
           <label for="debit-card">Debit/Credit Card</label>
 
-          <input type="radio" id="paypal" name="payment-method" value="paypal" />
+          <input type="radio" id="paypal" name="payment_method" value="paypal" />
           <label for="paypal">PayPal</label>
 
-          <input type="radio" id="google-pay" name="payment-method" value="google-pay" />
+          <input type="radio" id="google-pay" name="payment_method" value="google_pay" />
           <label for="google-pay">Google Pay</label>
 
-          <input type="radio" id="apple-pay" name="payment-method" value="apple-pay" />
+          <input type="radio" id="apple-pay" name="payment_method" value="apple_pay" />
           <label for="apple-pay">Apple Pay</label>
         </div>
+        <!-- Card Details Section (Initially Hidden) -->
+        <div id="card-details">
+          <!-- Credit Card Form Fields -->
+          <div class="form-group">
+            {{ form.credit_card_number.label_tag }}
+            {{ form.credit_card_number }}
+            {% if form.credit_card_number.errors %}
+            <div class="error">{{ form.credit_card_number.errors }}</div>
+            {% endif %}
+          </div>
 
+          <div class="form-group">
+            {{ form.cvv.label_tag }}
+            {{ form.cvv }}
+            {% if form.cvv.errors %}
+            <div class="error">{{ form.cvv.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              {{ form.expiry_month.label_tag }}
+              {{ form.expiry_month }}
+            </div>
+            <div class="form-group">
+              {{ form.expiry_year.label_tag }}
+              {{ form.expiry_year }}
+            </div>
+          </div>
+        </div>
         <div class="form-actions">
           <button type="submit">Complete Purchase</button>
         </div>
@@ -138,5 +169,4 @@
     </p>
   </footer>
 </body>
-
 </html>

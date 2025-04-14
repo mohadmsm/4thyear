@@ -6,7 +6,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.db import transaction
 from django.contrib.auth.models import User
 from .models import Product, ProductCategory, CartItem, Order, OrderItem, UserProfile
-from .forms import UserRegistrationForm, ProductForm, ProductCategoryForm
+from .forms import UserRegistrationForm, ProductForm, ProductCategoryForm,checkout_form
 from django.shortcuts import get_object_or_404  
 # Create your views here.
 def home(request):
@@ -93,43 +93,63 @@ def checkout(request):
         messages.error(request, 'Your cart is empty')
         return redirect('shop')
     
-    if request.method == 'POST':
-        try:
-            with transaction.atomic():
-                profile = request.user.profile
-                order = Order.objects.create(
-                    user=request.user,
-                    address=profile.address_line1,
-                    total=0
-                )
-                
-                total = 0
-                for item in cart_items:
-                    product = item.product
-                    if product.stock < item.quantity:
-                        raise Exception(f'Insufficient stock for {product.name}')
-                    
-                    product.stock -= item.quantity
-                    product.save()
-                    
-                    OrderItem.objects.create(
-                        order=order,
-                        product=product,
-                        quantity=item.quantity,
-                        price=product.price
-                    )
-                    total += product.price * item.quantity
-                
-                order.total = total
-                order.save()
-                cart_items.delete()
-                messages.success(request, 'Order placed successfully')
-                return redirect('order_history')
-        
-        except Exception as e:
-            messages.error(request, f'Checkout failed: {str(e)}')
+    cart_total = sum(item.product.price * item.quantity for item in cart_items)
     
-    return render(request, 'myapp/checkout.html')
+    if request.method == 'POST':
+        form = checkout_form(request.POST)  # Instantiate the form with POST data
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    profile = request.user.profile
+                    # Update profile with form data from POST
+                    profile.address_line1 = request.POST.get('address_line1')
+                    profile.address_line2 = request.POST.get('address_line2')
+                    profile.phone_number = request.POST.get('phone')
+                    profile.save()
+                    
+                    # Order processing logic here (same as before)
+                    order = Order.objects.create(
+                        user=request.user,
+                        address=profile.address_line1,
+                        total=0
+                    )
+                    
+                    total = 0
+                    for item in cart_items:
+                        product = item.product
+                        if product.stock < item.quantity:
+                            raise Exception(f'Insufficient stock for {product.name}')
+                        
+                        product.stock -= item.quantity
+                        product.save()
+                        
+                        OrderItem.objects.create(
+                            order=order,
+                            product=product,
+                            quantity=item.quantity,
+                            price=product.price
+                        )
+                        total += product.price * item.quantity
+                    
+                    order.total = total
+                    order.save()
+                    cart_items.delete()
+                    messages.success(request, 'Order placed successfully')
+                    return redirect('order_history')
+            
+            except Exception as e:
+                messages.error(request, f'Checkout failed: {str(e)}')
+        else:
+            # Form is invalid, show errors
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = checkout_form()  # Empty form for GET requests
+    
+    return render(request, 'myapp/checkout.html', {
+        'cart_items': cart_items,
+        'cart_total': cart_total,
+        'form': form,  # Pass the form (with errors if any)
+    })
 
 @login_required
 def order_history(request):
