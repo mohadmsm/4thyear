@@ -47,34 +47,66 @@ def cart(request):
 @login_required
 def update_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    redirect_url = request.POST.get('redirect_url', 'cart')
-    if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', 1))
-        
-        try:
-            cart_item = CartItem.objects.get(user=request.user, product=product)
-            if quantity > 0:
-                # Update quantity
-                cart_item.quantity = quantity
-                cart_item.save()
-                messages.success(request, 'Quantity updated')
-            else:
-                # Remove item if quantity is 0
-                cart_item.delete()
-                messages.success(request, 'Item removed from cart')
-        except CartItem.DoesNotExist:
-            if quantity > 0:
-                # Add new item
-                CartItem.objects.create(
-                    user=request.user,
-                    product=product,
-                    quantity=quantity
-                )
-                messages.success(request, 'Item added to cart')
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    response_data = {}
+    default_redirect = request.POST.get('redirect_url', 'cart')
 
-        return redirect(redirect_url)
-    
-    return redirect('cart')
+    if request.method == 'POST':
+        try:
+            quantity = int(request.POST.get('quantity', 1))
+            
+            # Handle stock validation
+            if quantity > product.stock:
+                raise ValueError(f"Only {product.stock} available in stock")
+            if quantity < 0:
+                raise ValueError("Quantity cannot be negative")
+
+            # Get or create cart item
+            cart_item, created = CartItem.objects.get_or_create(
+                user=request.user,
+                product=product,
+                defaults={'quantity': quantity}
+            )
+
+            # Update or delete existing item
+            if not created:
+                if quantity > 0:
+                    cart_item.quantity = quantity
+                    cart_item.save()
+                else:
+                    cart_item.delete()
+                    quantity = 0
+
+            # Prepare response data
+            cart_items = CartItem.objects.filter(user=request.user)
+            cart_total = sum(item.get_total() for item in cart_items)
+            cart_count = cart_items.count()
+
+            response_data = {
+                'success': True,
+                'message': 'Cart updated successfully',
+                'quantity': quantity,
+                'item_total': float(product.price * quantity),
+                'item_price': float(product.price),
+                'cart_total': float(cart_total),
+                'cart_count': cart_count
+            }
+
+            # Add success message for non-AJAX requests
+            if not is_ajax:
+                messages.success(request, response_data['message'])
+
+        except Exception as e:
+            response_data = {'success': False, 'message': str(e)}
+            if not is_ajax:
+                messages.error(request, str(e))
+
+        # Return appropriate response
+        if is_ajax:
+            return JsonResponse(response_data)
+        return redirect(default_redirect)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
 
 @login_required
 def remove_from_cart(request, item_id):

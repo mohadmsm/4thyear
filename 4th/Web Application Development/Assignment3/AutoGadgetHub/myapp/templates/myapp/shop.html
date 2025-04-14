@@ -140,6 +140,45 @@
       &copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili ECE4.
     </p>
   </footer>
+  <!-- Add this script section at the bottom of shop.html -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Handle all add-to-cart forms
+      document.querySelectorAll('.add-to-cart').forEach(button => {
+          button.addEventListener('click', async function(e) {
+              e.preventDefault();
+              const form = this.closest('form');
+              const formData = new FormData(form);
+              
+              try {
+                  const response = await fetch(form.action, {
+                      method: 'POST',
+                      headers: {
+                          'X-Requested-With': 'XMLHttpRequest',
+                          'X-CSRFToken': form.querySelector('input[name="csrfmiddlewaretoken"]').value
+                      },
+                      body: formData
+                  });
+  
+                  const data = await response.json();
+                  
+                  if (!response.ok || !data.success) {
+                      throw new Error(data.message || 'Failed to add item');
+                  }
+  
+                  // Update cart count in header
+                  document.querySelector('.cart-count').textContent = data.cart_count;
+                  
+                  // Show success message
+                  alert(data.message);
+  
+              } catch (error) {
+                  alert('Error: ' + error.message);
+              }
+          });
+      });
+  });
+  </script>
 </body>
 
 </html>
