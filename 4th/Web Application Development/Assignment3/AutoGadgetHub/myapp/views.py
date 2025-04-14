@@ -8,6 +8,9 @@ from django.contrib.auth.models import User
 from .models import Product, ProductCategory, CartItem, Order, OrderItem, UserProfile
 from .forms import UserRegistrationForm, ProductForm, ProductCategoryForm,checkout_form
 from django.shortcuts import get_object_or_404  
+from django.http import JsonResponse
+from django.utils import timezone
+from datetime import timedelta
 # Create your views here.
 def home(request):
     return render(request, 'myapp/index.html')
@@ -45,7 +48,6 @@ def cart(request):
 def update_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     redirect_url = request.POST.get('redirect_url', 'cart')
-
     if request.method == 'POST':
         quantity = int(request.POST.get('quantity', 1))
         
@@ -150,11 +152,6 @@ def checkout(request):
         'cart_total': cart_total,
         'form': form,  # Pass the form (with errors if any)
     })
-
-@login_required
-def order_history(request):
-    orders = Order.objects.filter(user=request.user).order_by('-created')
-    return render(request, 'myapp/order_history.html', {'orders': orders})
 
 # Staff management views
 @staff_member_required
@@ -300,3 +297,47 @@ def signout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out.')
     return redirect('home')
+
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created')
+    return render(request, 'myapp/order_history.html', {'orders': orders})
+
+@login_required
+def order_history_api(request):
+    period = request.GET.get('period', 'day')
+    now = timezone.now()
+    
+    if period == 'day':
+        start_date = now - timedelta(days=1)
+    elif period == 'month':
+        start_date = now - timedelta(days=30)
+    elif period == 'year':
+        start_date = now - timedelta(days=365)
+    else:
+        start_date = now - timedelta(days=1)
+
+    orders = Order.objects.filter(
+        user=request.user,
+        created__gte=start_date
+    ).prefetch_related('items').order_by('-created')
+    
+    orders_data = []
+    for order in orders:
+        order_data = {
+            'id': order.id,
+            'created': order.created.strftime("%b %d, %Y %H:%M"),
+            'total': str(order.total),
+            'status': order.status,
+            'get_status_display': order.get_status_display(),
+            'items': []
+        }
+        for item in order.items.all():
+            order_data['items'].append({
+                'product_name': item.product.name,
+                'quantity': item.quantity,
+                'price': str(item.price)
+            })
+        orders_data.append(order_data)
+    
+    return JsonResponse({'orders': orders_data})
