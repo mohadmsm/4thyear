@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="{% static 'myapp/css/main_style.css' %}" />
   <link rel="stylesheet" href="{% static 'myapp/css/header_mainBody.css' %}" />
   <link rel="stylesheet" href="{% static 'myapp/css/order_history_syle.css' %}" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
   <header>
@@ -49,85 +48,96 @@
   </header>
 
   <main>
-    <section class="order-history">
-      <h2>Your Order History</h2>
-      <div class="period-selector">
-        <select id="periodSelect">
-          <option value="day">Last Day</option>
-          <option value="month">Last Month</option>
-          <option value="year">Last Year</option>
-        </select>
-        <button id="retrieveBtn" class="btn-primary">Retrieve Orders</button>
-      </div>
+    <section class="order-history-container">
+      <div class="order-history">
+        <h2>Your Order History</h2>
+        <div class="period-selector">
+          <select id="periodSelect">
+            <option value="day">Last Day</option>
+            <option value="month">Last Month</option>
+            <option value="year">Last Year</option>
+          </select>
+          <button id="retrieveBtn" class="btn-primary">Retrieve Orders</button>
+        </div>
       
-      <div id="ordersContainer" class="orders-list">
-        <!-- AJAX content will be loaded here -->
+        <div id="ordersContainer" class="orders-list-container">
+          <div class="orders-list">
+            <!-- AJAX content will be loaded here -->
+          </div>
+        </div>
+        
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
       </div>
-      
-      <div id="errorMessage" class="error-message" style="display: none;"></div>
     </section>
   </main>
+
   <footer>
     <p>
-      &copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili
-      ECE4 .
+      &copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili ECE4.
     </p>
   </footer>
 
   <script>
-  $(document).ready(function() {
-    $('#retrieveBtn').click(function() {
-      const period = $('#periodSelect').val();
-      
-      $.ajax({
-        url: '{% url "order_history_api" %}',
-        type: 'GET',
-        data: { period: period },
-        dataType: 'json',
-        success: function(data) {
-          $('#errorMessage').hide();
-          renderOrders(data.orders);
-        },
-        error: function(xhr) {
-          $('#errorMessage').text('Error retrieving orders: ' + xhr.statusText).show();
-        }
+    document.addEventListener('DOMContentLoaded', function() {
+      const retrieveBtn = document.getElementById('retrieveBtn');
+      const periodSelect = document.getElementById('periodSelect');
+      const ordersList = document.querySelector('.orders-list');
+      const errorMessage = document.getElementById('errorMessage');
+    
+      retrieveBtn.addEventListener('click', function() {
+        const period = periodSelect.value;
+        const url = `{% url "order_history_api" %}?period=${encodeURIComponent(period)}`;
+    
+        fetch(url)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            errorMessage.style.display = 'none';
+            renderOrders(data.orders);
+          })
+          .catch(error => {
+            errorMessage.textContent = 'Error retrieving orders: ' + error.message;
+            errorMessage.style.display = 'block';
+          });
       });
-    });
-
-    function renderOrders(orders) {
-      const container = $('#ordersContainer');
-      container.empty();
-
-      if (orders.length === 0) {
-        container.html('<p class="no-orders">No orders found for this period.</p>');
-        return;
-      }
-
-      orders.forEach(order => {
-        const orderHtml = `
-          <div class="order-card">
-            <div class="order-header">
-              <span>Order #${order.id}</span>
-              <span class="status ${order.status.toLowerCase()}">${order.get_status_display}</span>
-            </div>
-            <div class="order-details">
-              <p>Date: ${order.created}</p>
-              <p>Total: $${order.total}</p>
-              <div class="order-items">
-                ${order.items.map(item => `
-                  <div class="order-item">
-                    <span>${item.product_name}</span>
-                    <span>${item.quantity} x $${item.price}</span>
-                  </div>
-                `).join('')}
+    
+      function renderOrders(orders) {
+        ordersList.innerHTML = '';
+        
+        if (orders.length === 0) {
+          ordersList.innerHTML = '<p class="no-orders">No orders found for this period.</p>';
+          return;
+        }
+    
+        orders.forEach(order => {
+          const orderHtml = `
+            <div class="order-card">
+              <div class="order-header">
+                <span>Order #${order.id}</span>
+                <span class="status ${order.status.toLowerCase()}">${order.get_status_display}</span>
+              </div>
+              <div class="order-details">
+                <p>Date: ${order.created}</p>
+                <p>Total: $${order.total}</p>
+                <div class="order-items">
+                  ${order.items.map(item => `
+                    <div class="order-item">
+                      <span>${item.product_name}</span>
+                      <span>${item.quantity} x $${item.price}</span>
+                    </div>
+                  `).join('')}
+                </div>
               </div>
             </div>
-          </div>
-        `;
-        container.append(orderHtml);
-      });
-    }
-  });
+          `;
+          ordersList.insertAdjacentHTML('beforeend', orderHtml);
+        });
+      }
+    });
   </script>
 </body>
 </html>

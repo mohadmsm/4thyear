@@ -1,4 +1,7 @@
-/* Add to header_mainBody.css */
+main {
+  padding: 20px 0;
+  margin-top: auto;
+}
 .order-history {
     padding: 2rem;
     max-width: 1200px;
@@ -59,3 +62,39 @@
     border-radius: 4px;
     margin-top: 1rem;
   }
+  /* Main layout adjustments */
+main {
+  padding: 20px 0;
+  min-height: calc(100vh - 120px); /* Adjust based on header/footer height */
+}
+
+.order-history-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Orders list container styling */
+.orders-list-container {
+  margin: 30px 0;
+  max-height: 70vh; /* Limits height to 70% of viewport */
+  overflow-y: auto; /* Adds scroll when content exceeds height */
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  background: #f9f9f9;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Order card styling */
+.order-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
