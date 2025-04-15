@@ -3,16 +3,25 @@
 
 {% block content %}
 <div class="staff-form">
+    <!-- Show diferent titles depending on if the category is being eddited or created -->
     <h1>{% if category %}Edit Category: {{ category.name }}{% else %}Add New Category{% endif %}</h1>
+
+    <!-- Form to add or edit a categgory -->
     <form method="post">
         {% csrf_token %}
+
+        <!-- Input feild for category name -->
         <div class="form-group">
-            {{ form.name.label_tag }}
-            {{ form.name }}
-            {{ form.name.errors }}
+            {{ form.name.label_tag }}  <!-- Label for the name input -->
+            {{ form.name }}            <!-- The input box itsself -->
+            {{ form.name.errors }}     <!-- Show errors if the name is invalid or empty -->
         </div>
+
+        <!-- Buttons to subbmit or cancel the form -->
         <div class="form-actions">
-            <button type="submit" class="btn-primary">{% if category %}Save Changes{% else %}Create Category{% endif %}</button>
+            <button type="submit" class="btn-primary">
+                {% if category %}Save Changes{% else %}Create Category{% endif %}
+            </button>
             <a href="{% url 'manage_categories' %}" class="btn-secondary">Cancel</a>
         </div>
     </form>

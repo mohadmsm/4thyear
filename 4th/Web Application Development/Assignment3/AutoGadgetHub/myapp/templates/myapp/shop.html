@@ -141,45 +141,48 @@
       &copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili ECE4.
     </p>
   </footer>
-  <!-- Add this script section at the bottom of shop.html -->
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-      // Handle all add-to-cart forms
+      // Handle all add-to-cart forms on the page
       document.querySelectorAll('.add-to-cart').forEach(button => {
           button.addEventListener('click', async function(e) {
-              e.preventDefault();
-              const form = this.closest('form');
-              const formData = new FormData(form);
+              e.preventDefault();  // Prevent form submission
+              const form = this.closest('form');  // Get the closest form to the button
+              const formData = new FormData(form); // Create a FormData object from the form
               
               try {
+                  // Make a POST request with the form data
                   const response = await fetch(form.action, {
                       method: 'POST',
                       headers: {
-                          'X-Requested-With': 'XMLHttpRequest',
-                          'X-CSRFToken': form.querySelector('input[name="csrfmiddlewaretoken"]').value
+                          'X-Requested-With': 'XMLHttpRequest',  // Indicate it's an AJAX request
+                          'X-CSRFToken': form.querySelector('input[name="csrfmiddlewaretoken"]').value  // CSRF token for security
                       },
-                      body: formData
+                      body: formData  // Send the form data in the request body
                   });
   
-                  const data = await response.json();
+                  const data = await response.json();  // Parse the response JSON
                   
+                  // If the response is not OK or the data indicates failure, throw an error
                   if (!response.ok || !data.success) {
                       throw new Error(data.message || 'Failed to add item');
                   }
   
-                  // Update cart count in header
+                  // Update the cart count in the header
                   document.querySelector('.cart-count').textContent = data.cart_count;
                   
-                  // Show success message
+                  // Show a success message
                   alert(data.message);
   
               } catch (error) {
+                  // Display an error alert if something goes wrong
                   alert('Error: ' + error.message);
               }
           });
       });
   });
-  </script>
+</script>
 </body>
 
 </html>

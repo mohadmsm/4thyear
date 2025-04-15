@@ -12,11 +12,11 @@
 <body>
   <header>
     <div>
-      <!-- Logo and website title -->
+      <!-- Logoo and website title -->
       <img src="{% static 'myapp/images/my_logo.png'%}" alt="AutoGadget Hub Logo" />
       <h1>AutoGadget Hub</h1>
     </div>
-    <!-- Navigation Bar -->
+    <!-- Navigaion Bar -->
     <nav>
       <a href="{% url 'home' %}">Home</a>
       <a href="{% url 'shop' %}">Shop</a>
@@ -30,7 +30,7 @@
       {% endif %}
     </nav>
     <div>
-      <!-- Shopping Cart Icon -->
+      <!-- Shopping Cartt Icon -->
       <a href="{% url 'cart' %}" class="cart-link">
         <img src="{% static 'myapp/images/shopping_cart.png' %}" alt="Cart">
         <span class="cart-count">
@@ -41,7 +41,7 @@
       <span class="welcome-msg">Welcome, {{ user.username }}!</span>
       <a href="{% url 'signout' %}" id="signout">Sign Out</a>
       {% else %}
-      <!-- Sign-in and Sign-up links -->
+      <!-- Sign-in and Sign-up linx -->
       <a href="{% url 'signin' %}" id="signin">Sign In</a>
       <a href="{% url 'signup' %}" id="signup">Sign Up</a>
       {% endif %}
@@ -63,7 +63,7 @@
       
         <div id="ordersContainer" class="orders-list-container">
           <div class="orders-list">
-            <!-- AJAX content will be loaded here -->
+            <!-- AJAX contentt will be loaded here -->
           </div>
         </div>
         
@@ -80,40 +80,49 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Grab the retrive button, period select, and orders list elements
       const retrieveBtn = document.getElementById('retrieveBtn');
       const periodSelect = document.getElementById('periodSelect');
       const ordersList = document.querySelector('.orders-list');
       const errorMessage = document.getElementById('errorMessage');
     
+      // When the retrieve button is clicked
       retrieveBtn.addEventListener('click', function() {
-        const period = periodSelect.value;
-        const url = `{% url "order_history_api" %}?period=${encodeURIComponent(period)}`;
+        const period = periodSelect.value;  // Get the selected period
+        const url = `{% url "order_history_api" %}?period=${encodeURIComponent(period)}`; // Build the API URL with period param
     
+        // Make a fetch request to get the orders data
         fetch(url)
           .then(response => {
+            // If the response is not OK, throw an error
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json();
+            return response.json();  // Parse the JSON response
           })
           .then(data => {
+            // Hide error message if data is fetched succesfully
             errorMessage.style.display = 'none';
-            renderOrders(data.orders);
+            renderOrders(data.orders); // Call renderOrders function with orders data
           })
           .catch(error => {
-            errorMessage.textContent = 'Error retrieving orders: ' + error.message;
+            // Display error message if something goes wrong
+            errorMessage.textContent = 'Error retriving orders: ' + error.message; 
             errorMessage.style.display = 'block';
           });
       });
     
+      // Function to render the orders on the page
       function renderOrders(orders) {
-        ordersList.innerHTML = '';
+        ordersList.innerHTML = '';  // Clear any previous orders
         
+        // If no orders are found, display a message
         if (orders.length === 0) {
-          ordersList.innerHTML = '<p class="no-orders">No orders found for this period.</p>';
+          ordersList.innerHTML = '<p class="no-orders">No orders found for this peiod.</p>';
           return;
         }
     
+        // Loop through each order and display it
         orders.forEach(order => {
           const orderHtml = `
             <div class="order-card">
@@ -135,10 +144,10 @@
               </div>
             </div>
           `;
-          ordersList.insertAdjacentHTML('beforeend', orderHtml);
+          ordersList.insertAdjacentHTML('beforeend', orderHtml); // Add the generated HTML for each order
         });
       }
     });
-  </script>
+</script>
 </body>
 </html>

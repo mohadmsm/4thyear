@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-    
+    //error handelling 
     function showError(input, message) {
         const formGroup = input.closest('.form-group');
         if (!formGroup) return;

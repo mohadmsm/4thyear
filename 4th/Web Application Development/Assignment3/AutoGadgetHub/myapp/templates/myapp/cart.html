@@ -140,58 +140,61 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Handle all update forms on the page
         document.querySelectorAll('.update-form').forEach(form => {
             form.addEventListener('submit', async function(e) {
-                e.preventDefault();
+                e.preventDefault();  // Prevent the default form submission/ reloading the page 
                 
-                const formData = new FormData(this);
-                const url = this.action;
-                const csrfToken = formData.get('csrfmiddlewaretoken');
-                const quantityInput = this.querySelector('input[name="quantity"]');
+                const formData = new FormData(this);  // Create FormData object from the form
+                const url = this.action;  // Get the action URL of the form
+                const csrfToken = formData.get('csrfmiddlewaretoken');  // Get CSRF token for security
+                const quantityInput = this.querySelector('input[name="quantity"]');  // Find the quantity input field
                 
                 try {
+                    // Make a POST request with the form data
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRFToken': csrfToken
+                            'X-Requested-With': 'XMLHttpRequest',  // Indicate AJAX request
+                            'X-CSRFToken': csrfToken  // CSRF token for security
                         },
-                        body: formData
+                        body: formData  // Send form data in the body
                     });
     
-                    const data = await response.json();
+                    const data = await response.json();  // Parse the response as JSON
                     
-                    if (!response.ok) throw new Error(data.message || 'Request failed');
+                    if (!response.ok) throw new Error(data.message || 'Request faileed');
                     if (!data.success) throw new Error(data.message);
     
-                    // Update quantity input
+                    // Update the quantity input value
                     quantityInput.value = data.quantity;
     
-                    // Update item total using response data
-                    const row = this.closest('tr');
+                    // Update the item total using response data
+                    const row = this.closest('tr');  // Find the closest row
                     row.querySelector('.product-total').innerHTML = `
                         €${data.item_total.toFixed(2)} 
                         (€${data.item_price.toFixed(2)} × ${data.quantity})
                     `;
     
-                    // Update cart totals
+                    // Update the cart totals
                     document.querySelector('.cart-summary strong').textContent = 
                         `Total: €${data.cart_total.toFixed(2)}`;
                     document.querySelector('.cart-count').textContent = data.cart_count;
     
-                    // Remove row if quantity is 0
+                    // Remove the row if quantity is 0
                     if (data.quantity === 0) {
-                        row.remove();
+                        row.remove(); 
                     }
     
-                   // alert(data.message);
+                   // alert(data.message);  // Optional: you can uncomment this line for a success alert
                 } catch (error) {
+                    // Handle error and reset quantity input value if an error occurs
                     alert('Error: ' + error.message);
                     quantityInput.value = quantityInput.defaultValue;
                 }
             });
         });
     });
-    </script>
+</script>
 </body>
 </html>

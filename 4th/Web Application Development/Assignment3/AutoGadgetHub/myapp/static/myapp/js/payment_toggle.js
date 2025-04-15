@@ -1,4 +1,3 @@
-// payment_toggle.js
 document.addEventListener('DOMContentLoaded', function() {
     // Get the card details section and all payment method radio buttons
     const cardDetailsSection = document.getElementById('card-details');

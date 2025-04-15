@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from .models import Product, ProductCategory
 from datetime import datetime
-# user reg form Q4
+
+# user reg form Q4 - for new users who wants to sign up
 class UserRegistrationForm(forms.Form):
     username = forms.CharField(
         max_length=150,
@@ -48,18 +49,21 @@ class UserRegistrationForm(forms.Form):
     )
 
     def clean_username(self):
+        # chek if user name alredy exists
         username = self.cleaned_data['username']
         if User.objects.filter(username=username).exists():
-            raise forms.ValidationError('This username is already taken.')
+            raise forms.ValidationError('This username is alredy taken.')
         return username
 
     def clean_email(self):
+        # validate email not used befor
         email = self.cleaned_data['email']
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('This email is already registered.')
+            raise forms.ValidationError('This email is alredy registered.')
         return email
 
     def clean(self):
+        # match the two passwerds enterd
         cleaned_data = super().clean()
         password = cleaned_data.get('password')
         confirm_password = cleaned_data.get('confirm_password')
@@ -68,8 +72,8 @@ class UserRegistrationForm(forms.Form):
             self.add_error('confirm_password', "Passwords don't match")
 
         return cleaned_data
-    
- # Product Management Form
+
+# Product Management Form - to add new prodcts
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
@@ -81,19 +85,22 @@ class ProductForm(forms.ModelForm):
         labels = {
             'product_code': 'SKU/Product Code'
         }
+
     def clean_price(self):
+        # make sure prise is not zero or negative
         price = self.cleaned_data['price']
         if price <= 0:
             raise forms.ValidationError("Price must be greater than 0.")
         return price
 
     def clean_stock(self):
+        # cant have nagetive stock
         stock = self.cleaned_data['stock']
         if stock < 0:
             raise forms.ValidationError("Stock cannot be negative.")
         return stock
 
-
+# edit exsisting product
 class ProductEditForm(forms.ModelForm):
     class Meta:
         model = Product
@@ -103,6 +110,7 @@ class ProductEditForm(forms.ModelForm):
             'image': forms.ClearableFileInput(),
         }
 
+# Form to add new categgory
 class ProductCategoryForm(forms.ModelForm):
     class Meta:
         model = ProductCategory
@@ -114,7 +122,7 @@ class ProductCategoryForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'placeholder': 'Enter category name'})
         }
 
-
+# Form for the checkout process with cradit card detailes
 class checkout_form(forms.Form):
     credit_card_number = forms.CharField(
         max_length=16,
@@ -132,7 +140,7 @@ class checkout_form(forms.Form):
         }),
         label='Credit Card Number'
     )
-    
+
     cvv = forms.CharField(
         max_length=4,
         min_length=3,
@@ -149,7 +157,7 @@ class checkout_form(forms.Form):
         }),
         label='Security Code (CVV)'
     )
-    
+
     expiry_month = forms.ChoiceField(
         choices=[(str(i).zfill(2), str(i).zfill(2)) for i in range(1, 13)],
         widget=forms.Select(attrs={
@@ -158,7 +166,7 @@ class checkout_form(forms.Form):
         }),
         label='Expiration Month'
     )
-    
+
     expiry_year = forms.ChoiceField(
         choices=[(str(year), str(year)) for year in range(datetime.now().year, datetime.now().year + 15)],
         widget=forms.Select(attrs={
@@ -169,43 +177,41 @@ class checkout_form(forms.Form):
     )
 
     def clean_credit_card_number(self):
+        # validate card nummber using luhn algorithmm / adapted from the example on loop
         card_number = self.cleaned_data.get('credit_card_number')
-        # First check if it contains only digits
         if not card_number.isdigit():
             raise forms.ValidationError("Credit card number must contain only digits.")
-            
-        # Then validate using Luhn algorithm
         if not self.luhn_checksum(card_number):
             raise forms.ValidationError("Invalid credit card number.")
         return card_number
-    
+
     def luhn_checksum(self, card_number):
-        """Implementation of the Luhn algorithm to validate credit card numbers"""
+        """Implemintashun of the Luhn algorithmm to validate card numbers"""
         def digits_of(n):
             return [int(d) for d in str(n)]
-            
+
         digits = digits_of(card_number)
         odd_digits = digits[-1::-2]
         even_digits = digits[-2::-2]
-        
+
         checksum = sum(odd_digits)
-        
+
         for d in even_digits:
             checksum += sum(digits_of(d * 2))
-            
+
         return checksum % 10 == 0
 
     def clean(self):
+        # check if expiry date is valid or alredy past
         cleaned_data = super().clean()
         expiry_month = cleaned_data.get('expiry_month')
         expiry_year = cleaned_data.get('expiry_year')
-        
+
         if expiry_month and expiry_year:
-            # Check if card is expired
             current_year = datetime.now().year
             current_month = datetime.now().month
-            
+
             if int(expiry_year) == current_year and int(expiry_month) < current_month:
                 raise forms.ValidationError("This credit card has expired.")
-        
+
         return cleaned_data

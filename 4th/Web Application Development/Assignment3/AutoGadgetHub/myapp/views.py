@@ -11,11 +11,12 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.utils import timezone
 from datetime import timedelta
-# Create your views here.
+# Create views here
 def home(request):
     return render(request, 'myapp/index.html')
 
 def shop(request):
+    # Get all products and categoriees
     products = Product.objects.all()
     categories = ProductCategory.objects.all()
     context = {
@@ -25,16 +26,20 @@ def shop(request):
     return render(request, 'myapp/shop.html', context)
 
 def about(request):
+    # About us pagee
     return render(request, 'myapp/about.html')
 
 def contact(request):
+    # Contact page
     return render(request, 'myapp/contact.html')
 
 def help(request):
+    # Help center page
     return render(request, 'myapp/help.html')
 
 @login_required
 def cart(request):
+    # Get cart items for loged-in user
     cart_items = CartItem.objects.filter(user=request.user)
     cart_total = sum(item.product.price * item.quantity for item in cart_items)
     
@@ -46,6 +51,7 @@ def cart(request):
 
 @login_required
 def update_cart(request, product_id):
+    # Handle cart updattes via AJAX or normal request
     product = get_object_or_404(Product, id=product_id)
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     response_data = {}
@@ -55,20 +61,20 @@ def update_cart(request, product_id):
         try:
             quantity = int(request.POST.get('quantity', 1))
             
-            # Handle stock validation
+            # Handle stock validaton
             if quantity > product.stock:
                 raise ValueError(f"Only {product.stock} available in stock")
             if quantity < 0:
                 raise ValueError("Quantity cannot be negative")
 
-            # Get or create cart item
+            # Get or creatte cart item
             cart_item, created = CartItem.objects.get_or_create(
                 user=request.user,
                 product=product,
                 defaults={'quantity': quantity}
             )
 
-            # Update or delete existing item
+            # Udpate or deleete existin item
             if not created:
                 if quantity > 0:
                     cart_item.quantity = quantity
@@ -77,7 +83,7 @@ def update_cart(request, product_id):
                     cart_item.delete()
                     quantity = 0
 
-            # Prepare response data
+            # Prepare responsse data
             cart_items = CartItem.objects.filter(user=request.user)
             cart_total = sum(item.get_total() for item in cart_items)
             cart_count = cart_items.count()
@@ -92,7 +98,7 @@ def update_cart(request, product_id):
                 'cart_count': cart_count
             }
 
-            # Add success message for non-AJAX requests
+            # Addd success messsage for non-AJAX requests
             if not is_ajax:
                 messages.success(request, response_data['message'])
 
@@ -101,7 +107,7 @@ def update_cart(request, product_id):
             if not is_ajax:
                 messages.error(request, str(e))
 
-        # Return appropriate response
+        # Returrn approprite responsse
         if is_ajax:
             return JsonResponse(response_data)
         return redirect(default_redirect)
@@ -110,6 +116,7 @@ def update_cart(request, product_id):
 
 @login_required
 def remove_from_cart(request, item_id):
+    # Removve item from cartt
     cart_item = get_object_or_404(CartItem, id=item_id, user=request.user)
     cart_item.delete()
     messages.success(request, 'Item removed from cart')
@@ -117,11 +124,13 @@ def remove_from_cart(request, item_id):
 
 
 def terms(request):
+    # Terms and conditons page
     return render(request, 'myapp/terms.html')
 
-# Checkout and orders
+# Checkout and ordder
 @login_required
 def checkout(request):
+    # Handle order checkout
     cart_items = CartItem.objects.filter(user=request.user)
     if not cart_items.exists():
         messages.error(request, 'Your cart is empty')
@@ -130,18 +139,18 @@ def checkout(request):
     cart_total = sum(item.product.price * item.quantity for item in cart_items)
     
     if request.method == 'POST':
-        form = checkout_form(request.POST)  # Instantiate the form with POST data
+        form = checkout_form(request.POST)  # Instantiat the form with POST data
         if form.is_valid():
             try:
                 with transaction.atomic():
                     profile = request.user.profile
-                    # Update profile with form data from POST
+                    # Udpate profile with form data from POST
                     profile.address_line1 = request.POST.get('address_line1')
                     profile.address_line2 = request.POST.get('address_line2')
                     profile.phone_number = request.POST.get('phone')
                     profile.save()
                     
-                    # Order processing logic here (same as before)
+                    # Order procesing logic here 
                     order = Order.objects.create(
                         user=request.user,
                         address=profile.address_line1,
@@ -174,25 +183,27 @@ def checkout(request):
             except Exception as e:
                 messages.error(request, f'Checkout failed: {str(e)}')
         else:
-            # Form is invalid, show errors
+            # Formm is invallid, show errors
             messages.error(request, 'Please correct the errors below.')
     else:
-        form = checkout_form()  # Empty form for GET requests
+        form = checkout_form()  # Empty form for GET reqquests
     
     return render(request, 'myapp/checkout.html', {
         'cart_items': cart_items,
         'cart_total': cart_total,
-        'form': form,  # Pass the form (with errors if any)
+        'form': form,  # Pass the form (with errors if anyy)
     })
 
-# Staff management views
+# Staff manegement views
 @staff_member_required
 def manage_products(request):
+    # List all products for staff
     products = Product.objects.all()
     return render(request, 'myapp/staff/products.html', {'products': products})
 
 @staff_member_required
 def add_product(request):
+    # Add new product
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
@@ -205,6 +216,7 @@ def add_product(request):
 
 @staff_member_required
 def edit_product(request, product_id):
+    # Edit existing product
     product = get_object_or_404(Product, id=product_id)
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, instance=product)
@@ -218,6 +230,7 @@ def edit_product(request, product_id):
 
 @staff_member_required
 def delete_product(request, product_id):
+    # Delete product
     product = get_object_or_404(Product, id=product_id)
     product.delete()
     messages.success(request, 'Product deleted successfully')
@@ -225,6 +238,7 @@ def delete_product(request, product_id):
 
 @staff_member_required
 def manage_categories(request):
+    # Managge producct categoriees
     categories = ProductCategory.objects.all()
     if request.method == 'POST':
         form = ProductCategoryForm(request.POST)
@@ -241,6 +255,7 @@ def manage_categories(request):
 
 @staff_member_required
 def add_category(request):
+    # Addd new categorie
     if request.method == 'POST':
         form = ProductCategoryForm(request.POST)
         if form.is_valid():
@@ -253,6 +268,7 @@ def add_category(request):
 
 @staff_member_required
 def category_edit(request, category_id):
+    # Edit existing category
     category = get_object_or_404(ProductCategory, id=category_id)
     if request.method == 'POST':
         form = ProductCategoryForm(request.POST, instance=category)
@@ -266,10 +282,11 @@ def category_edit(request, category_id):
 
 @staff_member_required
 def category_delete(request, category_id):
+    # Delete category
     if request.method == 'POST':
         category = get_object_or_404(ProductCategory, id=category_id)
         try:
-            # Prevent deletion of categories with associated products
+            # Prevent deletion of categoriees with associated produccts
             if category.product_set.exists():
                 messages.error(request, 'Cannot delete category with associated products')
             else:
@@ -281,12 +298,13 @@ def category_delete(request, category_id):
     return HttpResponse("Invalid request method", status=405)
 
 
-# Authentication views
+# Authenticaton viewss
 def signup_view(request):
+    # User registrattion
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            # Create user
+            # Creatte user
             user = User.objects.create_user(
                 username=form.cleaned_data['username'],
                 email=form.cleaned_data['email'],
@@ -304,13 +322,14 @@ def signup_view(request):
             messages.success(request, 'Registration successful! Please log in.')
             return redirect('signin')
         
-        # If form is invalid, errors will be displayed in template
+        # If formm is invalid, errors will bee displayed in templatte
     else:
         form = UserRegistrationForm()
     
     return render(request, 'myapp/signup.html', {'form': form})
 
 def signin_view(request):
+    # Userr login
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -326,17 +345,20 @@ def signin_view(request):
 
 
 def signout_view(request):
+    # User loggout
     logout(request)
     messages.success(request, 'You have been logged out.')
     return redirect('home')
 
 @login_required
 def order_history(request):
+    # Showw user order histtory
     orders = Order.objects.filter(user=request.user).order_by('-created')
     return render(request, 'myapp/order_history.html', {'orders': orders})
 
 @login_required
 def order_history_api(request):
+    # API endpooint for orderr histtory
     period = request.GET.get('period', 'day')
     now = timezone.now()
     
@@ -368,7 +390,7 @@ def order_history_api(request):
             order_data['items'].append({
                 'product_name': item.product.name,
                 'quantity': item.quantity,
-                'price': str(item.price) #to avoid serialization issues
+                'price': str(item.price) # to avoid serialization issues
             })
         orders_data.append(order_data)
     

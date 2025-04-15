@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # url links to home, shop , ...etc pages 
     path('', views.home, name='home'),
     path('shop/', views.shop, name='shop'),
     path('about/', views.about, name='about'),
@@ -24,6 +25,7 @@ urlpatterns = [
     path('staff/categories/add/', views.add_category, name='add_category'),
     path('staff/category/<int:category_id>/edit/', views.category_edit, name='category_edit'),
     path('staff/category/<int:category_id>/delete/', views.category_delete, name='category_delete'),
+    # histoy page 
     path('order-history/', views.order_history, name='order_history'),
     path('api/orders/', views.order_history_api, name='order_history_api'),
 ]

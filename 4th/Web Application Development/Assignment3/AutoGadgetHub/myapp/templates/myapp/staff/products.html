@@ -5,32 +5,38 @@
 <div class="staff-container">
     <h1>Product Management</h1>
     
+    <!-- This secshun is for the add product botton -->
     <div class="actions">
         <a href="{% url 'add_product' %}" class="btn-primary">Add New Product</a>
     </div>
 
+    <!-- Table to disply the list of products -->
     <table class="product-list">
         <thead>
             <tr>
                 <th>Product</th>
                 <th>Price</th>
                 <th>Stock</th>
-                <th>Actions</th>
+                <th>Actions</th> <!-- Edit or delete actons -->
             </tr>
         </thead>
         <tbody>
             {% for product in products %}
             <tr>
+                <!-- Showing prodct details -->
                 <td>{{ product.name }}</td>
                 <td>${{ product.price }}</td>
                 <td>{{ product.stock }}</td>
                 <td>
+                    <!-- Link to edit the selected produckt -->
                     <a href="{% url 'edit_product' product.id %}" class="btn-edit">Edit</a>
+                    <!-- Link to delet the product with a confirmashun -->
                     <a href="{% url 'delete_product' product.id %}" class="btn-delete"
                        onclick="return confirm('Delete this product?')">Delete</a>
                 </td>
             </tr>
             {% empty %}
+            <!-- Show this row if no produts are avilable -->
             <tr>
                 <td colspan="4">No products found</td>
             </tr>

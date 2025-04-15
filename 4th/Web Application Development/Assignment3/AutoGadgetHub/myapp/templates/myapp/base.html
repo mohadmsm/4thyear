@@ -4,21 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}AutoGadget Hub{% endblock %}</title>
+        <title>{% block title %}AutoGadget Hub{% endblock %}</title>
+    
+    <!-- Loading static files (CSS files) -->
     {% load static %}
     <link rel="stylesheet" href="{% static 'myapp/css/header_mainBody.css' %}">
-
     <link rel="stylesheet" href="{% static 'myapp/css/staff.css' %}">
+    
+    <!-- Block for additional CSS styles that can be added in child templates -->
     {% block css %} {% endblock %}
+    
+    <!-- Linking the JavaScript file for menu interaction -->
     <script src="{% static 'myapp/js/menu.js' %}"></script>
 </head>
 
 <body>
+    <!-- Header Section -->
     <header>
+        <!-- Logo and site title -->
         <div>
             <img src="{% static 'myapp/images/my_logo.png' %}" alt="AutoGadget Hub Logo">
             <h1>AutoGadget Hub</h1>
         </div>
+        
+        <!-- Navigation links -->
         <nav>
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'shop' %}">Shop</a>
@@ -26,18 +35,25 @@
             <a href="{% url 'contact' %}">Contact</a>
             <a href="{% url 'help' %}">Help❓</a>
             <a href="{% url 'order_history' %}">History</a>
+            
+            <!-- Conditional links visible only for staff members -->
             {% if user.is_staff %}
             <a href="{% url 'manage_products' %}">Manage Products</a>
             <a href="{% url 'manage_categories' %}">Manage Categories</a>
             {% endif %}
         </nav>
+        
+        <!-- Authentication section: Cart and User profile -->
         <div class="auth-section">
+            <!-- Cart link with dynamic count based on user's cart items -->
             <a href="{% url 'cart' %}" class="cart-link">
                 <img src="{% static 'myapp/images/shopping_cart.png' %}" alt="Cart">
                 <span class="cart-count">
                     {% if user.is_authenticated %}{{ user.cartitem_set.count }}{% else %}0{% endif %}
                 </span>
             </a>
+            
+            <!-- Conditional display based on user authentication -->
             {% if user.is_authenticated %}
             <span>Welcome, {{ user.username }}!</span>
             <a href="{% url 'signout' %}">Sign Out</a>
@@ -48,27 +64,37 @@
         </div>
     </header>
 
+    <!-- Main Content Section -->
     <main>
+        <!-- Button to trigger side menu on smaller screens -->
         <div class="menu-trigger">
             <div class="hamburger">☰</div>
         </div>
-        <!-- Dynamic Side Menu -->
+
+        <!-- Dynamic Side Menu (hidden by default) -->
         <nav id="sideMenu" class="side-menu">
             <div class="menu-header">
                 <span class="close-btn">&times;</span>
                 <h3>Navigation Menu</h3>
             </div>
             <div class="menu-content">
+                <!-- Links for side menu -->
                 <a href="{% url 'terms' %}">Terms & Conditions</a>
                 <a href="{% url 'shop' %}#New">Trending</a>
                 <a href="{% url 'contact' %}"> Support</a>
+                
+                <!-- Dark Mode toggle option -->
                 <div class="setting-item">
                     <span>Dark Mode</span>
                     <div class="toggle-switch" id="darkModeToggle"></div>
                 </div>
             </div>
         </nav>
+        
+        <!-- Overlay to close the side menu when clicked -->
         <div id="menuOverlay" class="overlay"></div>
+
+        <!-- Display any messages (e.g., success or error notifications) -->
         {% if messages %}
         <div class="messages">
             {% for message in messages %}
@@ -79,13 +105,17 @@
         </div>
         {% endif %}
 
+        <!-- Content block for child templates to inject content -->
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer Section -->
     <footer>
+        <!-- Footer text with copyright -->
         <p>&copy; 2025 AutoGadget Hub. All rights reserved by Mohammed AL Shuaili ECE4.</p>
     </footer>
+
+    <!-- Block for including additional JavaScript in child templates -->
     {% block script %}{% endblock %}
 </body>
 

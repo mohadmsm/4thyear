@@ -1,31 +1,35 @@
 {% extends "myapp/base.html" %}
 {% block title %}Manage Categories{% endblock %}
 
-
 {% block content %}
 <div class="staff-container">
+    <!-- Main title for the categry managment page -->
     <h1>Category Management</h1>
     
+    <!-- Form secton to add a new cateogry -->
     <section class="add-form">
         <h2>Add New Category</h2>
         <form method="post">
             {% csrf_token %}
+            <!-- Input feild for new catagory name -->
             <div class="form-group">
-                {{ form.name.label_tag }}
-                {{ form.name }}
-                {{ form.name.errors }}
+                {{ form.name.label_tag }}  <!-- Label for name input -->
+                {{ form.name }}            <!-- Input box -->
+                {{ form.name.errors }}     <!-- Shows errrors if any -->
             </div>
+            <!-- Button to submitt the new catagory -->
             <button type="submit" class="btn-primary">Create Category</button>
         </form>
     </section>
 
+    <!-- Table secton for showwing existting categories -->
     <section class="category-list">
         <h2>Existing Categories</h2>
         <table>
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Actions</th>
+                    <th>Actions</th> <!-- Edit or delete optons -->
                 </tr>
             </thead>
             <tbody>
@@ -33,7 +37,10 @@
                 <tr>
                     <td>{{ category.name }}</td>
                     <td>
+                        <!-- Link to eddit the selected category -->
                         <a href="{% url 'category_edit' category.id %}" class="btn-edit">Edit</a>
+
+                        <!-- Form to delete the categgory with confirmation -->
                         <form method="POST" action="{% url 'category_delete' category.id %}" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn-delete" 
@@ -44,6 +51,7 @@
                     </td>
                 </tr>
                 {% empty %}
+                <!-- If no catagories exist, show this messsage -->
                 <tr>
                     <td colspan="2">No categories found</td>
                 </tr>
