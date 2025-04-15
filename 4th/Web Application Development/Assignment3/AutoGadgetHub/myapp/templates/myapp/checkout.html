@@ -26,6 +26,7 @@
       <a href="{% url 'about' %}">About</a>
       <a href="{% url 'contact' %}">Contact</a>
       <a href="{% url 'help' %}">Help❓</a>
+      <a href="{% url 'order_history' %}">History</a>
       {% if user.is_staff %}
       <a href="{% url 'manage_products' %}">Manage Products</a>
       <a href="{% url 'manage_categories' %}">Manage Categories</a>

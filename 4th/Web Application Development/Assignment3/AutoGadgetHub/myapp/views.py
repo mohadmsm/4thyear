@@ -368,7 +368,7 @@ def order_history_api(request):
             order_data['items'].append({
                 'product_name': item.product.name,
                 'quantity': item.quantity,
-                'price': str(item.price)
+                'price': str(item.price) #to avoid serialization issues
             })
         orders_data.append(order_data)
     

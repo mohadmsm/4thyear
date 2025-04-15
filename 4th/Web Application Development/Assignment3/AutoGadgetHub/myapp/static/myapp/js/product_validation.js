@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
             // Price validation
             if (!formData.price || isNaN(formData.price) || parseFloat(formData.price) <= 0) {
-                showError(productForm.querySelector('#id_price'), 'Price must be a positive number');
+                showError(productForm.querySelector('#id_price'), 'Price must be a positive number and not 0');
                 isValid = false;
             }
             
