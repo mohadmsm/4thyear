@@ -75,3 +75,10 @@ plot(f,abs(H),f,abs(Hz),'r')
 Hdiff = abs(H)-1/sqrt(2);
 [aa,ff] = min(abs(Hdiff));
 fc=f(ff);% 5/2pi
+%%
+clear
+clc
+T = 0.1;
+f = 1.25;
+w = 2*pi*f;
+y = 1+exp(-j*4*w*T);
